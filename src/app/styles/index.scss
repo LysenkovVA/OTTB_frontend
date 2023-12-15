@@ -1,0 +1,15 @@
+// ЭТО ФАЙЛ С ГЛОБАЛЬНЫМИ СТИЛЯМИ, КОТОРЫЕ РАСПРОСТРАНЯЮТСЯ НА ВСЕ ПРИЛОЖЕНИЕ
+@import "reset";
+@import "fonts";
+@import "colors";
+@import "layout";
+
+.app {
+    // background: red;
+}
+
+.content-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,0 +1,19 @@
+.AppHeader {
+    width: 100%;
+    height: var(--header-height);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    line-height: 25px;
+}
+
+.actions {
+    margin-left: auto;
+}
+
+.logo {
+    width: var(--sidemenu-width);
+    margin-left: 16px;
+}
+
+

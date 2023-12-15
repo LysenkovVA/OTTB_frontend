@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    // Не используем переменные без явного указания типа
+    "noImplicitAny": true,
+    "module": "ESNext",
+    "target": "es5",
+    "jsx": "react-jsx", // чтобы не требовалось импортировать React
+    "allowJs": true,
+    "moduleResolution": "node",
+    // Для импортов без *
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    // Строгий режим TS
+    "strict": true,
+    "plugins": [{
+      "name": "typescript-strict-plugin",
+      "paths": [
+        "./src"
+      ],
+//      "exclude": ["./config"]
+    }],
+    // Также нужен путь до базовой директории, чтобы работали алиасы
+    "baseUrl": ".",
+    // Чтобы работали алиасы, заданные в резолверах
+    "paths": {
+      "@/*":["./src/*"]
+    }
+  },
+  // Переопределяем опции для ts-node (нужно для сборки)
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  },
+  "include": ["./src", "./config"],
+  "exclude": ["node_modules"],
+}

@@ -1,0 +1,19 @@
+.Page {
+    // Чтобы sidebar не сдвигался при растягивании контента страницы
+    flex-grow: 1;
+    // высота header, footer, trigger, padding
+    height: calc(100vh - var(--header-height) - var(--footer-height) - var(--infinite-scroll-page-trigger-height) - var(--infinite-scroll-page-trigger-margin));
+    overflow-y: auto;
+    flex-shrink: 100;
+}
+
+.PageRedesigned {
+    overflow-y: auto;
+}
+
+.trigger {
+    height: var(--infinite-scroll-page-trigger-height);
+    margin: var(--infinite-scroll-page-trigger-margin);
+}
+
+

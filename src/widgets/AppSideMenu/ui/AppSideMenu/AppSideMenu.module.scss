@@ -1,0 +1,10 @@
+.AppSideMenu {
+    width: var(--sidemenu-width);
+    height: calc(100vh - var(--header-height) - var(--footer-height));
+    position: relative;
+    margin: 16px;
+}
+
+.collapsed {
+    width: var(--sidemenu-width-collapsed);
+}
