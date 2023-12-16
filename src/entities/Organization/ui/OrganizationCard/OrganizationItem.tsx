@@ -10,42 +10,14 @@ interface OrganizationItemProps {
     organization: Organization;
     isLoading?: boolean;
     onClick?: (id: string | undefined) => void;
-    onDelete?: (id: string | undefined) => void;
 }
 
 export const OrganizationItem = memo((props: OrganizationItemProps) => {
-    const { className, organization, isLoading, onClick, onDelete } = props;
-
-    const [modalOpen, setModalOpen] = useState(false);
+    const { className, organization, isLoading, onClick } = props;
 
     if (isLoading) {
         return <Skeleton active />;
     }
-
-    const extraContent = (
-        <>
-            <Modal
-                title="Подтвердите удаление"
-                centered
-                open={modalOpen}
-                onOk={() => {
-                    setModalOpen(false);
-                    onDelete?.(organization.id);
-                }}
-                onCancel={() => setModalOpen(false)}
-            >
-                <DeleteOutlined style={{ color: "red" }} />
-                <p>Удалить?</p>
-            </Modal>
-            <Button
-                className={cls.deleteButton}
-                icon={<DeleteOutlined style={{ color: "lightgray" }} />}
-                onClick={() => setModalOpen(true)}
-                danger
-                type={"link"}
-            />
-        </>
-    );
 
     return (
         <Card
@@ -53,7 +25,6 @@ export const OrganizationItem = memo((props: OrganizationItemProps) => {
             size={"small"}
             className={classNames(cls.OrganizationCard, {}, [className])}
             title={organization.name}
-            extra={extraContent}
             onClick={() => onClick?.(organization.id)}
         >
             <div>

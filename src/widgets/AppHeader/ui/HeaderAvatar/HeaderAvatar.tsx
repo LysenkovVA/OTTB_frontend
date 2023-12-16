@@ -1,5 +1,4 @@
 import { getAuthenticatedUser } from "@/entities/User";
-import { profileReducer } from "@/features/Profiles/profileCard/model/slice/profileSlice";
 import { authLogout } from "@/features/logout/model/services/logout/authLogout";
 import { logoutReducer } from "@/features/logout/model/slice/logoutSlice";
 import { RoutePath } from "@/shared/config/routeConfig/routeConfig";
@@ -22,7 +21,7 @@ export interface HeaderAvatarProps {
 
 const reducers: ReducersList = {
     logoutSchema: logoutReducer,
-    profileSchema: profileReducer,
+    // profileSchema: profileReducer,
 };
 
 export const HeaderAvatar = memo((props: HeaderAvatarProps) => {

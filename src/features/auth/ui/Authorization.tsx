@@ -6,9 +6,10 @@ import {
     ReducersList,
 } from "@/shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
+import { useInitialEffect } from "@/shared/lib/hooks/useInitialEffect/useInitialEffect";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Alert, Button, Flex, Image, Input } from "antd";
-import { memo, useCallback, useEffect } from "react";
+import { memo, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getAuthEmail } from "../model/selectors/getAuthEmail/getAuthEmail";
@@ -22,23 +23,22 @@ import { authActions, authReducer } from "../model/slice/authSlice";
 const initialReducers: ReducersList = { authSchema: authReducer };
 
 export const Authorization = memo(() => {
-    // const dispatch = useDispatch<AppDispatch>();
     const dispatch = useAppDispatch();
 
     const email = useSelector(getAuthEmail);
     const password = useSelector(getAuthPassword);
     const isLoading = useSelector(getAuthIsLoading);
     const error = useSelector(getAuthError);
-
     const user = useSelector(getAuthenticatedUser);
 
     const navigate = useNavigate();
 
-    useEffect(() => {
+    // Отработает только один раз
+    useInitialEffect(() => {
         if (user?.id) {
             navigate(RoutePath.inspections);
         }
-    }, [user, navigate, dispatch]);
+    });
 
     const onChangeEmail = useCallback(
         (value: string) => {

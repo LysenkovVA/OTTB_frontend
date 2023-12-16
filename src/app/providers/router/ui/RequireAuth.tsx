@@ -10,7 +10,6 @@ interface RequireAuthProps {
 export function RequireAuth({ children }: RequireAuthProps) {
     const auth = useSelector(getAuthenticatedUser);
     const location = useLocation();
-    console.log("RequiredAuth Location: " + JSON.stringify(location));
 
     if (!auth.id) {
         return (

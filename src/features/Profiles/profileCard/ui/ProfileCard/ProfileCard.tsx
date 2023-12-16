@@ -1,4 +1,3 @@
-import { userActions } from "@/entities/User/model/slice/userSlice";
 import { removeProfileAvatar } from "@/features/Profiles/profileCard/model/services/removeProfileAvatar/removeProfileAvatar";
 import {
     DynamicModuleLoader,
@@ -84,9 +83,6 @@ export const ProfileCard = memo((props: ProfileCardProps) => {
         // Получаем новые данные (лишний запрос!)
         await dispatch(fetchProfileData({ profileId }));
 
-        // Обновляем пользовательскую схему
-        dispatch(userActions.setUserIsInitialized(false));
-
         setReadOnly(true);
     }, [
         dispatch,
@@ -119,7 +115,7 @@ export const ProfileCard = memo((props: ProfileCardProps) => {
     );
 
     return (
-        <DynamicModuleLoader reducers={reducers} removeAfterUnmount={false}>
+        <DynamicModuleLoader reducers={reducers} removeAfterUnmount={true}>
             <Card title={"Профиль пользователя"} extra={extraContent}>
                 {readOnly ? <ProfileCardView /> : <ProfileCardForm />}
             </Card>

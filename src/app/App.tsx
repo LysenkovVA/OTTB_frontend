@@ -1,4 +1,5 @@
 import { getAuthenticatedUser } from "@/entities/User";
+import { getAuthenticatedUserIsLoading } from "@/entities/User/model/selectors/getAuthenticatedUser/getAuthenticatedUser";
 import { getUserIsInited } from "@/entities/User/model/selectors/getUserIsInited/getAuthenticatedUserId";
 import { initAuthData } from "@/entities/User/model/services/initAuthData/initAuthData";
 import { classNames } from "@/shared/lib/classNames/classNames";
@@ -19,15 +20,20 @@ import "./styles/index.scss";
 export const App = () => {
     const dispatch = useAppDispatch();
     const authenticatedUser = useSelector(getAuthenticatedUser);
+    const isLoading = useSelector(getAuthenticatedUserIsLoading);
     const userIsInited = useSelector(getUserIsInited);
     const navigate = useNavigate();
 
     // Загружаем информацию об авторизованном пользователе
     useEffect(() => {
-        if (!userIsInited) {
+        if (!userIsInited && !isLoading) {
             dispatch(initAuthData());
         }
-    }, [dispatch, navigate, userIsInited]);
+    }, [dispatch, isLoading, navigate, userIsInited]);
+
+    if (isLoading) {
+        return null;
+    }
 
     if (authenticatedUser?.id) {
         return (
@@ -43,7 +49,7 @@ export const App = () => {
                         <AppSideMenu />
                     </Sider>
                     <Content className={classNames(cls.content)}>
-                        {userIsInited && <AppRouter />}
+                        {userIsInited && !isLoading && <AppRouter />}
                     </Content>
                 </Layout>
                 <Layout>
@@ -54,6 +60,10 @@ export const App = () => {
             </Layout>
         );
     } else {
-        return <div className="content-page">{<AppRouter />}</div>;
+        return (
+            <div className="content-page">
+                {userIsInited && !isLoading && <AppRouter />}
+            </div>
+        );
     }
 };

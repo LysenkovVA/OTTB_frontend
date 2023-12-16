@@ -144,6 +144,18 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
         dispatch(employeeDetailsActions.setRemoveAvatarOnUpdate(true));
     }, [dispatch]);
 
+    // const onChangeOrganization = useCallback(
+    //     (value: Berth | undefined) => {
+    //         dispatch(
+    //             employeeDetailsActions.setEmployeeDetailsFormData({
+    //                 ...employeeDetailsForm,
+    //                 berth: value,
+    //             }),
+    //         );
+    //     },
+    //     [dispatch, employeeDetailsForm],
+    // );
+
     const onChangeBerth = useCallback(
         (value: Berth | undefined) => {
             dispatch(
@@ -262,6 +274,14 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
                     Работа
                 </Divider>
                 <Row gutter={[8, 8]}>
+                    {/* <Col span={8}> */}
+                    {/*     <Form.Item label={"Организация"}> */}
+                    {/*         <OrganizationSelector */}
+                    {/*             value={employeeDetailsForm?.} */}
+                    {/*             onValueChanged={onChangeBerth} */}
+                    {/*         /> */}
+                    {/*     </Form.Item> */}
+                    {/* </Col> */}
                     <Col span={8}>
                         <Form.Item label={"Должность"}>
                             <BerthSelector

@@ -1,6 +1,5 @@
 import { OrganizationItem } from "@/entities/Organization";
 import { fetchOrganizationsInfiniteList } from "@/features/Organizations/organizationsInfiniteList/model/services/fetchOrganizationsInfiniteList/fetchOrganizationsInfiniteList";
-import { removeOrganization } from "@/features/Organizations/organizationsInfiniteList/model/services/removeOrganization/removeOrganization";
 import { RoutePath } from "@/shared/config/routeConfig/routeConfig";
 import {
     DynamicModuleLoader,
@@ -97,16 +96,6 @@ export const OrganizationsInfiniteList = memo(
             [navigate],
         );
 
-        const onDelete = useCallback(
-            async (id: string | undefined) => {
-                if (id) {
-                    await dispatch(removeOrganization({ organizationId: id }));
-                    dispatch(organizationsInfiniteListActions.removeOne(id));
-                }
-            },
-            [dispatch],
-        );
-
         return (
             <DynamicModuleLoader reducers={reducers} removeAfterUnmount={false}>
                 {!isLoading && error && (
@@ -119,7 +108,6 @@ export const OrganizationsInfiniteList = memo(
                                 key={organization.id}
                                 organization={organization}
                                 onClick={onClick}
-                                onDelete={onDelete}
                             />
                         ))}
                         {isLoading && (

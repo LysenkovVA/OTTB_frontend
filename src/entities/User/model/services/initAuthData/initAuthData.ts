@@ -13,17 +13,26 @@ export const initAuthData = createAsyncThunk<User, void, ThunkConfig<string>>(
         try {
             // Достаем из локалсторадж поле user
             const data = localStorage.getItem(USER_LOCALSTORAGE_KEY);
-            if (data) {
-                // Если нашли такое поле, у него есть id и email
-                const id = JSON.parse(data).user?.id;
 
-                if (id) {
-                    const response = await extra.api.get<User>(`/users/${id}`);
-                    return response.data;
-                }
+            if (!data) {
+                console.log("Нет данных в localstorage");
+                return rejectWithValue("Нет данных в localstorage");
             }
 
-            return rejectWithValue("Нет данных в localstorage");
+            // Если нашли такое поле, у него есть id и email
+            const id = JSON.parse(data).user?.id;
+
+            if (!id) {
+                console.log(
+                    "Не удалось получить идентификатор пользователя из localstorage",
+                );
+                return rejectWithValue(
+                    "Не удалось получить идентификатор пользователя из localstorage",
+                );
+            }
+
+            const response = await extra.api.get<User>(`/users/${id}`);
+            return response.data;
         } catch (e) {
             if (e instanceof AxiosError) {
                 const serverError = e?.response?.data as ServerError;
