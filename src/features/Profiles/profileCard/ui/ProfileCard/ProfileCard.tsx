@@ -89,10 +89,14 @@ export const ProfileCard = memo((props: ProfileCardProps) => {
         }
 
         // Получаем новые данные (лишний запрос!)
-        await dispatch(fetchProfileData({ profileId }));
+        const profile = await dispatch(
+            fetchProfileData({ profileId }),
+        ).unwrap();
 
-        // Обновляем данные пользователя, чтобы обновился аватар
-        dispatch(userActions.setAuthData({ ...user, profile: profileData }));
+        if (profile) {
+            // Обновляем данные пользователя, чтобы обновился аватар
+            dispatch(userActions.setAuthData({ ...user, profile }));
+        }
 
         setReadOnly(true);
     }, [

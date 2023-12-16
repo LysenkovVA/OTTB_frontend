@@ -1,11 +1,11 @@
 import { StateSchema } from "@/app/providers/StoreProvider";
 import { createSelector } from "@reduxjs/toolkit";
 
-const getUserSchema = (state: StateSchema) => state?.userSchema ?? {};
+const getUserSchema = (state: StateSchema) => state?.userSchema;
 
 // Обязательно использовать мемоизацию, иначе при обновлении страницы сбрасывается путь
 export const getUser = createSelector(getUserSchema, (userSchema) => {
-    return userSchema.authenticatedUser ?? {};
+    return userSchema?.authenticatedUser ?? undefined;
 });
 
 export const getUserIsLoading = createSelector(getUserSchema, (userSchema) => {

@@ -11,7 +11,7 @@ export function RequireAuth({ children }: RequireAuthProps) {
     const auth = useSelector(getUser);
     const location = useLocation();
 
-    if (!auth.id) {
+    if (!auth?.id) {
         return (
             <Navigate to={RoutePath.login} state={{ from: location }} replace />
         );

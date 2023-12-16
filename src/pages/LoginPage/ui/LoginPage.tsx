@@ -18,7 +18,7 @@ const LoginPage = (props: LoginPageProps) => {
 
     // Удаляем все редюсеры кроме нужных
     useEffect(() => {
-        if (!auth.id) {
+        if (!auth?.id) {
             const mountedReducers = store.reducerManager.getReducerMap();
             Object.entries(mountedReducers).forEach(
                 ([stateSchemaKey, reducer]) => {

@@ -25,6 +25,7 @@ const reducers: ReducersList = {
 };
 
 export const HeaderAvatar = memo((props: HeaderAvatarProps) => {
+    console.log("Header avatar rendering...");
     const { className } = props;
 
     const [isOpen, setIsOpen] = useState(false);
@@ -32,6 +33,8 @@ export const HeaderAvatar = memo((props: HeaderAvatarProps) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const user = useSelector(getUser);
+
+    console.log("USER: " + JSON.stringify(user));
 
     const showMenu = useCallback(
         (open: boolean) => {
@@ -41,8 +44,8 @@ export const HeaderAvatar = memo((props: HeaderAvatarProps) => {
     );
 
     const onProfileClick = useCallback(() => {
-        navigate(RoutePath.profile + user.profile?.id);
-    }, [navigate, user.profile?.id]);
+        navigate(RoutePath.profile + user?.profile?.id);
+    }, [navigate, user?.profile?.id]);
 
     const onLogout = useCallback(() => {
         dispatch(authLogout());
@@ -69,11 +72,11 @@ export const HeaderAvatar = memo((props: HeaderAvatarProps) => {
                 <div className={classNames(cls.HeaderAvatar, {}, [className])}>
                     <Flex vertical justify={"center"} align={"center"}>
                         <EditableAvatar
-                            file={user.profile?.avatar}
+                            file={user?.profile?.avatar}
                             canEdit={false}
                         />
                         <Typography.Text keyboard type={"secondary"}>
-                            {user.profile?.name ?? user.email}
+                            {user?.profile?.name ?? user?.email}
                         </Typography.Text>
                     </Flex>
                 </div>
