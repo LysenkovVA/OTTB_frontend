@@ -1,10 +1,5 @@
 import { getRegisteredUserId } from "@/entities/User";
 import { userActions } from "@/entities/User/model/slice/userSlice";
-import { getSignUpEmail } from "@/features/signUp/model/selectors/getSignUpEmail/getSignUpEmail";
-import { getSignUpError } from "@/features/signUp/model/selectors/getSignUpError/getSignUpError";
-import { getSignUpIsLoading } from "@/features/signUp/model/selectors/getSignUpIsLoading/getSignUpIsLoading";
-import { getSignUpPassword } from "@/features/signUp/model/selectors/getSignUpPassword/getSignUpPassword";
-import { getSignUpRepeatedPassword } from "@/features/signUp/model/selectors/getSignUpRepeatedPassword/getSignUpRepeatedPassword";
 import logo from "@/shared/assets/logo/crane.png";
 import {
     DynamicModuleLoader,
@@ -15,6 +10,13 @@ import { Alert, Button, Flex, Image, Input } from "antd";
 import { memo, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import {
+    getSignUpEmail,
+    getSignUpError,
+    getSignUpIsLoading,
+    getSignUpPassword,
+    getSignUpRepeatedPassword,
+} from "../model/selectors/signUpSelectors";
 import { signUpByEmail } from "../model/services/signUpByEmail/signUpByEmail";
 import { signUpActions, signUpReducer } from "../model/slice/signUpSlice";
 

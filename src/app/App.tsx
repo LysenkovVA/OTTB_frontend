@@ -1,6 +1,8 @@
-import { getAuthenticatedUser } from "@/entities/User";
-import { getAuthenticatedUserIsLoading } from "@/entities/User/model/selectors/getAuthenticatedUser/getAuthenticatedUser";
-import { getUserIsInited } from "@/entities/User/model/selectors/getUserIsInited/getAuthenticatedUserId";
+import {
+    getUser,
+    getUserIsInitialized,
+    getUserIsLoading,
+} from "@/entities/User";
 import { initAuthData } from "@/entities/User/model/services/initAuthData/initAuthData";
 import { classNames } from "@/shared/lib/classNames/classNames";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
@@ -19,23 +21,23 @@ import "./styles/index.scss";
 
 export const App = () => {
     const dispatch = useAppDispatch();
-    const authenticatedUser = useSelector(getAuthenticatedUser);
-    const isLoading = useSelector(getAuthenticatedUserIsLoading);
-    const userIsInited = useSelector(getUserIsInited);
+    const authUser = useSelector(getUser);
+    const isLoading = useSelector(getUserIsLoading);
+    const userIsInitialized = useSelector(getUserIsInitialized);
     const navigate = useNavigate();
 
     // Загружаем информацию об авторизованном пользователе
     useEffect(() => {
-        if (!userIsInited && !isLoading) {
+        if (!userIsInitialized && !isLoading) {
             dispatch(initAuthData());
         }
-    }, [dispatch, isLoading, navigate, userIsInited]);
+    }, [dispatch, isLoading, navigate, userIsInitialized]);
 
     if (isLoading) {
         return null;
     }
 
-    if (authenticatedUser?.id) {
+    if (authUser?.id) {
         return (
             <Layout>
                 <Header
@@ -49,7 +51,7 @@ export const App = () => {
                         <AppSideMenu />
                     </Sider>
                     <Content className={classNames(cls.content)}>
-                        {userIsInited && !isLoading && <AppRouter />}
+                        {userIsInitialized && !isLoading && <AppRouter />}
                     </Content>
                 </Layout>
                 <Layout>
@@ -62,7 +64,7 @@ export const App = () => {
     } else {
         return (
             <div className="content-page">
-                {userIsInited && !isLoading && <AppRouter />}
+                {userIsInitialized && !isLoading && <AppRouter />}
             </div>
         );
     }

@@ -1,5 +1,10 @@
 import { StateSchema } from "@/app/providers/StoreProvider";
+import { createSelector } from "@reduxjs/toolkit";
 import { inspectionsInfiniteListAdapter } from "../adapter/inspectionsInfiniteListAdapter";
+
+const getInspectionsInfiniteListSchema = (state: StateSchema) => {
+    return state.inspectionsInfiniteListSchema;
+};
 
 export const getInspectionsInfiniteList =
     inspectionsInfiniteListAdapter.getSelectors<StateSchema>(
@@ -8,20 +13,44 @@ export const getInspectionsInfiniteList =
             inspectionsInfiniteListAdapter.getInitialState(),
     );
 
-export const getInspectionsInfiniteListIsLoading = (state: StateSchema) =>
-    state?.inspectionsInfiniteListSchema?.isLoading ?? false;
+export const getInspectionsInfiniteListIsLoading = createSelector(
+    getInspectionsInfiniteListSchema,
+    (schema) => {
+        return schema?.isLoading ?? false;
+    },
+);
 
-export const getInspectionsInfiniteListError = (state: StateSchema) =>
-    state?.inspectionsInfiniteListSchema?.error ?? "";
+export const getInspectionsInfiniteListError = createSelector(
+    getInspectionsInfiniteListSchema,
+    (schema) => {
+        return schema?.error ?? "";
+    },
+);
 
-export const getInspectionsInfiniteListLimit = (state: StateSchema) =>
-    state?.inspectionsInfiniteListSchema?.limit ?? 10;
+export const getInspectionsInfiniteListLimit = createSelector(
+    getInspectionsInfiniteListSchema,
+    (schema) => {
+        return schema?.limit ?? 10;
+    },
+);
 
-export const getInspectionInfiniteListOffset = (state: StateSchema) =>
-    state?.inspectionsInfiniteListSchema?.offset ?? 0;
+export const getInspectionInfiniteListOffset = createSelector(
+    getInspectionsInfiniteListSchema,
+    (schema) => {
+        return schema?.offset ?? 0;
+    },
+);
 
-export const getInspectionsInfiniteListHasMore = (state: StateSchema) =>
-    state?.inspectionsInfiniteListSchema?.hasMore ?? false;
+export const getInspectionsInfiniteListHasMore = createSelector(
+    getInspectionsInfiniteListSchema,
+    (schema) => {
+        return schema?.hasMore ?? false;
+    },
+);
 
-export const getInspectionsInfiniteListIsInitialized = (state: StateSchema) =>
-    state?.inspectionsInfiniteListSchema?._isInitialized ?? false;
+export const getInspectionsInfiniteListIsInitialized = createSelector(
+    getInspectionsInfiniteListSchema,
+    (schema) => {
+        return schema?._isInitialized ?? false;
+    },
+);

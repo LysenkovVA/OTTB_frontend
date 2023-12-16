@@ -1,5 +1,10 @@
 import { StateSchema } from "@/app/providers/StoreProvider";
+import { createSelector } from "@reduxjs/toolkit";
 import { allDepartmentsAdapter } from "../adapter/allDepartmentsAdapter";
+
+const getAllDepartmentsSchema = (state: StateSchema) => {
+    return state.allDepartmentsSchema;
+};
 
 export const getAllDepartments =
     allDepartmentsAdapter.getSelectors<StateSchema>(
@@ -8,11 +13,23 @@ export const getAllDepartments =
             allDepartmentsAdapter.getInitialState(),
     );
 
-export const getAllDepartmentsIsLoading = (state: StateSchema) =>
-    state?.allDepartmentsSchema?.isLoading ?? false;
+export const getAllDepartmentsIsLoading = createSelector(
+    getAllDepartmentsSchema,
+    (schema) => {
+        return schema?.isLoading ?? false;
+    },
+);
 
-export const getAllDepartmentsError = (state: StateSchema) =>
-    state?.allDepartmentsSchema?.error ?? "";
+export const getAllDepartmentsError = createSelector(
+    getAllDepartmentsSchema,
+    (schema) => {
+        return schema?.error ?? "";
+    },
+);
 
-export const getAllDepartmentsIsInitialized = (state: StateSchema) =>
-    state?.allDepartmentsSchema?._isInitialized ?? false;
+export const getAllDepartmentsIsInitialized = createSelector(
+    getAllDepartmentsSchema,
+    (schema) => {
+        return schema?._isInitialized ?? false;
+    },
+);

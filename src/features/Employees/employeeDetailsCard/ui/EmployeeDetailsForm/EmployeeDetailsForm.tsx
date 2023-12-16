@@ -1,4 +1,4 @@
-import { Berth } from "@/entities/Berth/types/Berth";
+import { Berth } from "@/entities/Berth/model/types/Berth";
 import { Department } from "@/entities/Department";
 import { BerthSelector } from "@/features/Berthes/berthSelector/ui/BerthSelector/BerthSelector";
 import { DepartmentSelector } from "@/features/Departments/departmentSelector";
@@ -22,7 +22,7 @@ import { useSelector } from "react-redux";
 import {
     getEmployeeDetailsDataError,
     getEmployeeDetailsForm,
-} from "../../model/selectors/getEmployeeDetails/getEmployeeDetails";
+} from "../../model/selectors/getEmployeeDetails";
 import { employeeDetailsActions } from "../../model/slice/employeeDetailsSlice";
 
 interface EmployeeDetailsFormProps {

@@ -1,6 +1,6 @@
 import { ReduxStoreWithManager } from "@/app/providers/StoreProvider";
 import { StateSchemaKey } from "@/app/providers/StoreProvider/config/StateSchema";
-import { getAuthenticatedUser } from "@/entities/User";
+import { getUser } from "@/entities/User";
 import { Authorization } from "@/features/auth";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
 import { Flex } from "antd";
@@ -14,7 +14,7 @@ export interface LoginPageProps {
 const LoginPage = (props: LoginPageProps) => {
     const dispatch = useAppDispatch();
     const store = useStore() as ReduxStoreWithManager;
-    const auth = useSelector(getAuthenticatedUser);
+    const auth = useSelector(getUser);
 
     // Удаляем все редюсеры кроме нужных
     useEffect(() => {

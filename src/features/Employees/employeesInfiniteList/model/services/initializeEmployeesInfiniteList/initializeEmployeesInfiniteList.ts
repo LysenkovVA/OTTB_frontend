@@ -1,9 +1,9 @@
 import { ThunkConfig } from "@/app/providers/StoreProvider";
-import { getEmployeesInfiniteListIsInitialized } from "@/features/Employees/employeesInfiniteList/model/selectors/getEmployeesInfiniteListIsInitialized/getEmployeesInfiniteListIsInitialized";
 import { fetchEmployeesInfiniteList } from "@/features/Employees/employeesInfiniteList/model/services/fetchEmployeesInfiniteList/fetchEmployeesInfiniteList";
 import { ServerError } from "@/shared/error/ServerError";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
+import { getEmployeesInfiniteListIsInitialized } from "../../selectors/employeesInfiniteListSelectors";
 import { employeesInfiniteListActions } from "../../slice/employeesInfiniteListSlice";
 
 /**

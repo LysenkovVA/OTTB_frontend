@@ -20,7 +20,7 @@ export const ProfileCardView = memo((props: ProfileCardViewProps) => {
         <>
             <div className={cls.avatar}>
                 <EditableAvatar
-                    file={profileData.avatar}
+                    file={profileData?.avatar}
                     canEdit={false}
                     size={100}
                 />

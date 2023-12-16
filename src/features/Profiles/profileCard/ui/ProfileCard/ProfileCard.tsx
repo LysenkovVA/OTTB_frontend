@@ -1,3 +1,5 @@
+import { getUser } from "@/entities/User";
+import { userActions } from "@/entities/User/model/slice/userSlice";
 import { removeProfileAvatar } from "@/features/Profiles/profileCard/model/services/removeProfileAvatar/removeProfileAvatar";
 import {
     DynamicModuleLoader,
@@ -46,6 +48,7 @@ export const ProfileCard = memo((props: ProfileCardProps) => {
     const needAvatarDelete = useSelector(
         getProfileDataFormDataRemoveAvatarOnUpdate,
     );
+    const user = useSelector(getUser);
 
     useEffect(() => {
         if (!isInitialized && !isLoadingData) {
@@ -59,39 +62,47 @@ export const ProfileCard = memo((props: ProfileCardProps) => {
 
     const onSaveClick = useCallback(async () => {
         // Обновляем данные
-        await dispatch(
-            updateProfileData({
-                profileData: profileFormData,
-            }),
-        );
+        if (profileFormData) {
+            await dispatch(
+                updateProfileData({
+                    profileData: profileFormData,
+                }),
+            );
+        }
 
         // Обновляем аватар
-        if (!needAvatarDelete && formAvatar && profileFormData.id) {
+        if (!needAvatarDelete && formAvatar && profileFormData?.id) {
             const blob = await fetch(formAvatar).then((r) => r.blob());
             await dispatch(
-                updateProfileAvatar({ profileId: profileData.id!, file: blob }),
+                updateProfileAvatar({
+                    profileId: profileFormData?.id,
+                    file: blob,
+                }),
             );
         }
 
         // Удаляем аватар
         if (needAvatarDelete) {
             await dispatch(
-                removeProfileAvatar({ fileId: profileData.avatar?.id }),
+                removeProfileAvatar({ fileId: profileData?.avatar?.id }),
             );
         }
 
         // Получаем новые данные (лишний запрос!)
         await dispatch(fetchProfileData({ profileId }));
 
+        // Обновляем данные пользователя, чтобы обновился аватар
+        dispatch(userActions.setAuthData({ ...user, profile: profileData }));
+
         setReadOnly(true);
     }, [
         dispatch,
-        profileFormData,
-        needAvatarDelete,
         formAvatar,
+        needAvatarDelete,
+        profileData,
+        profileFormData,
         profileId,
-        profileData.id,
-        profileData.avatar?.id,
+        user,
     ]);
 
     const onCancelClick = useCallback(() => {

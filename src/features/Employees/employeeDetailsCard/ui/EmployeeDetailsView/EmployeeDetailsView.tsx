@@ -7,7 +7,7 @@ import { PreviewField } from "@/shared/ui/PreviewField";
 import { Col, Divider, Flex, Row, Typography } from "antd";
 import { memo } from "react";
 import { useSelector } from "react-redux";
-import { getEmployeeDetails } from "../../model/selectors/getEmployeeDetails/getEmployeeDetails";
+import { getEmployeeDetails } from "../../model/selectors/getEmployeeDetails";
 import cls from "./EmployeeDetailsView.module.scss";
 
 interface EmployeeDetailsViewProps {

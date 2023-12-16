@@ -1,1 +1,1 @@
-export type { CertificateType } from "./types/CertificateType";
+export type { CertificateType } from "@/entities/CertificateType/model/types/CertificateType";

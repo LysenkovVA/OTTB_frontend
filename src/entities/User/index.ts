@@ -1,3 +1,2 @@
-export { getAuthenticatedUser } from "./model/selectors/getAuthenticatedUser/getAuthenticatedUser";
-export { getRegisteredUserId } from "./model/selectors/getRegisteredUserId/getRegisteredUserId";
+export * from "./model/selectors/userSchemaSelectors";
 export type { User } from "./model/types/User";

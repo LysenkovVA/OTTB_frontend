@@ -1,4 +1,4 @@
-import { getAuthenticatedUser } from "@/entities/User";
+import { getUser } from "@/entities/User";
 import { RoutePath } from "@/shared/config/routeConfig/routeConfig";
 import { useSelector } from "react-redux";
 import { Navigate, useLocation } from "react-router-dom";
@@ -8,7 +8,7 @@ interface RequireAuthProps {
 }
 
 export function RequireAuth({ children }: RequireAuthProps) {
-    const auth = useSelector(getAuthenticatedUser);
+    const auth = useSelector(getUser);
     const location = useLocation();
 
     if (!auth.id) {

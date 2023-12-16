@@ -1,5 +1,10 @@
 import { StateSchema } from "@/app/providers/StoreProvider";
+import { createSelector } from "@reduxjs/toolkit";
 import { departmentsInfiniteListAdapter } from "../adapter/departmentsInfiniteListAdapter";
+
+const getDepartmentsInfiniteListSchema = (state: StateSchema) => {
+    return state.departmentsInfiniteListSchema;
+};
 
 export const getDepartmentsInfiniteList =
     departmentsInfiniteListAdapter.getSelectors<StateSchema>(
@@ -8,20 +13,44 @@ export const getDepartmentsInfiniteList =
             departmentsInfiniteListAdapter.getInitialState(),
     );
 
-export const getDepartmentsInfiniteListIsLoading = (state: StateSchema) =>
-    state?.departmentsInfiniteListSchema?.isLoading ?? false;
+export const getDepartmentsInfiniteListIsLoading = createSelector(
+    getDepartmentsInfiniteListSchema,
+    (schema) => {
+        return schema?.isLoading ?? false;
+    },
+);
 
-export const getDepartmentsInfiniteListError = (state: StateSchema) =>
-    state?.departmentsInfiniteListSchema?.error ?? "";
+export const getDepartmentsInfiniteListError = createSelector(
+    getDepartmentsInfiniteListSchema,
+    (schema) => {
+        return schema?.error ?? "";
+    },
+);
 
-export const getDepartmentsInfiniteListLimit = (state: StateSchema) =>
-    state?.departmentsInfiniteListSchema?.limit ?? 10;
+export const getDepartmentsInfiniteListLimit = createSelector(
+    getDepartmentsInfiniteListSchema,
+    (schema) => {
+        return schema?.limit ?? 10;
+    },
+);
 
-export const getDepartmentsInfiniteListOffset = (state: StateSchema) =>
-    state?.departmentsInfiniteListSchema?.offset ?? 0;
+export const getDepartmentsInfiniteListOffset = createSelector(
+    getDepartmentsInfiniteListSchema,
+    (schema) => {
+        return schema?.offset ?? 0;
+    },
+);
 
-export const getDepartmentsInfiniteListHasMore = (state: StateSchema) =>
-    state?.departmentsInfiniteListSchema?.hasMore ?? false;
+export const getDepartmentsInfiniteListHasMore = createSelector(
+    getDepartmentsInfiniteListSchema,
+    (schema) => {
+        return schema?.hasMore ?? false;
+    },
+);
 
-export const getDepartmentsInfiniteListIsInitialized = (state: StateSchema) =>
-    state?.departmentsInfiniteListSchema?._isInitialized ?? false;
+export const getDepartmentsInfiniteListIsInitialized = createSelector(
+    getDepartmentsInfiniteListSchema,
+    (schema) => {
+        return schema?._isInitialized ?? false;
+    },
+);

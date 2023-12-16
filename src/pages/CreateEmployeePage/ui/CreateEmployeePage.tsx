@@ -3,7 +3,7 @@ import { EmployeeDetailsForm } from "@/features/Employees/employeeDetailsCard";
 import {
     getEmployeeDetailsForm,
     getEmployeeDetailsFormAvatar,
-} from "@/features/Employees/employeeDetailsCard/model/selectors/getEmployeeDetails/getEmployeeDetails";
+} from "@/features/Employees/employeeDetailsCard/model/selectors/getEmployeeDetails";
 import { fetchEmployeeDetailsById } from "@/features/Employees/employeeDetailsCard/model/services/fetchEmployeeDetailsById/fetchEmployeeDetailsById";
 import { updateEmployeeAvatar } from "@/features/Employees/employeeDetailsCard/model/services/updateEmployeeAvatar/updateEmployeeAvatar";
 import { updateEmployeeDetailsById } from "@/features/Employees/employeeDetailsCard/model/services/updateEmployeeDetailsById/updateEmployeeDetailsById";

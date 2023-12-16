@@ -1,5 +1,5 @@
 import { EmployeesInfiniteList } from "@/features/Employees/employeesInfiniteList";
-import { getEmployeesInfiniteListSearchQuery } from "@/features/Employees/employeesInfiniteList/model/selectors/getEmployeesInfiniteListSearchQuery/getEmployeesInfiniteListSearchQuery";
+import { getEmployeesInfiniteListSearchQuery } from "@/features/Employees/employeesInfiniteList/model/selectors/employeesInfiniteListSelectors";
 import { fetchEmployeesInfiniteList } from "@/features/Employees/employeesInfiniteList/model/services/fetchEmployeesInfiniteList/fetchEmployeesInfiniteList";
 import { employeesInfiniteListActions } from "@/features/Employees/employeesInfiniteList/model/slice/employeesInfiniteListSlice";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";

@@ -1,5 +1,10 @@
 import { StateSchema } from "@/app/providers/StoreProvider";
+import { createSelector } from "@reduxjs/toolkit";
 import { organizationsInfiniteListAdapter } from "../adapter/organizationsInfiniteListAdapter";
+
+const getOrganizationsInfiniteListSchema = (state: StateSchema) => {
+    return state.organizationsInfiniteListSchema;
+};
 
 export const getOrganizationsInfiniteList =
     organizationsInfiniteListAdapter.getSelectors<StateSchema>(
@@ -8,20 +13,44 @@ export const getOrganizationsInfiniteList =
             organizationsInfiniteListAdapter.getInitialState(),
     );
 
-export const getOrganizationsInfiniteListIsLoading = (state: StateSchema) =>
-    state?.organizationsInfiniteListSchema?.isLoading ?? false;
+export const getOrganizationsInfiniteListIsLoading = createSelector(
+    getOrganizationsInfiniteListSchema,
+    (schema) => {
+        return schema?.isLoading ?? false;
+    },
+);
 
-export const getOrganizationsInfiniteListError = (state: StateSchema) =>
-    state?.organizationsInfiniteListSchema?.error ?? "";
+export const getOrganizationsInfiniteListError = createSelector(
+    getOrganizationsInfiniteListSchema,
+    (schema) => {
+        return schema?.error ?? "";
+    },
+);
 
-export const getOrganizationsInfiniteListLimit = (state: StateSchema) =>
-    state?.organizationsInfiniteListSchema?.limit ?? 10;
+export const getOrganizationsInfiniteListLimit = createSelector(
+    getOrganizationsInfiniteListSchema,
+    (schema) => {
+        return schema?.limit ?? 10;
+    },
+);
 
-export const getOrganizationsInfiniteListOffset = (state: StateSchema) =>
-    state?.organizationsInfiniteListSchema?.offset ?? 0;
+export const getOrganizationsInfiniteListOffset = createSelector(
+    getOrganizationsInfiniteListSchema,
+    (schema) => {
+        return schema?.offset ?? 0;
+    },
+);
 
-export const getOrganizationsInfiniteListHasMore = (state: StateSchema) =>
-    state?.organizationsInfiniteListSchema?.hasMore ?? false;
+export const getOrganizationsInfiniteListHasMore = createSelector(
+    getOrganizationsInfiniteListSchema,
+    (schema) => {
+        return schema?.hasMore ?? false;
+    },
+);
 
-export const getOrganizationsInfiniteListIsInitialized = (state: StateSchema) =>
-    state?.organizationsInfiniteListSchema?._isInitialized ?? false;
+export const getOrganizationsInfiniteListIsInitialized = createSelector(
+    getOrganizationsInfiniteListSchema,
+    (schema) => {
+        return schema?._isInitialized ?? false;
+    },
+);

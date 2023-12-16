@@ -1,4 +1,4 @@
-import { getAuthenticatedUser } from "@/entities/User";
+import { getUser } from "@/entities/User";
 import { RoutePath } from "@/shared/config/routeConfig/routeConfig";
 import { AppSideMenuItemType } from "@/widgets/AppSideMenu/model/types/AppSideMenuItemType";
 import {
@@ -12,7 +12,7 @@ import {
 import { createSelector } from "@reduxjs/toolkit";
 
 export const getAppSideMenuItems = createSelector(
-    getAuthenticatedUser,
+    getUser,
     (authenticatedUser) => {
         // Список пунктов меню
         const itemsList: AppSideMenuItemType[] = [];

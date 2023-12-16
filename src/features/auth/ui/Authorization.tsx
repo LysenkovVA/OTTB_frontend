@@ -1,4 +1,4 @@
-import { getAuthenticatedUser } from "@/entities/User";
+import { getUser } from "@/entities/User";
 import logo from "@/shared/assets/logo/crane.png";
 import { AppRoutes, RoutePath } from "@/shared/config/routeConfig/routeConfig";
 import {
@@ -12,10 +12,12 @@ import { Alert, Button, Flex, Image, Input } from "antd";
 import { memo, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getAuthEmail } from "../model/selectors/getAuthEmail/getAuthEmail";
-import { getAuthError } from "../model/selectors/getAuthError/getAuthError";
-import { getAuthIsLoading } from "../model/selectors/getAuthIsLoading/getAuthIsLoading";
-import { getAuthPassword } from "../model/selectors/getAuthPassword/getAuthPassword";
+import {
+    getAuthEmail,
+    getAuthError,
+    getAuthIsLoading,
+    getAuthPassword,
+} from "../model/selectors/authSchemaSelectors";
 import { authByEmail } from "../model/services/authByEmail/authByEmail";
 import { authActions, authReducer } from "../model/slice/authSlice";
 
@@ -29,7 +31,7 @@ export const Authorization = memo(() => {
     const password = useSelector(getAuthPassword);
     const isLoading = useSelector(getAuthIsLoading);
     const error = useSelector(getAuthError);
-    const user = useSelector(getAuthenticatedUser);
+    const user = useSelector(getUser);
 
     const navigate = useNavigate();
 

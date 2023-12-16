@@ -1,10 +1,4 @@
 import { EmployeeItem } from "@/entities/Employee";
-import { getEmployeesInfiniteList } from "@/features/Employees/employeesInfiniteList/model/selectors/getEmployeesInfiniteList/getEmployeesInfiniteList";
-import { getEmployeesInfiniteListError } from "@/features/Employees/employeesInfiniteList/model/selectors/getEmployeesInfiniteListError/getEmployeesInfiniteListError";
-import { getEmployeesInfiniteListIsInitialized } from "@/features/Employees/employeesInfiniteList/model/selectors/getEmployeesInfiniteListIsInitialized/getEmployeesInfiniteListIsInitialized";
-import { getEmployeesInfiniteListIsLoading } from "@/features/Employees/employeesInfiniteList/model/selectors/getEmployeesInfiniteListIsLoading/getEmployeesInfiniteListIsLoading";
-import { getEmployeesInfiniteListLimit } from "@/features/Employees/employeesInfiniteList/model/selectors/getEmployeesInfiniteListLimit/getEmployeesInfiniteListLimit";
-import { getEmployeesInfiniteListOffset } from "@/features/Employees/employeesInfiniteList/model/selectors/getEmployeesInfiniteListOffset/getEmployeesInfiniteListOffset";
 import { fetchEmployeesInfiniteList } from "@/features/Employees/employeesInfiniteList/model/services/fetchEmployeesInfiniteList/fetchEmployeesInfiniteList";
 import { initializeEmployeesInfiniteList } from "@/features/Employees/employeesInfiniteList/model/services/initializeEmployeesInfiniteList/initializeEmployeesInfiniteList";
 import { RoutePath } from "@/shared/config/routeConfig/routeConfig";
@@ -21,7 +15,15 @@ import { Col, Empty, Flex, FloatButton, Row } from "antd";
 import { memo, useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { getEmployeeListsHasMore } from "../model/selectors/getEmployeesHasMore/getEmployeesHasMore";
+import {
+    getEmployeeListsHasMore,
+    getEmployeesInfiniteList,
+    getEmployeesInfiniteListError,
+    getEmployeesInfiniteListIsInitialized,
+    getEmployeesInfiniteListIsLoading,
+    getEmployeesInfiniteListLimit,
+    getEmployeesInfiniteListOffset,
+} from "../model/selectors/employeesInfiniteListSelectors";
 import {
     employeesInfiniteListActions,
     employeesInfiniteListReducer,

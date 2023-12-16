@@ -1,5 +1,10 @@
 import { StateSchema } from "@/app/providers/StoreProvider";
+import { createSelector } from "@reduxjs/toolkit";
 import { constructionObjectsInfiniteListAdapter } from "../adapter/constructionObjectsInfiniteListAdapter";
+
+const getConstructionObjectsInfiniteListSchema = (state: StateSchema) => {
+    return state.constructionObjectsInfiniteListSchema;
+};
 
 export const getConstructionObjectsInfiniteList =
     constructionObjectsInfiniteListAdapter.getSelectors<StateSchema>(
@@ -8,22 +13,44 @@ export const getConstructionObjectsInfiniteList =
             constructionObjectsInfiniteListAdapter.getInitialState(),
     );
 
-export const getConstructionObjectsInfiniteListIsLoading = (
-    state: StateSchema,
-) => state?.constructionObjectsInfiniteListSchema?.isLoading ?? false;
+export const getConstructionObjectsInfiniteListIsLoading = createSelector(
+    getConstructionObjectsInfiniteListSchema,
+    (schema) => {
+        return schema?.isLoading ?? false;
+    },
+);
 
-export const getConstructionObjectsInfiniteListError = (state: StateSchema) =>
-    state?.constructionObjectsInfiniteListSchema?.error ?? "";
+export const getConstructionObjectsInfiniteListError = createSelector(
+    getConstructionObjectsInfiniteListSchema,
+    (schema) => {
+        return schema?.error ?? "";
+    },
+);
 
-export const getConstructionObjectsInfiniteListLimit = (state: StateSchema) =>
-    state?.constructionObjectsInfiniteListSchema?.limit ?? 10;
+export const getConstructionObjectsInfiniteListLimit = createSelector(
+    getConstructionObjectsInfiniteListSchema,
+    (schema) => {
+        return schema?.limit ?? 10;
+    },
+);
 
-export const getConstructionObjectsInfiniteListOffset = (state: StateSchema) =>
-    state?.constructionObjectsInfiniteListSchema?.offset ?? 0;
+export const getConstructionObjectsInfiniteListOffset = createSelector(
+    getConstructionObjectsInfiniteListSchema,
+    (schema) => {
+        return schema?.offset ?? 0;
+    },
+);
 
-export const getConstructionObjectsInfiniteListHasMore = (state: StateSchema) =>
-    state?.constructionObjectsInfiniteListSchema?.hasMore ?? false;
+export const getConstructionObjectsInfiniteListHasMore = createSelector(
+    getConstructionObjectsInfiniteListSchema,
+    (schema) => {
+        return schema?.hasMore ?? false;
+    },
+);
 
-export const getConstructionObjectsInfiniteListIsInitialized = (
-    state: StateSchema,
-) => state?.constructionObjectsInfiniteListSchema?._isInitialized ?? false;
+export const getConstructionObjectsInfiniteListIsInitialized = createSelector(
+    getConstructionObjectsInfiniteListSchema,
+    (schema) => {
+        return schema?._isInitialized ?? false;
+    },
+);

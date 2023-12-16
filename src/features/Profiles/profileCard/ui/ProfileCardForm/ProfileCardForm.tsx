@@ -92,7 +92,7 @@ export const ProfileCardForm = memo((props: ProfileCardFormProps) => {
         >
             <Form.Item className={cls.avatar}>
                 <EditableAvatar
-                    file={profileFormData.avatar}
+                    file={profileFormData?.avatar}
                     onChangeAvatar={onChangeAvatar}
                     onDeleteAvatar={onDeleteAvatar}
                     style={{ width: 150, height: 150 }}

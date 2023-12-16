@@ -1,16 +1,41 @@
 import { StateSchema } from "@/app/providers/StoreProvider";
+import { createSelector } from "@reduxjs/toolkit";
 
-export const getOrganizationDetailsIsLoading = (state: StateSchema) =>
-    state.organizationDetailsSchema?.isLoading ?? false;
+const getOrganizationDetailsSchema = (state: StateSchema) => {
+    return state.organizationDetailsSchema;
+};
 
-export const getOrganizationDetailsError = (state: StateSchema) =>
-    state.organizationDetailsSchema?.error ?? "";
+export const getOrganizationDetailsIsLoading = createSelector(
+    getOrganizationDetailsSchema,
+    (schema) => {
+        return schema?.isLoading ?? false;
+    },
+);
 
-export const getOrganizationDetails = (state: StateSchema) =>
-    state.organizationDetailsSchema?.organizationDetails;
+export const getOrganizationDetailsError = createSelector(
+    getOrganizationDetailsSchema,
+    (schema) => {
+        return schema?.error ?? "";
+    },
+);
 
-export const getOrganizationDetailsForm = (state: StateSchema) =>
-    state.organizationDetailsSchema?.organizationDetailsForm;
+export const getOrganizationDetails = createSelector(
+    getOrganizationDetailsSchema,
+    (schema) => {
+        return schema?.organizationDetails ?? undefined;
+    },
+);
 
-export const getOrganizationDetailsIsInitialized = (state: StateSchema) =>
-    state.organizationDetailsSchema?._isInitialized ?? false;
+export const getOrganizationDetailsForm = createSelector(
+    getOrganizationDetailsSchema,
+    (schema) => {
+        return schema?.organizationDetailsForm ?? undefined;
+    },
+);
+
+export const getOrganizationDetailsIsInitialized = createSelector(
+    getOrganizationDetailsSchema,
+    (schema) => {
+        return schema?._isInitialized ?? false;
+    },
+);

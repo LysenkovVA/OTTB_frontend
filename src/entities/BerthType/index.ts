@@ -1,1 +1,1 @@
-export type { BerthType } from "./types/BerthType";
+export type { BerthType } from "@/entities/BerthType/model/types/BerthType";

@@ -19,7 +19,7 @@ import {
     getEmployeeDetailsIsDataLoading,
     getEmployeeDetailsIsInitialized,
     getEmployeeDetailsRemoveAvatarOnUpdate,
-} from "../../model/selectors/getEmployeeDetails/getEmployeeDetails";
+} from "../../model/selectors/getEmployeeDetails";
 import { fetchEmployeeDetailsById } from "../../model/services/fetchEmployeeDetailsById/fetchEmployeeDetailsById";
 import { updateEmployeeAvatar } from "../../model/services/updateEmployeeAvatar/updateEmployeeAvatar";
 import { updateEmployeeDetailsById } from "../../model/services/updateEmployeeDetailsById/updateEmployeeDetailsById";

@@ -1,4 +1,4 @@
-import { getAuthenticatedUser } from "@/entities/User";
+import { getUser } from "@/entities/User";
 import { authLogout } from "@/features/logout/model/services/logout/authLogout";
 import { logoutReducer } from "@/features/logout/model/slice/logoutSlice";
 import { RoutePath } from "@/shared/config/routeConfig/routeConfig";
@@ -31,7 +31,7 @@ export const HeaderAvatar = memo((props: HeaderAvatarProps) => {
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const user = useSelector(getAuthenticatedUser);
+    const user = useSelector(getUser);
 
     const showMenu = useCallback(
         (open: boolean) => {

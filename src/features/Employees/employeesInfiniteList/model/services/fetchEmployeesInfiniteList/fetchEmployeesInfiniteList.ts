@@ -1,13 +1,15 @@
 import { ThunkConfig } from "@/app/providers/StoreProvider";
 import { Employee } from "@/entities/Employee";
-import { getEmployeesInfiniteListLimit } from "@/features/Employees/employeesInfiniteList/model/selectors/getEmployeesInfiniteListLimit/getEmployeesInfiniteListLimit";
-import { getEmployeesInfiniteListOffset } from "@/features/Employees/employeesInfiniteList/model/selectors/getEmployeesInfiniteListOffset/getEmployeesInfiniteListOffset";
-import { getEmployeesInfiniteListSearchQuery } from "@/features/Employees/employeesInfiniteList/model/selectors/getEmployeesInfiniteListSearchQuery/getEmployeesInfiniteListSearchQuery";
 import { ServerError } from "@/shared/error/ServerError";
 import { addQueryParams } from "@/shared/lib/url/addQueryParams";
 import { FetchRowsResult } from "@/shared/types/FetchRowsResult";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
+import {
+    getEmployeesInfiniteListLimit,
+    getEmployeesInfiniteListOffset,
+    getEmployeesInfiniteListSearchQuery,
+} from "../../selectors/employeesInfiniteListSelectors";
 
 export interface FetchEmployeesInfiniteListProps {
     replaceData?: boolean; // Для использования в action.meta.arg

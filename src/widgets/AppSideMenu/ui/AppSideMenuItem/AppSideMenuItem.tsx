@@ -1,4 +1,4 @@
-import { getAuthenticatedUser } from "@/entities/User";
+import { getUser } from "@/entities/User";
 import { classNames } from "@/shared/lib/classNames/classNames";
 import { AppSideMenuItemType } from "@/widgets/AppSideMenu/model/types/AppSideMenuItemType";
 import { Button } from "antd";
@@ -14,7 +14,7 @@ interface AppSideMenuItemProps {
 export const AppSideMenuItem = memo((props: AppSideMenuItemProps) => {
     const { item } = props;
 
-    const user = useSelector(getAuthenticatedUser);
+    const user = useSelector(getUser);
 
     const navigate = useNavigate();
 

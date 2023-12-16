@@ -1,5 +1,10 @@
 import { StateSchema } from "@/app/providers/StoreProvider";
+import { createSelector } from "@reduxjs/toolkit";
 import { certificatesInfiniteListAdapter } from "../adapter/certificatesInfiniteListAdapter";
+
+const getCertificatesInfiniteListSchema = (state: StateSchema) => {
+    return state.certificatesInfiniteListSchema;
+};
 
 export const getCertificatesInfiniteList =
     certificatesInfiniteListAdapter.getSelectors<StateSchema>(
@@ -8,20 +13,44 @@ export const getCertificatesInfiniteList =
             certificatesInfiniteListAdapter.getInitialState(),
     );
 
-export const getCertificatesInfiniteListIsLoading = (state: StateSchema) =>
-    state?.certificatesInfiniteListSchema?.isLoading ?? false;
+export const getCertificatesInfiniteListIsLoading = createSelector(
+    getCertificatesInfiniteListSchema,
+    (schema) => {
+        return schema?.isLoading ?? false;
+    },
+);
 
-export const getCertificatesInfiniteListError = (state: StateSchema) =>
-    state?.certificatesInfiniteListSchema?.error ?? "";
+export const getCertificatesInfiniteListError = createSelector(
+    getCertificatesInfiniteListSchema,
+    (schema) => {
+        return schema?.error ?? "";
+    },
+);
 
-export const getCertificatesInfiniteListLimit = (state: StateSchema) =>
-    state?.certificatesInfiniteListSchema?.limit ?? 10;
+export const getCertificatesInfiniteListLimit = createSelector(
+    getCertificatesInfiniteListSchema,
+    (schema) => {
+        return schema?.limit ?? 10;
+    },
+);
 
-export const getCertificatesInfiniteListOffset = (state: StateSchema) =>
-    state?.certificatesInfiniteListSchema?.offset ?? 0;
+export const getCertificatesInfiniteListOffset = createSelector(
+    getCertificatesInfiniteListSchema,
+    (schema) => {
+        return schema?.offset ?? 0;
+    },
+);
 
-export const getCertificatesInfiniteListHasMore = (state: StateSchema) =>
-    state?.certificatesInfiniteListSchema?.hasMore ?? false;
+export const getCertificatesInfiniteListHasMore = createSelector(
+    getCertificatesInfiniteListSchema,
+    (schema) => {
+        return schema?.hasMore ?? false;
+    },
+);
 
-export const getCertificatesInfiniteListIsInitialized = (state: StateSchema) =>
-    state?.certificatesInfiniteListSchema?._isInitialized ?? false;
+export const getCertificatesInfiniteListIsInitialized = createSelector(
+    getCertificatesInfiniteListSchema,
+    (schema) => {
+        return schema?._isInitialized ?? false;
+    },
+);
