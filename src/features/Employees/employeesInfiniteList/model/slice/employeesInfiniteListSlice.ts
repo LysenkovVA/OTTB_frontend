@@ -33,15 +33,11 @@ export const employeesInfiniteListSlice = createSlice({
             state.searchQuery = action.payload;
             state.offset = 0;
         },
-        updateEmployee: (state, action: PayloadAction<Employee>) => {
-            if (action.payload) {
-                employeesInfiniteListAdapter.setOne(state, action.payload);
-            }
+        addOne: (state, action: PayloadAction<Employee>) => {
+            employeesInfiniteListAdapter.addOne(state, action.payload);
         },
-        addEmployee: (state, action: PayloadAction<Employee>) => {
-            if (action.payload) {
-                employeesInfiniteListAdapter.addOne(state, action.payload);
-            }
+        setOne: (state, action: PayloadAction<Employee>) => {
+            employeesInfiniteListAdapter.setOne(state, action.payload);
         },
         removeOne: (state, action: PayloadAction<string>) => {
             employeesInfiniteListAdapter.removeOne(state, action.payload);

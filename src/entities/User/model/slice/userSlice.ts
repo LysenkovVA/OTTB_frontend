@@ -6,6 +6,7 @@ import { UserSchema } from "../types/UserSchema";
 
 const initialState: UserSchema = {
     authenticatedUser: {},
+    activeWorkspaceId: "",
     registeredUserId: undefined,
     isLoading: false,
     error: "",
@@ -18,6 +19,7 @@ export const userSlice = createSlice({
     reducers: {
         setAuthData: (state, action: PayloadAction<User>) => {
             state.authenticatedUser = action.payload;
+            state.activeWorkspaceId = action.payload.workspaces?.[0].id;
         },
         logout: (state) => {
             state.authenticatedUser = undefined;
@@ -39,6 +41,7 @@ export const userSlice = createSlice({
                     state.isLoading = false;
                     state.error = undefined;
                     state.authenticatedUser = action.payload;
+                    state.activeWorkspaceId = action.payload.workspaces?.[0].id;
                     state._isInitialized = true;
                 },
             )

@@ -1,17 +1,21 @@
-import { Employee } from "@/entities/Employee";
+import { deleteEmployee } from "@/features/Employees/employeeDetailsCard/model/services/deleteEmployee/deleteEmployee";
 import { removeEmployeeAvatar } from "@/features/Employees/employeeDetailsCard/model/services/removeEmployeeAvatar/removeEmployeeAvatar";
+import { updateEmployee } from "@/features/Employees/employeeDetailsCard/model/services/updateEmployee/updateEmployee";
+import { updateEmployeeAvatar } from "@/features/Employees/employeeDetailsCard/model/services/updateEmployeeAvatar/updateEmployeeAvatar";
+import { employeesInfiniteListActions } from "@/features/Employees/employeesInfiniteList/model/slice/employeesInfiniteListSlice";
 import { classNames } from "@/shared/lib/classNames/classNames";
 import {
     DynamicModuleLoader,
     ReducersList,
 } from "@/shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
+import { useInitialEffect } from "@/shared/lib/hooks/useInitialEffect/useInitialEffect";
 import { InfiniteScrollPage } from "@/widgets/InfiniteScrollPage";
-import { Button, Card } from "antd";
-import { memo, useCallback, useEffect, useState } from "react";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { Button, Card, Flex, Modal, Typography } from "antd";
+import { memo, useCallback, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import { employeesInfiniteListActions } from "../../../employeesInfiniteList/model/slice/employeesInfiniteListSlice";
+import { useNavigate, useParams } from "react-router-dom";
 import {
     getEmployeeDetails,
     getEmployeeDetailsForm,
@@ -21,8 +25,6 @@ import {
     getEmployeeDetailsRemoveAvatarOnUpdate,
 } from "../../model/selectors/getEmployeeDetails";
 import { fetchEmployeeDetailsById } from "../../model/services/fetchEmployeeDetailsById/fetchEmployeeDetailsById";
-import { updateEmployeeAvatar } from "../../model/services/updateEmployeeAvatar/updateEmployeeAvatar";
-import { updateEmployeeDetailsById } from "../../model/services/updateEmployeeDetailsById/updateEmployeeDetailsById";
 import {
     employeeDetailsActions,
     employeeDetailsReducer,
@@ -42,103 +44,207 @@ const reducers: ReducersList = {
 export const EmployeeDetailsCard = memo((props: EmployeeDetailsCardProps) => {
     const { className } = props;
 
+    const [modalOpen, setModalOpen] = useState(false);
+    const navigate = useNavigate();
+
+    const [isEditMode, setIsEditMode] = useState(false);
+
     const { id: employeeId } = useParams<{ id: string }>();
 
-    // Можно редактировать
-    const [canEdit, setCanEdit] = useState(true);
-
     const dispatch = useAppDispatch();
-    const isLoadingData = useSelector(getEmployeeDetailsIsDataLoading);
+    const isLoading = useSelector(getEmployeeDetailsIsDataLoading);
+    const isInitialized = useSelector(getEmployeeDetailsIsInitialized);
     const employeeDetails = useSelector(getEmployeeDetails);
     const employeeDetailsForm = useSelector(getEmployeeDetailsForm);
     const formAvatar = useSelector(getEmployeeDetailsFormAvatar);
-    const isInitialized = useSelector(getEmployeeDetailsIsInitialized);
     const needAvatarDelete = useSelector(
         getEmployeeDetailsRemoveAvatarOnUpdate,
     );
 
-    useEffect(() => {
-        if (!isInitialized && employeeId && !isLoadingData) {
+    useInitialEffect(() => {
+        if (!isInitialized && !isLoading && employeeId) {
             dispatch(fetchEmployeeDetailsById({ id: employeeId }));
         }
-    }, [dispatch, employeeId, isInitialized, isLoadingData]);
+    });
 
-    const onEditClick = useCallback(() => {
-        setCanEdit(false);
-    }, []);
+    const onSave = useCallback(async () => {
+        if (employeeDetailsForm) {
+            try {
+                await dispatch(
+                    updateEmployee({
+                        employee: employeeDetailsForm,
+                    }),
+                );
 
-    const onSaveClick = useCallback(async () => {
-        await dispatch(
-            updateEmployeeDetailsById({ employee: employeeDetailsForm! }),
-        );
-
-        // Обновляем аватар
-        if (!needAvatarDelete && formAvatar && employeeDetails?.id) {
-            const blob = await fetch(formAvatar).then((r) => r.blob());
-            await dispatch(
-                updateEmployeeAvatar({
-                    employeeId: employeeDetails.id,
-                    file: blob,
-                }),
-            );
-        }
-
-        // Удаляем аватар
-        if (needAvatarDelete) {
-            await dispatch(
-                removeEmployeeAvatar({ fileId: employeeDetails?.avatar?.id }),
-            );
-        }
-
-        // Получаем новые данные
-        if (employeeDetails) {
-            await dispatch(
-                fetchEmployeeDetailsById({ id: employeeDetails.id! }),
-            ).then((r) => {
-                // Обновляем запись в списке сотрудников
-                const employee = r.payload as Employee;
-
-                if (employee) {
-                    dispatch(
-                        employeesInfiniteListActions.updateEmployee(employee),
+                // Обновляем аватар
+                if (!needAvatarDelete && formAvatar && employeeDetails?.id) {
+                    const blob = await fetch(formAvatar).then((r) => r.blob());
+                    await dispatch(
+                        updateEmployeeAvatar({
+                            employeeId: employeeDetails.id,
+                            file: blob,
+                        }),
                     );
                 }
-            });
-        }
 
-        setCanEdit(true);
+                // Удаляем аватар
+                if (needAvatarDelete) {
+                    await dispatch(
+                        removeEmployeeAvatar({
+                            fileId: employeeDetails?.avatar?.id,
+                        }),
+                    );
+                }
+
+                setIsEditMode(false);
+                // Возврат к списку
+                navigate(-1);
+            } catch {}
+        }
     }, [
         dispatch,
-        employeeDetails,
+        employeeDetails?.avatar?.id,
+        employeeDetails?.id,
         employeeDetailsForm,
         formAvatar,
+        navigate,
         needAvatarDelete,
     ]);
 
-    const onCancelClick = useCallback(() => {
-        // Возвращаем обратно значения сотрудника
-        dispatch(
-            employeeDetailsActions.setEmployeeDetailsFormData({
-                ...employeeDetails,
-            }),
-        );
-        // Возвращаем обратно значение аватара
+    const onCancel = useCallback(() => {
+        if (employeeDetails) {
+            dispatch(employeeDetailsActions.setFormData(employeeDetails));
+        }
+
         dispatch(employeeDetailsActions.setEmployeeDetailsFormDataAvatar(""));
         dispatch(employeeDetailsActions.setRemoveAvatarOnUpdate(false));
-        setCanEdit(true);
+
+        setIsEditMode(false);
     }, [dispatch, employeeDetails]);
+
+    const onDelete = useCallback(
+        async (id: string | undefined) => {
+            if (id) {
+                try {
+                    await dispatch(deleteEmployee({ employeeId: id }));
+                    dispatch(employeesInfiniteListActions.removeOne(id));
+                    navigate(-1);
+                } catch {}
+            }
+        },
+        [dispatch, navigate],
+    );
 
     const extraContent = (
         <>
-            {canEdit ? (
-                <Button type={"dashed"} onClick={onEditClick}>
-                    Править
-                </Button>
+            <Modal
+                title="Подтвердите удаление"
+                centered
+                open={modalOpen}
+                onOk={() => {
+                    if (employeeDetails) {
+                        setModalOpen(false);
+                        onDelete?.(employeeDetails.id);
+                    }
+                }}
+                onCancel={() => setModalOpen(false)}
+                okButtonProps={{ danger: true }}
+                okText={"Удалить"}
+                cancelText={"Отмена"}
+            >
+                <Flex gap={8}>
+                    <DeleteOutlined style={{ color: "red" }} />
+                    <Typography.Text>{`Удалить '${employeeDetails?.surname} ${employeeDetails?.name}'?`}</Typography.Text>
+                </Flex>
+            </Modal>
+            {!isEditMode ? (
+                <Flex gap={8}>
+                    <Button
+                        icon={<EditOutlined />}
+                        onClick={() => setIsEditMode(true)}
+                    />
+                    <Button
+                        danger
+                        icon={<DeleteOutlined />}
+                        onClick={() => setModalOpen(true)}
+                    />
+                </Flex>
             ) : null}
         </>
     );
 
-    const onSubmitForm = useCallback(() => {}, []);
+    // const onEditClick = useCallback(() => {
+    //     setCanEdit(false);
+    // }, []);
+    //
+    // const onSaveClick = useCallback(async () => {
+    //     await dispatch(updateEmployee({ employee: employeeDetailsForm! }));
+    //
+    //     // Обновляем аватар
+    //     if (!needAvatarDelete && formAvatar && employeeDetails?.id) {
+    //         const blob = await fetch(formAvatar).then((r) => r.blob());
+    //         await dispatch(
+    //             updateEmployeeAvatar({
+    //                 employeeId: employeeDetails.id,
+    //                 file: blob,
+    //             }),
+    //         );
+    //     }
+    //
+    //     // Удаляем аватар
+    //     if (needAvatarDelete) {
+    //         await dispatch(
+    //             removeEmployeeAvatar({ fileId: employeeDetails?.avatar?.id }),
+    //         );
+    //     }
+    //
+    //     // Получаем новые данные
+    //     if (employeeDetails) {
+    //         await dispatch(
+    //             fetchEmployeeDetailsById({ id: employeeDetails.id! }),
+    //         ).then((r) => {
+    //             // Обновляем запись в списке сотрудников
+    //             const employee = r.payload as Employee;
+    //
+    //             if (employee) {
+    //                 dispatch(employeesInfiniteListActions.setOne(employee));
+    //             }
+    //         });
+    //     }
+    //
+    //     setCanEdit(true);
+    // }, [
+    //     dispatch,
+    //     employeeDetails,
+    //     employeeDetailsForm,
+    //     formAvatar,
+    //     needAvatarDelete,
+    // ]);
+    //
+    // const onCancelClick = useCallback(() => {
+    //     // Возвращаем обратно значения сотрудника
+    //     dispatch(
+    //         employeeDetailsActions.setEmployeeDetailsFormData({
+    //             ...employeeDetails,
+    //         }),
+    //     );
+    //     // Возвращаем обратно значение аватара
+    //     dispatch(employeeDetailsActions.setEmployeeDetailsFormDataAvatar(""));
+    //     dispatch(employeeDetailsActions.setRemoveAvatarOnUpdate(false));
+    //     setCanEdit(true);
+    // }, [dispatch, employeeDetails]);
+    //
+    // const extraContent = (
+    //     <>
+    //         {canEdit ? (
+    //             <Button type={"dashed"} onClick={onEditClick}>
+    //                 Править
+    //             </Button>
+    //         ) : null}
+    //     </>
+    // );
+    //
+    // const onSubmitForm = useCallback(() => {}, []);
 
     return (
         <DynamicModuleLoader reducers={reducers}>
@@ -149,11 +255,12 @@ export const EmployeeDetailsCard = memo((props: EmployeeDetailsCardProps) => {
                     className={classNames(cls.EmployeeDetailsCard, {}, [
                         className,
                     ])}
+                    size={"small"}
                 >
-                    {!canEdit ? (
+                    {isEditMode ? (
                         <EmployeeDetailsForm
-                            onSave={onSaveClick}
-                            onCancel={onCancelClick}
+                            onSave={onSave}
+                            onCancel={onCancel}
                         />
                     ) : (
                         <EmployeeDetailsView />

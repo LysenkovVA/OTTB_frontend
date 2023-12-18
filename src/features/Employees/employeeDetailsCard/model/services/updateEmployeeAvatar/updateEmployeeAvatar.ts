@@ -20,9 +20,10 @@ export const updateEmployeeAvatar = createAsyncThunk<
     try {
         const route = getEmployeeAvatarUploadRoute(employeeId);
 
-        return await dispatch(uploadFile({ route, file })).then(
-            (result) => result.payload,
-        );
+        // return await dispatch(uploadFile({ route, file })).then(
+        //     (result) => result.payload,
+        // );
+        return await dispatch(uploadFile({ route, file })).unwrap();
     } catch (e) {
         if (e instanceof AxiosError) {
             const serverError = e?.response?.data as ServerError;

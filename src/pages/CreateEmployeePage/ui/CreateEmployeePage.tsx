@@ -1,12 +1,12 @@
-import { Employee } from "@/entities/Employee";
+import { getUserActiveWorkspaceId } from "@/entities/User";
 import { EmployeeDetailsForm } from "@/features/Employees/employeeDetailsCard";
 import {
     getEmployeeDetailsForm,
     getEmployeeDetailsFormAvatar,
 } from "@/features/Employees/employeeDetailsCard/model/selectors/getEmployeeDetails";
+import { createEmployee } from "@/features/Employees/employeeDetailsCard/model/services/createEmployee/createEmployee";
 import { fetchEmployeeDetailsById } from "@/features/Employees/employeeDetailsCard/model/services/fetchEmployeeDetailsById/fetchEmployeeDetailsById";
 import { updateEmployeeAvatar } from "@/features/Employees/employeeDetailsCard/model/services/updateEmployeeAvatar/updateEmployeeAvatar";
-import { updateEmployeeDetailsById } from "@/features/Employees/employeeDetailsCard/model/services/updateEmployeeDetailsById/updateEmployeeDetailsById";
 import { employeeDetailsReducer } from "@/features/Employees/employeeDetailsCard/model/slice/employeeDetailsSlice";
 import { employeesInfiniteListActions } from "@/features/Employees/employeesInfiniteList/model/slice/employeesInfiniteListSlice";
 import {
@@ -31,64 +31,60 @@ const CreateEmployeePage = (props: CreateEmployeePageProps) => {
     const { className } = props;
 
     const navigate = useNavigate();
-
     const dispatch = useAppDispatch();
-    // const isLoadingData = useSelector(getEmployeeDetailsIsDataLoading);
-    // const employeeDetails = useSelector(getEmployeeDetails);
     const employeeDetailsForm = useSelector(getEmployeeDetailsForm);
     const frmAvatar = useSelector(getEmployeeDetailsFormAvatar);
-    // const isInitialized = useSelector(getEmployeeDetailsIsInitialized);
-    // const needAvatarDelete = useSelector(
-    //     getEmployeeDetailsRemoveAvatarOnUpdate,
-    // );
+    const activeWorkspaceId = useSelector(getUserActiveWorkspaceId);
 
     const onSave = useCallback(async () => {
-        // Создаем сотрудника
-        await dispatch(
-            updateEmployeeDetailsById({ employee: employeeDetailsForm! }),
-        ).then(async (response) => {
-            // Получаем сотрудника из запроса
-            const employee = response.payload as Employee;
-
-            // Обновляем аватар
-            if (frmAvatar && employee?.id) {
-                const blob = await fetch(frmAvatar).then((r) => r.blob());
-                await dispatch(
-                    updateEmployeeAvatar({
-                        employeeId: employee.id,
-                        file: blob,
+        if (employeeDetailsForm) {
+            try {
+                // Создаем сотрудника
+                const employee = await dispatch(
+                    createEmployee({
+                        employee: employeeDetailsForm,
+                        workspaceId: activeWorkspaceId,
                     }),
-                );
-            }
+                ).unwrap();
 
-            // Обновляем список сотрудников
-            await dispatch(fetchEmployeeDetailsById({ id: employee.id! })).then(
-                (r) => {
-                    // Обновляем запись в списке сотрудников
-                    const employee = r.payload as Employee;
-
-                    if (employee) {
-                        dispatch(
-                            employeesInfiniteListActions.updateEmployee(
-                                employee,
-                            ),
+                // Если сотрудник создан
+                if (employee?.id) {
+                    // Обновляем аватар
+                    if (frmAvatar && employee.id) {
+                        const blob = await fetch(frmAvatar).then((r) =>
+                            r.blob(),
                         );
-
-                        navigate(-1);
+                        await dispatch(
+                            updateEmployeeAvatar({
+                                employeeId: employee.id,
+                                file: blob,
+                            }),
+                        );
                     }
-                },
-            );
-        });
-    }, [dispatch, employeeDetailsForm, frmAvatar, navigate]);
 
-    const onCancel = useCallback(() => {
-        navigate(-1);
-    }, [navigate]);
+                    // Получаем свежие данные сотрудника из БД
+                    const updatedEmployee = await dispatch(
+                        fetchEmployeeDetailsById({ id: employee.id }),
+                    ).unwrap();
+
+                    // Добавляем в список сотрудников
+                    dispatch(
+                        employeesInfiniteListActions.addOne(updatedEmployee),
+                    );
+
+                    navigate(-1);
+                }
+            } catch {}
+        }
+    }, [activeWorkspaceId, dispatch, employeeDetailsForm, frmAvatar, navigate]);
 
     return (
         <DynamicModuleLoader reducers={reducers}>
             <Card title={"Новый сотрудник"}>
-                <EmployeeDetailsForm onSave={onSave} onCancel={onCancel} />
+                <EmployeeDetailsForm
+                    onSave={onSave}
+                    onCancel={() => navigate(-1)}
+                />
             </Card>
         </DynamicModuleLoader>
     );

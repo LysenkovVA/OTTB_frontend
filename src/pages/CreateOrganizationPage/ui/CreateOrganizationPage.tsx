@@ -1,7 +1,9 @@
+import { getUserActiveWorkspaceId } from "@/entities/User";
 import { getOrganizationDetailsForm } from "@/features/Organizations/organizationDetailsCard/model/selectors/organizationDetailsSelectors";
 import { createOrganization } from "@/features/Organizations/organizationDetailsCard/model/services/createOrganization/createOrganization";
 import { organizationDetailsReducer } from "@/features/Organizations/organizationDetailsCard/model/slice/organizationDetailsSlice";
 import { OrganizationDetailsForm } from "@/features/Organizations/organizationDetailsCard/ui/OrganizationDetailsForm/OrganizationDetailsForm";
+import { organizationsInfiniteListActions } from "@/features/Organizations/organizationsInfiniteList/model/slice/organizationsInfiniteListSlice";
 import { classNames } from "@/shared/lib/classNames/classNames";
 import {
     DynamicModuleLoader,
@@ -27,21 +29,26 @@ const CreateOrganizationPage = (props: CreateOrganizationPageProps) => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const organizationDetailsForm = useSelector(getOrganizationDetailsForm);
+    const activeWorkspaceId = useSelector(getUserActiveWorkspaceId);
 
     const onSave = useCallback(async () => {
         if (organizationDetailsForm) {
             // Создаем новую организацию
             try {
-                await dispatch(
+                const organization = await dispatch(
                     createOrganization({
                         organization: organizationDetailsForm,
+                        workspaceId: activeWorkspaceId,
                     }),
-                );
+                ).unwrap();
+
+                // Добавляем в список организаций
+                dispatch(organizationsInfiniteListActions.addOne(organization));
 
                 navigate(-1);
             } catch {}
         }
-    }, [dispatch, navigate, organizationDetailsForm]);
+    }, [activeWorkspaceId, dispatch, navigate, organizationDetailsForm]);
 
     return (
         <DynamicModuleLoader reducers={reducers}>

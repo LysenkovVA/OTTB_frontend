@@ -3,11 +3,16 @@ import emailFieldSvg from "@/shared/assets/svg/emailField.svg";
 import phoneFieldSvg from "@/shared/assets/svg/phoneField.svg";
 import { classNames } from "@/shared/lib/classNames/classNames";
 import { EditableAvatar } from "@/shared/ui/EditableAvatar/EditableAvatar";
+import { ErrorInfo } from "@/shared/ui/ErrorInfo/ErrorInfo";
 import { PreviewField } from "@/shared/ui/PreviewField";
-import { Col, Divider, Flex, Row, Typography } from "antd";
+import { Col, Divider, Flex, Row, Skeleton, Typography } from "antd";
 import { memo } from "react";
 import { useSelector } from "react-redux";
-import { getEmployeeDetails } from "../../model/selectors/getEmployeeDetails";
+import {
+    getEmployeeDetails,
+    getEmployeeDetailsDataError,
+    getEmployeeDetailsIsDataLoading,
+} from "../../model/selectors/getEmployeeDetails";
 import cls from "./EmployeeDetailsView.module.scss";
 
 interface EmployeeDetailsViewProps {
@@ -17,7 +22,17 @@ interface EmployeeDetailsViewProps {
 export const EmployeeDetailsView = memo((props: EmployeeDetailsViewProps) => {
     const { className } = props;
 
+    const isLoading = useSelector(getEmployeeDetailsIsDataLoading);
+    const error = useSelector(getEmployeeDetailsDataError);
     const employeeDetails = useSelector(getEmployeeDetails);
+
+    if (isLoading) {
+        return <Skeleton active />;
+    }
+
+    if (error) {
+        return <ErrorInfo status={"error"} title={error} subtitle={""} />;
+    }
 
     const employeeDetailsContent = (
         <>

@@ -132,7 +132,7 @@ export const EmployeesInfiniteList = memo(
                         !error &&
                         employees &&
                         employees?.length === 0 && (
-                            <Empty description={"Проверок не найдено"} />
+                            <Empty description={"Сотрудников не найдено"} />
                         )}
                 </InfiniteScrollPage>
                 <FloatButton

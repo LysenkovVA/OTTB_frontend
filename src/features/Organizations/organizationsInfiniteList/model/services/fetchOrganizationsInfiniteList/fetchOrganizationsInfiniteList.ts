@@ -1,6 +1,7 @@
 import { ThunkConfig } from "@/app/providers/StoreProvider";
 import { Organization } from "@/entities/Organization";
 
+import { getUserActiveWorkspaceId } from "@/entities/User";
 import { ServerError } from "@/shared/error/ServerError";
 import { FetchRowsResult } from "@/shared/types/FetchRowsResult";
 import { createAsyncThunk } from "@reduxjs/toolkit";
@@ -22,8 +23,13 @@ export const fetchOrganizationsInfiniteList = createAsyncThunk<
     const { extra, rejectWithValue, getState } = thunkApi;
 
     // Получаем параметры из стейта
+    const workspaceId = getUserActiveWorkspaceId(getState());
     const limit = getOrganizationsInfiniteListLimit(getState());
     const offset = getOrganizationsInfiniteListOffset(getState());
+
+    if (!workspaceId) {
+        return rejectWithValue("Рабочее пространство неизвестно!");
+    }
 
     try {
         // Отправляем запрос
@@ -31,6 +37,7 @@ export const fetchOrganizationsInfiniteList = createAsyncThunk<
             "/organizations",
             {
                 params: {
+                    workspaceId,
                     limit,
                     offset,
                 },

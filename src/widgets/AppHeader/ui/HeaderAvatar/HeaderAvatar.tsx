@@ -9,8 +9,9 @@ import {
 } from "@/shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
 import { EditableAvatar } from "@/shared/ui/EditableAvatar/EditableAvatar";
-import { Flex, Popover, Space, Typography } from "antd";
-import { memo, useCallback, useState } from "react";
+import { LogoutOutlined } from "@ant-design/icons";
+import { Button, Flex, Typography } from "antd";
+import { memo, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import cls from "./HeaderAvatar.module.scss";
@@ -25,23 +26,11 @@ const reducers: ReducersList = {
 };
 
 export const HeaderAvatar = memo((props: HeaderAvatarProps) => {
-    console.log("Header avatar rendering...");
     const { className } = props;
-
-    const [isOpen, setIsOpen] = useState(false);
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const user = useSelector(getUser);
-
-    console.log("USER: " + JSON.stringify(user));
-
-    const showMenu = useCallback(
-        (open: boolean) => {
-            setIsOpen(open);
-        },
-        [setIsOpen],
-    );
 
     const onProfileClick = useCallback(() => {
         navigate(RoutePath.profile + user?.profile?.id);
@@ -51,36 +40,35 @@ export const HeaderAvatar = memo((props: HeaderAvatarProps) => {
         dispatch(authLogout());
     }, [dispatch]);
 
-    const content = (
-        <div>
-            <Space direction={"vertical"}>
-                <a onClick={() => onProfileClick()}>Профиль</a>
-                <a onClick={() => onLogout()}>Выход</a>
-            </Space>
-        </div>
-    );
-
     return (
         // TODO Редюсер демонтируется до fulfilled
         <DynamicModuleLoader reducers={reducers}>
-            <Popover
-                content={content}
-                open={isOpen}
-                onOpenChange={showMenu}
-                placement={"bottomLeft"}
+            <div
+                className={classNames(cls.HeaderAvatar, {}, [className])}
+                onClick={() => onProfileClick()}
             >
-                <div className={classNames(cls.HeaderAvatar, {}, [className])}>
-                    <Flex vertical justify={"center"} align={"center"}>
+                <Flex vertical>
+                    <Flex gap={8} justify={"center"} align={"center"}>
                         <EditableAvatar
                             file={user?.profile?.avatar}
                             canEdit={false}
                         />
-                        <Typography.Text keyboard type={"secondary"}>
+                        <Typography.Text type={"secondary"}>
                             {user?.profile?.name ?? user?.email}
                         </Typography.Text>
+                        <Button
+                            icon={<LogoutOutlined />}
+                            onClick={() => onLogout()}
+                        />
                     </Flex>
-                </div>
-            </Popover>
+                    {/* <Typography.Text */}
+                    {/*     className={cls.subscriptionText} */}
+                    {/*     type={"success"} */}
+                    {/* > */}
+                    {/*     {"Подписка: " + user?.subscriptions?.[0].value} */}
+                    {/* </Typography.Text> */}
+                </Flex>
+            </div>
         </DynamicModuleLoader>
     );
 });

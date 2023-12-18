@@ -22,21 +22,23 @@ import { useSelector } from "react-redux";
 import {
     getEmployeeDetailsDataError,
     getEmployeeDetailsForm,
+    getEmployeeDetailsIsDataLoading,
 } from "../../model/selectors/getEmployeeDetails";
 import { employeeDetailsActions } from "../../model/slice/employeeDetailsSlice";
 
 interface EmployeeDetailsFormProps {
     className?: string;
-    onSave?: () => void;
-    onCancel?: () => void;
+    onSave: () => void;
+    onCancel: () => void;
 }
 
 export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
     const { onSave, onCancel } = props;
 
     const dispatch = useAppDispatch();
-    const employeeDetailsForm = useSelector(getEmployeeDetailsForm);
+    const isLoading = useSelector(getEmployeeDetailsIsDataLoading);
     const error = useSelector(getEmployeeDetailsDataError);
+    const employeeDetailsForm = useSelector(getEmployeeDetailsForm);
 
     const fields = useMemo((): FieldData[] => {
         return [
@@ -71,7 +73,7 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
                 switch (key) {
                     case "surname":
                         dispatch(
-                            employeeDetailsActions.setEmployeeDetailsFormData({
+                            employeeDetailsActions.setFormData({
                                 ...employeeDetailsForm,
                                 surname: changedValues[key],
                             }),
@@ -79,7 +81,7 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
                         break;
                     case "name":
                         dispatch(
-                            employeeDetailsActions.setEmployeeDetailsFormData({
+                            employeeDetailsActions.setFormData({
                                 ...employeeDetailsForm,
                                 name: changedValues[key],
                             }),
@@ -87,7 +89,7 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
                         break;
                     case "hireDate":
                         dispatch(
-                            employeeDetailsActions.setEmployeeDetailsFormData({
+                            employeeDetailsActions.setFormData({
                                 ...employeeDetailsForm,
                                 hireDate: changedValues[key],
                             }),
@@ -95,7 +97,7 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
                         break;
                     case "dismissDate":
                         dispatch(
-                            employeeDetailsActions.setEmployeeDetailsFormData({
+                            employeeDetailsActions.setFormData({
                                 ...employeeDetailsForm,
                                 dismissDate: changedValues[key],
                             }),
@@ -103,7 +105,7 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
                         break;
                     case "email":
                         dispatch(
-                            employeeDetailsActions.setEmployeeDetailsFormData({
+                            employeeDetailsActions.setFormData({
                                 ...employeeDetailsForm,
                                 email: changedValues[key],
                             }),
@@ -111,7 +113,7 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
                         break;
                     case "phone":
                         dispatch(
-                            employeeDetailsActions.setEmployeeDetailsFormData({
+                            employeeDetailsActions.setFormData({
                                 ...employeeDetailsForm,
                                 phone: changedValues[key],
                             }),
@@ -119,7 +121,7 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
                         break;
                     case "rank":
                         dispatch(
-                            employeeDetailsActions.setEmployeeDetailsFormData({
+                            employeeDetailsActions.setFormData({
                                 ...employeeDetailsForm,
                                 rank: changedValues[key],
                             }),
@@ -144,22 +146,10 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
         dispatch(employeeDetailsActions.setRemoveAvatarOnUpdate(true));
     }, [dispatch]);
 
-    // const onChangeOrganization = useCallback(
-    //     (value: Berth | undefined) => {
-    //         dispatch(
-    //             employeeDetailsActions.setEmployeeDetailsFormData({
-    //                 ...employeeDetailsForm,
-    //                 berth: value,
-    //             }),
-    //         );
-    //     },
-    //     [dispatch, employeeDetailsForm],
-    // );
-
     const onChangeBerth = useCallback(
         (value: Berth | undefined) => {
             dispatch(
-                employeeDetailsActions.setEmployeeDetailsFormData({
+                employeeDetailsActions.setFormData({
                     ...employeeDetailsForm,
                     berth: value,
                 }),
@@ -171,7 +161,7 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
     const onChangeDepartment = useCallback(
         (value: Department | undefined) => {
             dispatch(
-                employeeDetailsActions.setEmployeeDetailsFormData({
+                employeeDetailsActions.setFormData({
                     ...employeeDetailsForm,
                     department: value,
                 }),
@@ -180,21 +170,21 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
         [dispatch, employeeDetailsForm],
     );
 
+    const onFinish = useCallback(async () => {
+        onSave();
+    }, [onSave]);
+
     return (
         <>
+            {error && <Alert type={"error"} message={error} />}
             <Form
                 id={"employeeDetailsForm"}
                 layout={"vertical"}
+                disabled={isLoading}
                 fields={fields}
                 onValuesChange={onValueChanged}
-                onFinish={onSave}
-                // onReset={onCancel}
+                onFinish={onFinish}
             >
-                {error && (
-                    <Form.Item>
-                        <Alert message={error} type="error" showIcon />{" "}
-                    </Form.Item>
-                )}
                 <Row gutter={[8, 8]}>
                     <Col span={12}>
                         <Form.Item
@@ -229,7 +219,7 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
                         <Flex justify={"flex-end"}>
                             <EditableAvatar
                                 size={150}
-                                style={{ backgroundColor: "#87d068" }}
+                                // style={{ backgroundColor: "#87d068" }}
                                 file={employeeDetailsForm?.avatar}
                                 onChangeAvatar={onChangeAvatar}
                                 onDeleteAvatar={onDeleteAvatar}

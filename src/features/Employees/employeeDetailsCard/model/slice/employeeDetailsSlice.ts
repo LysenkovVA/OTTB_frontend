@@ -1,9 +1,10 @@
 import { Employee } from "@/entities/Employee/model/types/Employee";
+import { createEmployee } from "@/features/Employees/employeeDetailsCard/model/services/createEmployee/createEmployee";
 import { removeEmployeeAvatar } from "@/features/Employees/employeeDetailsCard/model/services/removeEmployeeAvatar/removeEmployeeAvatar";
+import { updateEmployee } from "@/features/Employees/employeeDetailsCard/model/services/updateEmployee/updateEmployee";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { fetchEmployeeDetailsById } from "../services/fetchEmployeeDetailsById/fetchEmployeeDetailsById";
 import { updateEmployeeAvatar } from "../services/updateEmployeeAvatar/updateEmployeeAvatar";
-import { updateEmployeeDetailsById } from "../services/updateEmployeeDetailsById/updateEmployeeDetailsById";
 import { EmployeeDetailsSchema } from "../types/EmployeeDetailsSchema";
 
 const initialState: EmployeeDetailsSchema = {
@@ -22,10 +23,7 @@ export const employeeDetailsSlice = createSlice({
     name: "employeeDetailsSlice",
     initialState,
     reducers: {
-        setEmployeeDetailsFormData: (
-            state,
-            action: PayloadAction<Employee>,
-        ) => {
+        setFormData: (state, action: PayloadAction<Employee>) => {
             state.employeeDetailsForm = action.payload;
         },
         // Используется когда в форме выбирается файл на диске
@@ -59,21 +57,37 @@ export const employeeDetailsSlice = createSlice({
                 state.isDataLoading = false;
                 state.dataError = action.payload;
             })
-            .addCase(updateEmployeeDetailsById.pending, (state) => {
+            .addCase(createEmployee.pending, (state) => {
                 state.isDataLoading = true;
                 state.dataError = undefined;
             })
             .addCase(
-                updateEmployeeDetailsById.fulfilled,
+                createEmployee.fulfilled,
                 (state, action: PayloadAction<Employee>) => {
                     state.isDataLoading = false;
                     state.dataError = undefined;
                     state.employeeDetails = action.payload;
                     state.employeeDetailsForm = action.payload;
-                    state._isInitialized = true;
                 },
             )
-            .addCase(updateEmployeeDetailsById.rejected, (state, action) => {
+            .addCase(createEmployee.rejected, (state, action) => {
+                state.isDataLoading = false;
+                state.dataError = action.payload;
+            })
+            .addCase(updateEmployee.pending, (state) => {
+                state.isDataLoading = true;
+                state.dataError = undefined;
+            })
+            .addCase(
+                updateEmployee.fulfilled,
+                (state, action: PayloadAction<Employee>) => {
+                    state.isDataLoading = false;
+                    state.dataError = undefined;
+                    state.employeeDetails = action.payload;
+                    state.employeeDetailsForm = action.payload;
+                },
+            )
+            .addCase(updateEmployee.rejected, (state, action) => {
                 state.isDataLoading = false;
                 state.dataError = action.payload;
             })

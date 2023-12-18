@@ -8,6 +8,13 @@ export const getUser = createSelector(getUserSchema, (userSchema) => {
     return userSchema?.authenticatedUser ?? undefined;
 });
 
+export const getUserActiveWorkspaceId = createSelector(
+    getUserSchema,
+    (userSchema) => {
+        return userSchema?.activeWorkspaceId ?? "";
+    },
+);
+
 export const getUserIsLoading = createSelector(getUserSchema, (userSchema) => {
     return userSchema.isLoading ?? false;
 });

@@ -1,5 +1,6 @@
 import { ThunkConfig } from "@/app/providers/StoreProvider";
 import { Employee } from "@/entities/Employee";
+import { getUserActiveWorkspaceId } from "@/entities/User";
 import { ServerError } from "@/shared/error/ServerError";
 import { addQueryParams } from "@/shared/lib/url/addQueryParams";
 import { FetchRowsResult } from "@/shared/types/FetchRowsResult";
@@ -23,6 +24,7 @@ export const fetchEmployeesInfiniteList = createAsyncThunk<
     const { extra, rejectWithValue, getState } = thunkApi;
 
     // Получаем параметры из стейта
+    const workspaceId = getUserActiveWorkspaceId(getState());
     const limit = getEmployeesInfiniteListLimit(getState());
     const offset = getEmployeesInfiniteListOffset(getState());
     const searchQuery = getEmployeesInfiniteListSearchQuery(getState());
@@ -33,11 +35,16 @@ export const fetchEmployeesInfiniteList = createAsyncThunk<
             searchQuery,
         });
 
+        if (!workspaceId) {
+            return rejectWithValue("Рабочее пространство неизвестно!");
+        }
+
         // Отправляем запрос
         const response = await extra.api.get<FetchRowsResult<Employee>>(
             "/employees",
             {
                 params: {
+                    workspaceId,
                     limit,
                     offset,
                     searchQuery,
