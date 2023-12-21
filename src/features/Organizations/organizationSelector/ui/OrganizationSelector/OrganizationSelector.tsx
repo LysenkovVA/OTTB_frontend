@@ -17,8 +17,8 @@ import { allOrganizationsReducer } from "../../model/slice/allOrganizationsSlice
 
 interface OrganizationSelectorProps {
     className?: string;
-    value: Organization | undefined;
-    onValueChanged: (value: Organization | undefined) => void;
+    value?: Organization | undefined;
+    onValueChanged?: (value: Organization | undefined) => void;
 }
 
 const reducers: ReducersList = {
@@ -66,7 +66,7 @@ export const OrganizationSelector = memo((props: OrganizationSelectorProps) => {
     const onChanged = useCallback(
         (id: string | undefined) => {
             if (!id) {
-                onValueChanged(undefined);
+                onValueChanged?.(undefined);
             }
 
             const organization = organizations.find(
@@ -75,7 +75,7 @@ export const OrganizationSelector = memo((props: OrganizationSelectorProps) => {
 
             if (organization) {
                 // Пробрасываем наверх значение
-                onValueChanged(organization);
+                onValueChanged?.(organization);
             }
         },
         [organizations, onValueChanged],

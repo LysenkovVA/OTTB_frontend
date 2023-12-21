@@ -14,7 +14,8 @@ import {
     ReducersList,
 } from "@/shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
-import { Card } from "antd";
+import { EditFormWrapper } from "@/shared/ui/EditFormWrapper";
+import { useForm } from "antd/es/form/Form";
 import { memo, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -29,6 +30,8 @@ const reducers: ReducersList = {
 
 const CreateEmployeePage = (props: CreateEmployeePageProps) => {
     const { className } = props;
+
+    const [form] = useForm();
 
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
@@ -80,12 +83,14 @@ const CreateEmployeePage = (props: CreateEmployeePageProps) => {
 
     return (
         <DynamicModuleLoader reducers={reducers}>
-            <Card title={"Новый сотрудник"}>
-                <EmployeeDetailsForm
-                    onSave={onSave}
-                    onCancel={() => navigate(-1)}
-                />
-            </Card>
+            <EditFormWrapper
+                title={"Новый сотрудник"}
+                form={form}
+                onSave={onSave}
+                onCancel={() => {}}
+            >
+                <EmployeeDetailsForm form={form} />
+            </EditFormWrapper>
         </DynamicModuleLoader>
     );
 };

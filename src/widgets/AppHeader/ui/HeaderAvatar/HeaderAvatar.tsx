@@ -9,7 +9,7 @@ import {
 } from "@/shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
 import { EditableAvatar } from "@/shared/ui/EditableAvatar/EditableAvatar";
-import { LogoutOutlined } from "@ant-design/icons";
+import { PoweroffOutlined } from "@ant-design/icons";
 import { Button, Flex, Typography } from "antd";
 import { memo, useCallback } from "react";
 import { useSelector } from "react-redux";
@@ -52,14 +52,22 @@ export const HeaderAvatar = memo((props: HeaderAvatarProps) => {
                         <EditableAvatar
                             file={user?.profile?.avatar}
                             canEdit={false}
+                            size={45}
                         />
                         <Typography.Text type={"secondary"}>
                             {user?.profile?.name ?? user?.email}
                         </Typography.Text>
                         <Button
-                            icon={<LogoutOutlined />}
+                            type={"dashed"}
+                            icon={
+                                <PoweroffOutlined
+                                    style={{ color: "orangered" }}
+                                />
+                            }
                             onClick={() => onLogout()}
-                        />
+                        >
+                            {"Выход"}
+                        </Button>
                     </Flex>
                     {/* <Typography.Text */}
                     {/*     className={cls.subscriptionText} */}

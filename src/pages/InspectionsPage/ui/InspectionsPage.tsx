@@ -1,6 +1,9 @@
 import { InspectionsInfiniteList } from "@/features/Inspections/inspectionsInfiniteList";
-import { Flex } from "antd";
-import { memo } from "react";
+import { RoutePath } from "@/shared/config/routeConfig/routeConfig";
+import { ListWrapper } from "@/shared/ui/ListWrapper";
+import { PageWrapper } from "@/widgets/PageWrapper";
+import { memo, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
 export interface InspectionsPageProps {
     className?: string;
@@ -9,10 +12,18 @@ export interface InspectionsPageProps {
 const InspectionsPage = (props: InspectionsPageProps) => {
     const { className } = props;
 
+    const navigate = useNavigate();
+
+    const onAddClick = useCallback(() => {
+        navigate(RoutePath.create_inspection);
+    }, [navigate]);
+
     return (
-        <Flex vertical gap={8}>
-            <InspectionsInfiniteList />;
-        </Flex>
+        <PageWrapper>
+            <ListWrapper title={"Проверки"} onAddClick={onAddClick}>
+                <InspectionsInfiniteList />
+            </ListWrapper>
+        </PageWrapper>
     );
 };
 

@@ -4,14 +4,12 @@ import {
     getUserIsLoading,
 } from "@/entities/User";
 import { initAuthData } from "@/entities/User/model/services/initAuthData/initAuthData";
-import { classNames } from "@/shared/lib/classNames/classNames";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
-import { AppFooter } from "@/widgets/AppFooter";
 import { AppHeader } from "@/widgets/AppHeader";
 import { AppSideMenu } from "@/widgets/AppSideMenu";
 import { Layout } from "antd";
 import Sider from "antd/es/layout/Sider";
-import { Content, Footer, Header } from "antd/es/layout/layout";
+import { Content, Header } from "antd/es/layout/layout";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -39,25 +37,17 @@ export const App = () => {
 
     if (authUser?.id) {
         return (
-            <Layout>
-                <Header
-                    style={{ backgroundColor: "white" }}
-                    className={classNames(cls.header, {}, [])}
-                >
+            <Layout className={cls.layout}>
+                <Header className={cls.header}>
                     <AppHeader />
                 </Header>
-                <Layout hasSider>
+                <Layout>
                     <Sider className={cls.sider} theme={"light"}>
                         <AppSideMenu />
                     </Sider>
-                    <Content className={classNames(cls.content)}>
+                    <Content className={cls.content}>
                         {userIsInitialized && !isLoading && <AppRouter />}
                     </Content>
-                </Layout>
-                <Layout>
-                    <Footer className={classNames(cls.footer)}>
-                        <AppFooter />
-                    </Footer>
                 </Layout>
             </Layout>
         );

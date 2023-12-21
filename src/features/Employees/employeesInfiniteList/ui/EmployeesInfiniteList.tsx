@@ -10,8 +10,7 @@ import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch
 import { useInitialEffect } from "@/shared/lib/hooks/useInitialEffect/useInitialEffect";
 import { ErrorInfo } from "@/shared/ui/ErrorInfo/ErrorInfo";
 import { InfiniteScrollPage } from "@/widgets/InfiniteScrollPage";
-import { PlusCircleOutlined } from "@ant-design/icons";
-import { Col, Empty, Flex, FloatButton, Row } from "antd";
+import { Col, Empty, Flex, Row } from "antd";
 import { memo, useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -135,13 +134,6 @@ export const EmployeesInfiniteList = memo(
                             <Empty description={"Сотрудников не найдено"} />
                         )}
                 </InfiniteScrollPage>
-                <FloatButton
-                    icon={<PlusCircleOutlined />}
-                    shape={"circle"}
-                    type={"primary"}
-                    style={{ bottom: 50, right: 50, width: 50, height: 50 }}
-                    onClick={() => navigate(RoutePath.create_employee)}
-                />
             </DynamicModuleLoader>
         );
     },

@@ -1,6 +1,7 @@
-import { fetchAllBerthes } from "@/features/Berthes/berthSelector/model/services/fetchAllBerthes/fetchAllBerthes";
-import { createSlice } from "@reduxjs/toolkit";
+import { Berth } from "@/entities/Berth";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { allBerthesAdapter } from "../adapter/allBerthesAdapter";
+import { fetchAllBerthes } from "../services/fetchAllBerthes/fetchAllBerthes";
 import { AllBerthesSchema } from "../types/AllBerthesSchema";
 
 const initialState: AllBerthesSchema = {
@@ -14,7 +15,17 @@ const initialState: AllBerthesSchema = {
 export const allBerthesSlice = createSlice({
     name: "allBerthesSlice",
     initialState,
-    reducers: {},
+    reducers: {
+        addOne: (state, action: PayloadAction<Berth>) => {
+            allBerthesAdapter.addOne(state, action.payload);
+        },
+        setOne: (state, action: PayloadAction<Berth>) => {
+            allBerthesAdapter.setOne(state, action.payload);
+        },
+        removeOne: (state, action: PayloadAction<string>) => {
+            allBerthesAdapter.removeOne(state, action.payload);
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchAllBerthes.pending, (state, action) => {

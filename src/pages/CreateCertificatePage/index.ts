@@ -1,0 +1,1 @@
+export { CreateCertificatePageAsync as CreateCertificatePage } from "./ui/CreateCertificatePage.async";

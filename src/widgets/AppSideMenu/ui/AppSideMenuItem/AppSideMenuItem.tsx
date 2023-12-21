@@ -28,14 +28,12 @@ export const AppSideMenuItem = memo((props: AppSideMenuItemProps) => {
         return null;
     }
 
-    // return <div className={classNames(cls.AppSideMenuItem)}></div>;
-
     return (
         <div className={classNames(cls.AppSideMenuItem)}>
             <Button
                 className={classNames(cls.button)}
                 icon={item.icon}
-                type={"link"}
+                type={"text"}
                 onClick={onClick}
             >
                 {item.text}

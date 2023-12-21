@@ -1,4 +1,5 @@
 import { classNames } from "@/shared/lib/classNames/classNames";
+import { EditFormWrapper } from "@/shared/ui/EditFormWrapper";
 import { ErrorInfo } from "@/shared/ui/ErrorInfo/ErrorInfo";
 import { memo } from "react";
 import cls from "./CreateInspectionPage.module.scss";
@@ -12,11 +13,19 @@ const CreateInspectionPage = (props: CreateInspectionPageProps) => {
 
     return (
         <div className={classNames(cls.CreateInspectionPage, {}, [className])}>
-            <ErrorInfo
-                status={"info"}
-                title={"Создание новой проверки"}
-                subtitle={"Эта страница находится в разработке..."}
-            />
+            {/* eslint-disable-next-line react/jsx-no-undef */}
+            <EditFormWrapper
+                title={"Новая проверка"}
+                // form={form}
+                // onSave={onSave}
+                // onCancel={() => {}}
+            >
+                <ErrorInfo
+                    status={"info"}
+                    title={"Создание новой проверки"}
+                    subtitle={"Эта страница находится в разработке..."}
+                />
+            </EditFormWrapper>
         </div>
     );
 };

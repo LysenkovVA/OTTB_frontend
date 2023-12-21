@@ -8,8 +8,7 @@ import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch
 import { useInitialEffect } from "@/shared/lib/hooks/useInitialEffect/useInitialEffect";
 import { ErrorInfo } from "@/shared/ui/ErrorInfo/ErrorInfo";
 import { InfiniteScrollPage } from "@/widgets/InfiniteScrollPage";
-import { PlusCircleOutlined } from "@ant-design/icons";
-import { Empty, Flex, FloatButton } from "antd";
+import { Empty, Flex } from "antd";
 import { memo, useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
 import {
@@ -106,13 +105,6 @@ export const CertificatesInfiniteList = memo(
                             <Empty description={"Удостоверений не найдено"} />
                         )}
                 </InfiniteScrollPage>
-                <FloatButton
-                    icon={<PlusCircleOutlined />}
-                    shape={"circle"}
-                    type={"primary"}
-                    style={{ bottom: 50, right: 50, width: 50, height: 50 }}
-                    // onClick={() => navigate(RoutePath.create_organization)}
-                />
             </DynamicModuleLoader>
         );
     },

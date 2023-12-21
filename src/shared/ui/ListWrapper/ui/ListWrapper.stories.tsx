@@ -1,15 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
-
-import { AppFooter } from "./AppFooter";
+import { ListWrapper } from "./ListWrapper";
 
 const meta = {
-    title: "widgets/AppFooter",
-    component: AppFooter,
+    title: "shared/ListWrapper",
+    component: ListWrapper,
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",
     },
-} satisfies Meta<typeof AppFooter>;
+} satisfies Meta<typeof ListWrapper>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

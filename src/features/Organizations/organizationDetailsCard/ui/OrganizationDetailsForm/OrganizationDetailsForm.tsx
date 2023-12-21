@@ -7,20 +7,19 @@ import { organizationDetailsActions } from "@/features/Organizations/organizatio
 import { classNames } from "@/shared/lib/classNames/classNames";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
 import { FieldData } from "@/shared/types/FieldData";
-import { Alert, Button, Col, Form, Image, Input, Row } from "antd";
+import { Alert, Col, Form, FormInstance, Image, Input, Row } from "antd";
 import { memo, useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
 import cls from "./OrganizationDetailsForm.module.scss";
 
 interface OrganizationDetailsFormProps {
     className?: string;
-    onSave: () => void;
-    onCancel: () => void;
+    form: FormInstance;
 }
 
 export const OrganizationDetailsForm = memo(
     (props: OrganizationDetailsFormProps) => {
-        const { className, onSave, onCancel } = props;
+        const { className, form } = props;
 
         const dispatch = useAppDispatch();
         const isLoading = useSelector(getOrganizationDetailsIsLoading);
@@ -59,15 +58,12 @@ export const OrganizationDetailsForm = memo(
             [dispatch, organizationDetailsForm],
         );
 
-        const onFinish = useCallback(async () => {
-            onSave();
-        }, [onSave]);
-
         return (
             <>
                 {error && <Alert type={"error"} message={error} />}
                 <Form
                     id={"organizationDetailsForm"}
+                    form={form}
                     rootClassName={classNames(cls.OrganizationDetailsForm, {}, [
                         className,
                     ])}
@@ -75,7 +71,6 @@ export const OrganizationDetailsForm = memo(
                     disabled={isLoading}
                     fields={fields}
                     onValuesChange={onValueChanged}
-                    onFinish={onFinish}
                 >
                     <Row gutter={[8, 8]} justify={"center"}>
                         <Col span={12} style={{ height: 200 }}>
@@ -103,29 +98,6 @@ export const OrganizationDetailsForm = memo(
                                 ]}
                             >
                                 <Input />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={[8, 8]} justify={"center"}>
-                        <Col span={12}>
-                            <Form.Item>
-                                <Button
-                                    htmlType={"submit"}
-                                    type={"primary"}
-                                    style={{ width: "100%" }}
-                                >
-                                    Сохранить
-                                </Button>
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item>
-                                <Button
-                                    style={{ width: "100%" }}
-                                    onClick={onCancel}
-                                >
-                                    Отмена
-                                </Button>
                             </Form.Item>
                         </Col>
                     </Row>

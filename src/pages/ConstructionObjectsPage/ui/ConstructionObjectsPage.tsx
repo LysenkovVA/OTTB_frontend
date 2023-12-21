@@ -1,5 +1,8 @@
 import { ConstructionObjectsInfiniteList } from "@/features/ConstructionObjects/constructionObjectsInfiniteList";
-import { memo } from "react";
+import { RoutePath } from "@/shared/config/routeConfig/routeConfig";
+import { ListWrapper } from "@/shared/ui/ListWrapper";
+import { memo, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
 export interface ConstructionObjectsPageProps {
     className?: string;
@@ -8,7 +11,17 @@ export interface ConstructionObjectsPageProps {
 const ConstructionObjectsPage = (props: ConstructionObjectsPageProps) => {
     const { className } = props;
 
-    return <ConstructionObjectsInfiniteList />;
+    const navigate = useNavigate();
+
+    const onAddClick = useCallback(() => {
+        navigate(RoutePath.create_object);
+    }, [navigate]);
+
+    return (
+        <ListWrapper title={"Объекты"} onAddClick={onAddClick}>
+            <ConstructionObjectsInfiniteList />
+        </ListWrapper>
+    );
 };
 
 export default memo(ConstructionObjectsPage);

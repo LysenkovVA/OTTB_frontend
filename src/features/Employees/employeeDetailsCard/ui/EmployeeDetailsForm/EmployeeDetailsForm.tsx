@@ -2,17 +2,18 @@ import { Berth } from "@/entities/Berth/model/types/Berth";
 import { Department } from "@/entities/Department";
 import { BerthSelector } from "@/features/Berthes/berthSelector/ui/BerthSelector/BerthSelector";
 import { DepartmentSelector } from "@/features/Departments/departmentSelector";
+import { OrganizationSelector } from "@/features/Organizations/organizationSelector";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
 import { FieldData } from "@/shared/types/FieldData";
 import { EditableAvatar } from "@/shared/ui/EditableAvatar/EditableAvatar";
 import {
     Alert,
-    Button,
     Col,
     DatePicker,
     Divider,
     Flex,
     Form,
+    FormInstance,
     Input,
     Row,
 } from "antd";
@@ -28,12 +29,11 @@ import { employeeDetailsActions } from "../../model/slice/employeeDetailsSlice";
 
 interface EmployeeDetailsFormProps {
     className?: string;
-    onSave: () => void;
-    onCancel: () => void;
+    form: FormInstance;
 }
 
 export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
-    const { onSave, onCancel } = props;
+    const { form } = props;
 
     const dispatch = useAppDispatch();
     const isLoading = useSelector(getEmployeeDetailsIsDataLoading);
@@ -170,20 +170,16 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
         [dispatch, employeeDetailsForm],
     );
 
-    const onFinish = useCallback(async () => {
-        onSave();
-    }, [onSave]);
-
     return (
         <>
             {error && <Alert type={"error"} message={error} />}
             <Form
+                form={form}
                 id={"employeeDetailsForm"}
                 layout={"vertical"}
                 disabled={isLoading}
                 fields={fields}
                 onValuesChange={onValueChanged}
-                onFinish={onFinish}
             >
                 <Row gutter={[8, 8]}>
                     <Col span={12}>
@@ -264,15 +260,25 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
                     Работа
                 </Divider>
                 <Row gutter={[8, 8]}>
-                    {/* <Col span={8}> */}
-                    {/*     <Form.Item label={"Организация"}> */}
-                    {/*         <OrganizationSelector */}
-                    {/*             value={employeeDetailsForm?.} */}
-                    {/*             onValueChanged={onChangeBerth} */}
-                    {/*         /> */}
-                    {/*     </Form.Item> */}
-                    {/* </Col> */}
-                    <Col span={8}>
+                    <Col span={12}>
+                        <Form.Item label={"Организация"}>
+                            <OrganizationSelector
+                            // value={employeeDetailsForm?.}
+                            // onValueChanged={onChangeBerth}
+                            />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label={"Подразделение"}>
+                            <DepartmentSelector
+                                value={employeeDetailsForm?.department}
+                                onValueChanged={onChangeDepartment}
+                            />
+                        </Form.Item>
+                    </Col>
+                </Row>
+                <Row gutter={[8, 8]}>
+                    <Col span={12}>
                         <Form.Item label={"Должность"}>
                             <BerthSelector
                                 value={employeeDetailsForm?.berth}
@@ -280,39 +286,15 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
                             />
                         </Form.Item>
                     </Col>
-                    <Col span={8}>
-                        <Form.Item label={"Участок"}>
-                            <DepartmentSelector
-                                value={employeeDetailsForm?.department}
-                                onValueChanged={onChangeDepartment}
-                            />
-                        </Form.Item>
-                    </Col>
-                    <Col span={8}>
+                    <Col span={12}>
                         <Form.Item label={"Разряд"} name={"rank"}>
                             <Input />
                         </Form.Item>
                     </Col>
                 </Row>
-
                 <Form.Item label={"Принят на работу"} name={"hireDate"}>
                     <DatePicker format={"DD.MM.YYYY"} />
                 </Form.Item>
-                <Divider />
-                <Row gutter={[8, 8]}>
-                    <Col>
-                        <Form.Item>
-                            <Button type={"primary"} htmlType={"submit"}>
-                                {"Сохранить"}
-                            </Button>
-                        </Form.Item>
-                    </Col>
-                    <Col>
-                        <Form.Item>
-                            <Button onClick={onCancel}>{"Отмена"}</Button>
-                        </Form.Item>
-                    </Col>
-                </Row>
             </Form>
         </>
     );

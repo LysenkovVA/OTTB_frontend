@@ -42,7 +42,7 @@ export const getAppSideMenuItems = createSelector(
                 },
                 {
                     path: RoutePath.departments,
-                    text: "Участки",
+                    text: "Подразделения",
                     icon: <ApartmentOutlined />,
                 },
                 {

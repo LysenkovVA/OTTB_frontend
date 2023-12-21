@@ -1,4 +1,5 @@
 import { classNames } from "@/shared/lib/classNames/classNames";
+import { EditFormWrapper } from "@/shared/ui/EditFormWrapper";
 import { ErrorInfo } from "@/shared/ui/ErrorInfo/ErrorInfo";
 import { memo } from "react";
 import cls from "./CreateDepartmentPage.module.scss";
@@ -12,11 +13,18 @@ const CreateDepartmentPage = (props: CreateDepartmentPageProps) => {
 
     return (
         <div className={classNames(cls.CreateDepartmentPage, {}, [className])}>
-            <ErrorInfo
-                status={"info"}
-                title={"Создание нового участка"}
-                subtitle={"Эта страница находится в разработке..."}
-            />
+            <EditFormWrapper
+                title={"Новое подразделение"}
+                // form={form}
+                // onSave={onSave}
+                // onCancel={() => {}}
+            >
+                <ErrorInfo
+                    status={"info"}
+                    title={"Создание нового подраздления"}
+                    subtitle={"Эта страница находится в разработке..."}
+                />
+            </EditFormWrapper>
         </div>
     );
 };

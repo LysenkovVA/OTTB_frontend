@@ -2,7 +2,9 @@
     --header-height: 64px;
     --sidemenu-width: 150px;
     --sidemenu-width-collapsed: 40px;
-    --footer-height: 64px;
+    --margin: 8px;
+    --sidemenu_height: calc(100vh - var(--header-height) - var(--margin) * 2);
+    --content-height: calc(100vh - var(--header-height) - var(--margin) * 2);
     --infinite-scroll-page-trigger-height: 20px;
     --infinite-scroll-page-trigger-margin: 10px;
 }

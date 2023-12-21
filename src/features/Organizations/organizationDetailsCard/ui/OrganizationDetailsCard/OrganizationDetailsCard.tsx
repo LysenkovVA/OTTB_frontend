@@ -14,19 +14,18 @@ import {
 import { OrganizationDetailsView } from "@/features/Organizations/organizationDetailsCard/ui/OrganizationDetailsView/OrganizationDetailsView";
 import { removeOrganization } from "@/features/Organizations/organizationsInfiniteList/model/services/removeOrganization/removeOrganization";
 import { organizationsInfiniteListActions } from "@/features/Organizations/organizationsInfiniteList/model/slice/organizationsInfiniteListSlice";
-import { classNames } from "@/shared/lib/classNames/classNames";
 import {
     DynamicModuleLoader,
     ReducersList,
 } from "@/shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
 import { useInitialEffect } from "@/shared/lib/hooks/useInitialEffect/useInitialEffect";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Card, Flex, Modal, Typography } from "antd";
+import { EditFormWrapper } from "@/shared/ui/EditFormWrapper";
+import { ViewWrapper } from "@/shared/ui/ViewWrapper";
+import { useForm } from "antd/es/form/Form";
 import { memo, useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import cls from "./OrganizationDetailsCard.module.scss";
 
 interface OrganizationDetailsCardProps {
     className?: string;
@@ -40,7 +39,7 @@ export const OrganizationDetailsCard = memo(
     (props: OrganizationDetailsCardProps) => {
         const { className } = props;
 
-        const [modalOpen, setModalOpen] = useState(false);
+        const [form] = useForm();
         const navigate = useNavigate();
 
         const [isEditMode, setIsEditMode] = useState(false);
@@ -85,80 +84,41 @@ export const OrganizationDetailsCard = memo(
             setIsEditMode(false);
         }, [dispatch, organizationDetails]);
 
-        const onDelete = useCallback(
-            async (id: string | undefined) => {
-                if (id) {
-                    try {
-                        await dispatch(
-                            removeOrganization({ organizationId: id }),
-                        );
-                        dispatch(
-                            organizationsInfiniteListActions.removeOne(id),
-                        );
-                        navigate(-1);
-                    } catch {}
-                }
-            },
-            [dispatch, navigate],
-        );
-
-        const extraContent = (
-            <>
-                <Modal
-                    title="Подтвердите удаление"
-                    centered
-                    open={modalOpen}
-                    onOk={() => {
-                        if (organizationDetails) {
-                            setModalOpen(false);
-                            onDelete?.(organizationDetails.id);
-                        }
-                    }}
-                    onCancel={() => setModalOpen(false)}
-                    okButtonProps={{ danger: true }}
-                    okText={"Удалить"}
-                    cancelText={"Отмена"}
-                >
-                    <Flex gap={8}>
-                        <DeleteOutlined style={{ color: "red" }} />
-                        <Typography.Text>{`Удалить '${organizationDetails?.name}'?`}</Typography.Text>
-                    </Flex>
-                </Modal>
-                {!isEditMode ? (
-                    <Flex gap={8}>
-                        <Button
-                            icon={<EditOutlined />}
-                            onClick={() => setIsEditMode(true)}
-                        />
-                        <Button
-                            danger
-                            icon={<DeleteOutlined />}
-                            onClick={() => setModalOpen(true)}
-                        />
-                    </Flex>
-                ) : null}
-            </>
-        );
+        const onDelete = useCallback(async () => {
+            if (organizationId) {
+                try {
+                    await dispatch(removeOrganization({ organizationId }));
+                    dispatch(
+                        organizationsInfiniteListActions.removeOne(
+                            organizationId,
+                        ),
+                    );
+                    navigate(-1);
+                } catch {}
+            }
+        }, [dispatch, navigate, organizationId]);
 
         return (
             <DynamicModuleLoader reducers={reducers}>
-                <Card
-                    className={classNames(cls.OrganizationDetailsCard, {}, [
-                        className,
-                    ])}
-                    extra={extraContent}
-                    title={organizationDetails?.name}
-                    size={"small"}
-                >
-                    {isEditMode ? (
-                        <OrganizationDetailsForm
-                            onSave={onSave}
-                            onCancel={onCancel}
-                        />
-                    ) : (
+                {isEditMode ? (
+                    <EditFormWrapper
+                        title={`${organizationDetails?.name}`}
+                        form={form}
+                        onSave={onSave}
+                        onCancel={onCancel}
+                    >
+                        <OrganizationDetailsForm form={form} />
+                    </EditFormWrapper>
+                ) : (
+                    <ViewWrapper
+                        title={`${organizationDetails?.name}`}
+                        deleteText={`Удалить ${organizationDetails?.name}?`}
+                        onEditClick={() => setIsEditMode(true)}
+                        onDeleteClick={onDelete}
+                    >
                         <OrganizationDetailsView />
-                    )}
-                </Card>
+                    </ViewWrapper>
+                )}
             </DynamicModuleLoader>
         );
     },

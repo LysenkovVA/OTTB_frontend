@@ -1,6 +1,5 @@
 import { InspectionItem } from "@/entities/Inspection";
 import { fetchInspectionsInfiniteList } from "@/features/Inspections/inspectionsInfiniteList/model/services/fetchInspectionsInfiniteList/fetchInspectionsInfiniteList";
-import { RoutePath } from "@/shared/config/routeConfig/routeConfig";
 import {
     DynamicModuleLoader,
     ReducersList,
@@ -9,11 +8,9 @@ import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch
 import { useInitialEffect } from "@/shared/lib/hooks/useInitialEffect/useInitialEffect";
 import { ErrorInfo } from "@/shared/ui/ErrorInfo/ErrorInfo";
 import { InfiniteScrollPage } from "@/widgets/InfiniteScrollPage";
-import { PlusCircleOutlined } from "@ant-design/icons";
-import { Empty, Flex, FloatButton } from "antd";
+import { Empty, Flex } from "antd";
 import { memo, useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import {
     getInspectionInfiniteListOffset,
     getInspectionsInfiniteList,
@@ -39,8 +36,6 @@ const reducers: ReducersList = {
 export const InspectionsInfiniteList = memo(
     (props: InspectionsInfiniteListProps) => {
         const { className } = props;
-
-        const navigate = useNavigate();
 
         const dispatch = useAppDispatch();
 
@@ -111,13 +106,6 @@ export const InspectionsInfiniteList = memo(
                             <Empty description={"Проверок не найдено"} />
                         )}
                 </InfiniteScrollPage>
-                <FloatButton
-                    icon={<PlusCircleOutlined />}
-                    shape={"circle"}
-                    type={"primary"}
-                    style={{ bottom: 50, right: 50, width: 50, height: 50 }}
-                    onClick={() => navigate(RoutePath.create_inspection)}
-                />
             </DynamicModuleLoader>
         );
     },

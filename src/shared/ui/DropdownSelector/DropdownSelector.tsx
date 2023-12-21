@@ -3,17 +3,8 @@ import {
     ReducersList,
 } from "@/shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 import { PlusOutlined } from "@ant-design/icons";
-import {
-    Button,
-    Empty,
-    Flex,
-    Form,
-    Input,
-    Modal,
-    Select,
-    SelectProps,
-} from "antd";
-import { memo, useCallback, useState } from "react";
+import { Button, Empty, Flex, Select, SelectProps } from "antd";
+import { memo, useCallback } from "react";
 
 interface DropdownSelectorType {
     label: string;
@@ -46,8 +37,6 @@ export const DropdownSelector = memo((props: DropdownSelectorProps) => {
         ...otherProps
     } = props;
 
-    const [modalOpen, setModalOpen] = useState(false);
-
     const onChange = useCallback(
         (value: DropdownSelectorType[]) => {
             const ddt = value as unknown as DropdownSelectorType;
@@ -71,30 +60,6 @@ export const DropdownSelector = memo((props: DropdownSelectorProps) => {
 
         return false;
     }, [error, isLoading]);
-
-    const onAddClick = useCallback(() => {
-        setModalOpen(true);
-
-        onAdd?.();
-    }, [onAdd]);
-
-    const modalDialog = (
-        <Modal
-            title="Укажите значение"
-            centered
-            open={modalOpen}
-            onOk={() => setModalOpen(false)}
-            onCancel={() => setModalOpen(false)}
-            okText={"Сохранить"}
-            cancelText={"Отмена"}
-        >
-            <Form key={"modalForm"}>
-                <Form.Item label={"Значение"}>
-                    <Input />
-                </Form.Item>
-            </Form>
-        </Modal>
-    );
 
     return (
         <DynamicModuleLoader reducers={reducers} removeAfterUnmount={false}>
@@ -123,11 +88,15 @@ export const DropdownSelector = memo((props: DropdownSelectorProps) => {
                 dropdownRender={(menu) => (
                     <>
                         {menu}
-                        <Flex justify={"center"} align={"center"}>
+                        <Flex
+                            justify={"center"}
+                            align={"center"}
+                            style={{ paddingTop: 8 }}
+                        >
                             <Button
                                 icon={<PlusOutlined />}
-                                type={"primary"}
-                                onClick={onAddClick}
+                                type={"link"}
+                                onClick={onAdd}
                             >
                                 {"Добавить"}
                             </Button>
@@ -136,7 +105,6 @@ export const DropdownSelector = memo((props: DropdownSelectorProps) => {
                 )}
                 {...otherProps}
             />
-            {modalDialog}
         </DynamicModuleLoader>
     );
 });

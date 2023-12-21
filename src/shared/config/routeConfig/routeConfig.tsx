@@ -1,5 +1,6 @@
 import { CertificatesPage } from "@/pages/CertificatesPage";
 import { ConstructionObjectsPage } from "@/pages/ConstructionObjectsPage";
+import { CreateCertificatePage } from "@/pages/CreateCertificatePage";
 import { CreateConstructionObjectPage } from "@/pages/CreateConstructionObjectPage";
 import { CreateDepartmentPage } from "@/pages/CreateDepartmentPage";
 import { CreateEmployeePage } from "@/pages/CreateEmployeePage";
@@ -23,6 +24,7 @@ export enum AppRoutes {
     PROFILE = "profile",
     INSPECTIONS = "inspections",
     CERTIFICATES = "certificates",
+    CREATE_CERTIFICATE = "create_certificate",
     ORGANIZATIONS = "organizations",
     CREATE_ORGANIZATION = "create_organization",
     ORGANIZATION_DETAILS = "organization_details",
@@ -46,6 +48,7 @@ export const RoutePath: Record<AppRoutes, string> = {
     [AppRoutes.INSPECTIONS]: "/inspections",
     [AppRoutes.CREATE_INSPECTION]: "/inspections/create",
     [AppRoutes.CERTIFICATES]: "/certificates",
+    [AppRoutes.CREATE_CERTIFICATE]: "/certificates/create",
     [AppRoutes.ORGANIZATIONS]: "/organizations",
     [AppRoutes.CREATE_ORGANIZATION]: "/organizations/create",
     [AppRoutes.ORGANIZATION_DETAILS]: "/organizations/", // +id
@@ -91,6 +94,11 @@ export const routeConfig: Record<AppRoutes, AppRouteProps> = {
     [AppRoutes.CERTIFICATES]: {
         path: RoutePath.certificates,
         element: <CertificatesPage />,
+        authOnly: true,
+    },
+    [AppRoutes.CREATE_CERTIFICATE]: {
+        path: RoutePath.create_certificate,
+        element: <CreateCertificatePage />,
         authOnly: true,
     },
     [AppRoutes.ORGANIZATIONS]: {

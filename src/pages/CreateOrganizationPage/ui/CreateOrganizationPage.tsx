@@ -10,6 +10,8 @@ import {
     ReducersList,
 } from "@/shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
+import { EditFormWrapper } from "@/shared/ui/EditFormWrapper";
+import { useForm } from "antd/es/form/Form";
 import { memo, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +27,8 @@ const reducers: ReducersList = {
 
 const CreateOrganizationPage = (props: CreateOrganizationPageProps) => {
     const { className } = props;
+
+    const [form] = useForm();
 
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
@@ -57,10 +61,14 @@ const CreateOrganizationPage = (props: CreateOrganizationPageProps) => {
                     className,
                 ])}
             >
-                <OrganizationDetailsForm
+                <EditFormWrapper
+                    title={"Новая организация"}
+                    form={form}
                     onSave={onSave}
-                    onCancel={() => navigate(-1)}
-                />
+                    onCancel={() => {}}
+                >
+                    <OrganizationDetailsForm form={form} />
+                </EditFormWrapper>
             </div>
         </DynamicModuleLoader>
     );

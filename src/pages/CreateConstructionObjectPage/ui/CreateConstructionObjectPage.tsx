@@ -1,4 +1,5 @@
 import { classNames } from "@/shared/lib/classNames/classNames";
+import { EditFormWrapper } from "@/shared/ui/EditFormWrapper";
 import { ErrorInfo } from "@/shared/ui/ErrorInfo/ErrorInfo";
 import { memo } from "react";
 import cls from "./CreateConstructionObjectPage.module.scss";
@@ -18,11 +19,18 @@ const CreateConstructionObjectPage = (
                 className,
             ])}
         >
-            <ErrorInfo
-                status={"info"}
-                title={"Создание нового объекта"}
-                subtitle={"Эта страница находится в разработке..."}
-            />
+            <EditFormWrapper
+                title={"Новый объект"}
+                // form={form}
+                // onSave={onSave}
+                // onCancel={() => {}}
+            >
+                <ErrorInfo
+                    status={"info"}
+                    title={"Создание нового объекта"}
+                    subtitle={"Эта страница находится в разработке..."}
+                />
+            </EditFormWrapper>
         </div>
     );
 };
