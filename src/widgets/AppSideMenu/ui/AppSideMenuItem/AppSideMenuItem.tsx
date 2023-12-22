@@ -33,7 +33,7 @@ export const AppSideMenuItem = memo((props: AppSideMenuItemProps) => {
             <Button
                 className={classNames(cls.button)}
                 icon={item.icon}
-                type={"text"}
+                type={"link"}
                 onClick={onClick}
             >
                 {item.text}

@@ -9,17 +9,21 @@ import {
 import { createBerth } from "@/features/Berthes/berthSelector/model/services/createBerth/createBerth";
 import { fetchAllBerthes } from "@/features/Berthes/berthSelector/model/services/fetchAllBerthes/fetchAllBerthes";
 import { allBerthesReducer } from "@/features/Berthes/berthSelector/model/slice/allBerthesSlice";
-import { classNames } from "@/shared/lib/classNames/classNames";
 import { ReducersList } from "@/shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
 import { useInitialEffect } from "@/shared/lib/hooks/useInitialEffect/useInitialEffect";
 import { DropdownSelector } from "@/shared/ui/DropdownSelector/DropdownSelector";
-import { Flex, Form, Input, Modal } from "antd";
+import { Form, Input, Modal, SelectProps } from "antd";
 import { memo, useCallback, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import cls from "./BerthSelector.module.scss";
 
-interface BerthSelectorProps {
+type DDSelectorProps = Omit<
+    SelectProps,
+    "options" | "children" | "value" | "className"
+>;
+
+interface BerthSelectorProps extends DDSelectorProps {
     className?: string;
     value: Berth | undefined;
     onValueChanged: (value: Berth | undefined) => void;
@@ -37,7 +41,7 @@ const convertBerthToSelectObject = (berth: Berth | undefined) => {
 };
 
 export const BerthSelector = memo((props: BerthSelectorProps) => {
-    const { className, onValueChanged, value } = props;
+    const { className, onValueChanged, value, ...otherProps } = props;
 
     const [modalOpen, setModalOpen] = useState(false);
     const [newBerth, setNewBerth] = useState<string>("");
@@ -128,20 +132,18 @@ export const BerthSelector = memo((props: BerthSelectorProps) => {
     );
 
     return (
-        <div className={classNames(cls.BerthSelector, {}, [className])}>
-            <Flex gap={4}>
-                <DropdownSelector
-                    className={cls.selector}
-                    reducers={reducers}
-                    value={convertBerthToSelectObject(value)}
-                    isLoading={isLoading}
-                    onValueChanged={onChanged}
-                    options={options}
-                    error={error}
-                    onAdd={onAdd}
-                />
-                {modalDialog}
-            </Flex>
-        </div>
+        <>
+            <DropdownSelector
+                className={cls.selector}
+                reducers={reducers}
+                value={convertBerthToSelectObject(value)}
+                isLoading={isLoading}
+                onValueChanged={onChanged}
+                options={options}
+                error={error}
+                onAdd={onAdd}
+                {...otherProps}
+            />
+        </>
     );
 });

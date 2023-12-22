@@ -1,6 +1,7 @@
 // Схема данных приложения
 import { UserSchema } from "@/entities/User/model/types/UserSchema";
 import { AllBerthesSchema } from "@/features/Berthes/berthSelector";
+import { DepartmentDetailsSchema } from "@/features/Departments/departmentDetailsCard";
 import { AllDepartmentsSchema } from "@/features/Departments/departmentSelector";
 import { EmployeeDetailsSchema } from "@/features/Employees/employeeDetailsCard";
 import { OrganizationDetailsSchema } from "@/features/Organizations/organizationDetailsCard";
@@ -50,6 +51,7 @@ export interface StateSchema {
     employeesInfiniteListSchema?: EmployeesInfiniteListSchema;
     // ДЕТАЛИ РАБОТНИКА
     employeeDetailsSchema?: EmployeeDetailsSchema;
+    departmentDetailsSchema?: DepartmentDetailsSchema;
     allBerthesSchema?: AllBerthesSchema;
     allOrganizationsSchema?: AllOrganizationsSchema;
     allDepartmentsSchema?: AllDepartmentsSchema;

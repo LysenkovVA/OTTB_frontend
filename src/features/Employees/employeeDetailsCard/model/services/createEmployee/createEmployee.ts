@@ -14,7 +14,7 @@ export const createEmployee = createAsyncThunk<
     Employee,
     CreateEmployeeProps,
     ThunkConfig<string>
->("employee/createEmployee", async ({ employee, workspaceId }, thunkApi) => {
+>("employee/createDepartment", async ({ employee, workspaceId }, thunkApi) => {
     const { dispatch, extra, rejectWithValue, getState } = thunkApi;
 
     try {

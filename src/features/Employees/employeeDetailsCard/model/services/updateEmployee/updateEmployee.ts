@@ -13,7 +13,7 @@ export const updateEmployee = createAsyncThunk<
     Employee,
     UpdateEmployeeDetailsByIdProps,
     ThunkConfig<string>
->("employee/updateEmployee", async ({ employee }, thunkApi) => {
+>("employee/updateDepartment", async ({ employee }, thunkApi) => {
     const { dispatch, extra, rejectWithValue } = thunkApi;
 
     try {

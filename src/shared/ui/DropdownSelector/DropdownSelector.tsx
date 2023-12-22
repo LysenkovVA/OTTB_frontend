@@ -2,7 +2,7 @@ import {
     DynamicModuleLoader,
     ReducersList,
 } from "@/shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusCircleOutlined } from "@ant-design/icons";
 import { Button, Empty, Flex, Select, SelectProps } from "antd";
 import { memo, useCallback } from "react";
 
@@ -63,48 +63,62 @@ export const DropdownSelector = memo((props: DropdownSelectorProps) => {
 
     return (
         <DynamicModuleLoader reducers={reducers} removeAfterUnmount={false}>
-            <Select
-                showSearch
-                allowClear={true}
-                labelInValue
-                virtual={false}
-                // Без этого поиск не показывал найдненное
-                filterOption={(inputValue, option) =>
-                    option!
-                        .label!.toLocaleString()
-                        .toLowerCase()
-                        .includes(inputValue.toLowerCase())
-                }
-                options={options}
-                value={value}
-                onChange={onChange}
-                onClear={onClear}
-                loading={isLoading}
-                disabled={disabled()}
-                placeholder={error}
-                notFoundContent={
-                    <Empty description={false} style={{ paddingBottom: 10 }} />
-                }
-                dropdownRender={(menu) => (
-                    <>
-                        {menu}
-                        <Flex
-                            justify={"center"}
-                            align={"center"}
-                            style={{ paddingTop: 8 }}
-                        >
-                            <Button
-                                icon={<PlusOutlined />}
-                                type={"link"}
-                                onClick={onAdd}
-                            >
-                                {"Добавить"}
-                            </Button>
-                        </Flex>
-                    </>
-                )}
-                {...otherProps}
-            />
+            <Flex>
+                <Select
+                    showSearch
+                    allowClear={true}
+                    labelInValue
+                    virtual={false}
+                    // Без этого поиск не показывал найдненное
+                    filterOption={(inputValue, option) =>
+                        option!
+                            .label!.toLocaleString()
+                            .toLowerCase()
+                            .includes(inputValue.toLowerCase())
+                    }
+                    options={options}
+                    value={value}
+                    onChange={onChange}
+                    onClear={onClear}
+                    loading={isLoading}
+                    disabled={disabled()}
+                    placeholder={error}
+                    notFoundContent={
+                        <Empty
+                            description={false}
+                            style={{ paddingBottom: 10 }}
+                        />
+                    }
+                    // dropdownRender={(menu) => (
+                    //     <>
+                    //         {menu}
+                    //         <Flex
+                    //             justify={"center"}
+                    //             align={"center"}
+                    //             style={{ paddingTop: 8 }}
+                    //         >
+                    //             <Button
+                    //                 icon={<PlusOutlined />}
+                    //                 type={"link"}
+                    //                 onClick={() => {
+                    //                     onAdd?.();
+                    //                 }}
+                    //             >
+                    //                 {"Добавить"}
+                    //             </Button>
+                    //         </Flex>
+                    //     </>
+                    // )}
+                    {...otherProps}
+                />
+                <Button
+                    type={"link"}
+                    icon={<PlusCircleOutlined />}
+                    onClick={() => {
+                        onAdd?.();
+                    }}
+                />
+            </Flex>
         </DynamicModuleLoader>
     );
 });

@@ -1,4 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { Organization } from "@/entities/Organization";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { allOrganizationsAdapter } from "../adapter/allOrganizationsAdapter";
 import { fetchAllOrganizations } from "../services/fetchAllOrganizations/fetchAllOrganizations";
 import { AllOrganizationsSchema } from "../types/AllOrganizationsSchema";
@@ -14,7 +15,17 @@ const initialState: AllOrganizationsSchema = {
 export const allOrganizationsSlice = createSlice({
     name: "allOrganizationsSlice",
     initialState,
-    reducers: {},
+    reducers: {
+        addOne: (state, action: PayloadAction<Organization>) => {
+            allOrganizationsAdapter.addOne(state, action.payload);
+        },
+        setOne: (state, action: PayloadAction<Organization>) => {
+            allOrganizationsAdapter.setOne(state, action.payload);
+        },
+        removeOne: (state, action: PayloadAction<string>) => {
+            allOrganizationsAdapter.removeOne(state, action.payload);
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchAllOrganizations.pending, (state, action) => {

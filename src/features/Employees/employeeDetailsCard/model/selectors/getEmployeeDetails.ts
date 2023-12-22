@@ -19,6 +19,13 @@ export const getEmployeeDetailsForm = createSelector(
     },
 );
 
+export const getEmployeeDetailsFormSelectedOrganization = createSelector(
+    getEmployeeDetailsSchema,
+    (schema) => {
+        return schema?.employeeDetailsFormSelectedOrganization ?? undefined;
+    },
+);
+
 export const getEmployeeDetailsIsDataLoading = createSelector(
     getEmployeeDetailsSchema,
     (schema) => {

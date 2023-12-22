@@ -1,7 +1,10 @@
 import { Berth } from "@/entities/Berth/model/types/Berth";
 import { Department } from "@/entities/Department";
+import { Organization } from "@/entities/Organization";
+import { fetchAllBerthes } from "@/features/Berthes/berthSelector/model/services/fetchAllBerthes/fetchAllBerthes";
 import { BerthSelector } from "@/features/Berthes/berthSelector/ui/BerthSelector/BerthSelector";
 import { DepartmentSelector } from "@/features/Departments/departmentSelector";
+import { fetchAllDepartments } from "@/features/Departments/departmentSelector/model/services/fetchAllDepartments/fetchAllDepartments";
 import { OrganizationSelector } from "@/features/Organizations/organizationSelector";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
 import { FieldData } from "@/shared/types/FieldData";
@@ -23,6 +26,7 @@ import { useSelector } from "react-redux";
 import {
     getEmployeeDetailsDataError,
     getEmployeeDetailsForm,
+    getEmployeeDetailsFormSelectedOrganization,
     getEmployeeDetailsIsDataLoading,
 } from "../../model/selectors/getEmployeeDetails";
 import { employeeDetailsActions } from "../../model/slice/employeeDetailsSlice";
@@ -39,6 +43,9 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
     const isLoading = useSelector(getEmployeeDetailsIsDataLoading);
     const error = useSelector(getEmployeeDetailsDataError);
     const employeeDetailsForm = useSelector(getEmployeeDetailsForm);
+    const selectedOrganization = useSelector(
+        getEmployeeDetailsFormSelectedOrganization,
+    );
 
     const fields = useMemo((): FieldData[] => {
         return [
@@ -158,6 +165,48 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
         [dispatch, employeeDetailsForm],
     );
 
+    const onChangeOrganization = useCallback(
+        async (value: Organization | undefined) => {
+            dispatch(
+                employeeDetailsActions.setFormDataSelectedOrganization(value),
+            );
+
+            if (value) {
+                // Если значение поменялось, меняем значения селекторов
+                // Подразделения
+                await dispatch(
+                    fetchAllDepartments({ organizationId: value.id }),
+                );
+
+                // Должности
+                await dispatch(fetchAllBerthes({ organizationId: value.id }));
+            } else {
+                // Сбрасываем значения
+                dispatch(
+                    employeeDetailsActions.setFormData({
+                        ...employeeDetailsForm,
+                        department: undefined,
+                    }),
+                );
+
+                dispatch(
+                    employeeDetailsActions.setFormData({
+                        ...employeeDetailsForm,
+                        berth: undefined,
+                    }),
+                );
+
+                dispatch(
+                    employeeDetailsActions.setFormData({
+                        ...employeeDetailsForm,
+                        rank: undefined,
+                    }),
+                );
+            }
+        },
+        [dispatch, employeeDetailsForm],
+    );
+
     const onChangeDepartment = useCallback(
         (value: Department | undefined) => {
             dispatch(
@@ -263,14 +312,15 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
                     <Col span={12}>
                         <Form.Item label={"Организация"}>
                             <OrganizationSelector
-                            // value={employeeDetailsForm?.}
-                            // onValueChanged={onChangeBerth}
+                                value={selectedOrganization}
+                                onValueChanged={onChangeOrganization}
                             />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
                         <Form.Item label={"Подразделение"}>
                             <DepartmentSelector
+                                disabled={selectedOrganization === undefined}
                                 value={employeeDetailsForm?.department}
                                 onValueChanged={onChangeDepartment}
                             />
@@ -281,6 +331,7 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
                     <Col span={12}>
                         <Form.Item label={"Должность"}>
                             <BerthSelector
+                                disabled={selectedOrganization === undefined}
                                 value={employeeDetailsForm?.berth}
                                 onValueChanged={onChangeBerth}
                             />
@@ -288,7 +339,9 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
                     </Col>
                     <Col span={12}>
                         <Form.Item label={"Разряд"} name={"rank"}>
-                            <Input />
+                            <Input
+                                disabled={selectedOrganization === undefined}
+                            />
                         </Form.Item>
                     </Col>
                 </Row>

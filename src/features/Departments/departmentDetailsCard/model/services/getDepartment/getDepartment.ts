@@ -1,40 +1,33 @@
 import { ThunkConfig } from "@/app/providers/StoreProvider";
-import { Employee } from "@/entities/Employee/model/types/Employee";
+import { Department } from "@/entities/Department";
 import { ServerError } from "@/shared/error/ServerError";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 
-export interface FetchEmployeeDetailsByIdProps {
+export interface GetDepartmentProps {
     id: string;
 }
 
-export const fetchEmployeeDetailsById = createAsyncThunk<
-    Employee,
-    FetchEmployeeDetailsByIdProps,
+export const getDepartment = createAsyncThunk<
+    Department,
+    GetDepartmentProps,
     ThunkConfig<string>
->("employee/getDepartment", async ({ id }, thunkApi) => {
+>("department/getDepartment", async ({ id }, thunkApi) => {
     const { dispatch, extra, rejectWithValue } = thunkApi;
 
     try {
         if (!id) {
             return rejectWithValue(
-                "Идентификатор сотрудника не задан! (getDepartment)",
+                "Идентификатор подразделения не задан! (getDepartment)",
             );
         }
-        const response = await extra.api.get<Employee | ServerError>(
-            `/employees/${id}`,
-        );
+        const response = await extra.api.get<Department>(`/departments/${id}`);
 
         if (!response.data) {
             return rejectWithValue("Ответ от сервера не получен");
         }
 
-        if (response.status === 400) {
-            const serverError = response.data as ServerError;
-            return rejectWithValue(serverError.error);
-        }
-
-        return response.data as Employee;
+        return response.data;
     } catch (e) {
         if (e instanceof AxiosError) {
             const serverError = e?.response?.data as ServerError;
@@ -44,6 +37,6 @@ export const fetchEmployeeDetailsById = createAsyncThunk<
             }
         }
 
-        return rejectWithValue("Сотрудник не найден!");
+        return rejectWithValue("Подразделение не найдено!");
     }
 });

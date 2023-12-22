@@ -1,4 +1,5 @@
 import { Employee } from "@/entities/Employee/model/types/Employee";
+import { Organization } from "@/entities/Organization";
 import { createEmployee } from "@/features/Employees/employeeDetailsCard/model/services/createEmployee/createEmployee";
 import { removeEmployeeAvatar } from "@/features/Employees/employeeDetailsCard/model/services/removeEmployeeAvatar/removeEmployeeAvatar";
 import { updateEmployee } from "@/features/Employees/employeeDetailsCard/model/services/updateEmployee/updateEmployee";
@@ -12,6 +13,7 @@ const initialState: EmployeeDetailsSchema = {
     dataError: undefined,
     employeeDetails: {},
     employeeDetailsForm: {},
+    employeeDetailsFormSelectedOrganization: undefined,
     isAvatarUploading: false,
     avatarUploadError: "",
     employeeDetailsFormAvatar: "",
@@ -25,6 +27,12 @@ export const employeeDetailsSlice = createSlice({
     reducers: {
         setFormData: (state, action: PayloadAction<Employee>) => {
             state.employeeDetailsForm = action.payload;
+        },
+        setFormDataSelectedOrganization: (
+            state,
+            action: PayloadAction<Organization | undefined>,
+        ) => {
+            state.employeeDetailsFormSelectedOrganization = action.payload;
         },
         // Используется когда в форме выбирается файл на диске
         setEmployeeDetailsFormDataAvatar: (

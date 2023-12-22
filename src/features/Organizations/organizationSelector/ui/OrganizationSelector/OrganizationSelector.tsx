@@ -1,10 +1,19 @@
 import { Organization } from "@/entities/Organization";
-import { ReducersList } from "@/shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
+import { getUserActiveWorkspaceId } from "@/entities/User";
+import { getOrganizationDetailsForm } from "@/features/Organizations/organizationDetailsCard/model/selectors/organizationDetailsSelectors";
+import { createOrganization } from "@/features/Organizations/organizationDetailsCard/model/services/createOrganization/createOrganization";
+import { organizationDetailsReducer } from "@/features/Organizations/organizationDetailsCard/model/slice/organizationDetailsSlice";
+import { OrganizationSimpleForm } from "@/features/Organizations/organizationSelector/ui/OrganizationSimpleForm/OrganizationSimpleForm";
+import {
+    DynamicModuleLoader,
+    ReducersList,
+} from "@/shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
 import { useInitialEffect } from "@/shared/lib/hooks/useInitialEffect/useInitialEffect";
 import { DropdownSelector } from "@/shared/ui/DropdownSelector/DropdownSelector";
-import { Flex } from "antd";
-import { memo, useCallback, useMemo } from "react";
+import { ModalFormWrapper } from "@/shared/ui/ModalFormWrapper";
+import { useForm } from "antd/es/form/Form";
+import { memo, useCallback, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import {
     getAllOrganizations,
@@ -25,6 +34,10 @@ const reducers: ReducersList = {
     allOrganizationsSchema: allOrganizationsReducer,
 };
 
+const reducersModal: ReducersList = {
+    organizationDetailsSchema: organizationDetailsReducer,
+};
+
 const convertOrganizationToSelectObject = (
     organization: Organization | undefined,
 ) => {
@@ -35,13 +48,17 @@ const convertOrganizationToSelectObject = (
 };
 
 export const OrganizationSelector = memo((props: OrganizationSelectorProps) => {
-    const { className, onValueChanged, value } = props;
+    const { className, onValueChanged, value, ...otherProps } = props;
+
+    const [modalOpen, setModalOpen] = useState(false);
 
     const dispatch = useAppDispatch();
     const isInitialized = useSelector(getAllOrganizationsIsInitialized);
     const isLoading = useSelector(getAllOrganizationsIsLoading);
     const error = useSelector(getAllOrganizationsError);
     const organizations = useSelector(getAllOrganizations.selectAll);
+    const organizationDetails = useSelector(getOrganizationDetailsForm);
+    const activeWorkspaceId = useSelector(getUserActiveWorkspaceId);
 
     // Список
     const options = useMemo(() => {
@@ -81,8 +98,51 @@ export const OrganizationSelector = memo((props: OrganizationSelectorProps) => {
         [organizations, onValueChanged],
     );
 
+    const onAddOrganization = useCallback(() => {
+        setModalOpen(true);
+    }, []);
+
+    const onSaveOrganization = useCallback(async () => {
+        if (organizationDetails) {
+            // Создаем новую организацию
+            const res = await dispatch(
+                createOrganization({
+                    organization: organizationDetails,
+                    workspaceId: activeWorkspaceId,
+                }),
+            ).unwrap();
+
+            // Получаем новый список
+            dataFetcher();
+            // Устанавливаем в качестве нового значения
+            onValueChanged?.(res);
+
+            // Закрываем окно
+            setModalOpen(false);
+        }
+    }, [
+        activeWorkspaceId,
+        dataFetcher,
+        dispatch,
+        onValueChanged,
+        organizationDetails,
+    ]);
+
+    const [form] = useForm();
+
     return (
-        <Flex vertical gap={8}>
+        <>
+            <ModalFormWrapper
+                form={form}
+                title={"Новая организация"}
+                isVisible={modalOpen}
+                onCancel={() => setModalOpen(false)}
+                onSave={onSaveOrganization}
+            >
+                <DynamicModuleLoader reducers={reducersModal}>
+                    <OrganizationSimpleForm form={form} />
+                </DynamicModuleLoader>
+            </ModalFormWrapper>
             <DropdownSelector
                 reducers={reducers}
                 value={convertOrganizationToSelectObject(value)}
@@ -90,7 +150,9 @@ export const OrganizationSelector = memo((props: OrganizationSelectorProps) => {
                 onValueChanged={onChanged}
                 options={options}
                 error={error}
+                onAdd={onAddOrganization}
+                {...otherProps}
             />
-        </Flex>
+        </>
     );
 });
