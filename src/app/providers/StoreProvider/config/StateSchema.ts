@@ -1,13 +1,13 @@
 // Схема данных приложения
+import { EmployeeDetailsSchema } from "@/entities/Employee";
+import { OrganizationDetailsSchema } from "@/entities/Organization";
+import { ProfileSchema } from "@/entities/Profile";
 import { UserSchema } from "@/entities/User/model/types/UserSchema";
 import { AllBerthesSchema } from "@/features/Berthes/berthSelector";
 import { DepartmentDetailsSchema } from "@/features/Departments/departmentDetailsCard";
 import { AllDepartmentsSchema } from "@/features/Departments/departmentSelector";
-import { EmployeeDetailsSchema } from "@/features/Employees/employeeDetailsCard";
-import { OrganizationDetailsSchema } from "@/features/Organizations/organizationDetailsCard";
 import { AllOrganizationsSchema } from "@/features/Organizations/organizationSelector";
 import { OrganizationsInfiniteListSchema } from "@/features/Organizations/organizationsInfiniteList/model/types/OrganizationsInfiniteListSchema";
-import { ProfileSchema } from "@/features/Profiles/profileCard/model/types/ProfileSchema";
 import { UISchema } from "@/features/UI";
 import { AuthSchema } from "@/features/auth";
 import { LogoutSchema } from "@/features/logout/model/types/LogoutSchema";

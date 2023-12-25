@@ -1,6 +1,7 @@
+import { Profile, updateProfileData } from "@/entities/Profile";
 import { initAuthData } from "@/entities/User/model/services/initAuthData/initAuthData";
 import { USER_LOCALSTORAGE_KEY } from "@/shared/const/localstorage";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { User } from "../types/User";
 import { UserSchema } from "../types/UserSchema";
 
@@ -49,7 +50,16 @@ export const userSlice = createSlice({
                 state.isLoading = false;
                 state.error = action.payload;
                 state._isInitialized = true;
-            });
+            })
+            // При обновлении профиля, обновляем данные пользователя
+            .addCase(
+                updateProfileData.fulfilled,
+                (state, action: PayloadAction<Profile>) => {
+                    if (state.authenticatedUser) {
+                        state.authenticatedUser.profile = action.payload;
+                    }
+                },
+            );
     },
 });
 

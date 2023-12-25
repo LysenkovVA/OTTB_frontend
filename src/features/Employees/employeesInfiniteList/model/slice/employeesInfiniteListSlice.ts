@@ -1,5 +1,8 @@
 import { Employee } from "@/entities/Employee";
+import { createEmployee } from "@/features/Employees/employeesInfiniteList/model/services/createEmployee/createEmployee";
+import { deleteEmployee } from "@/features/Employees/employeesInfiniteList/model/services/deleteEmployee/deleteEmployee";
 import { fetchEmployeesInfiniteList } from "@/features/Employees/employeesInfiniteList/model/services/fetchEmployeesInfiniteList/fetchEmployeesInfiniteList";
+import { updateEmployee } from "@/features/Employees/employeesInfiniteList/model/services/updateEmployee/updateEmployee";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { employeesInfiniteListAdapter } from "../adapter/employeesInfiniteListAdapter";
 import { EmployeesInfiniteListSchema } from "../types/EmployeesInfiniteListSchema";
@@ -32,15 +35,6 @@ export const employeesInfiniteListSlice = createSlice({
         setSearchQuery: (state, action: PayloadAction<string | undefined>) => {
             state.searchQuery = action.payload;
             state.offset = 0;
-        },
-        addOne: (state, action: PayloadAction<Employee>) => {
-            employeesInfiniteListAdapter.addOne(state, action.payload);
-        },
-        setOne: (state, action: PayloadAction<Employee>) => {
-            employeesInfiniteListAdapter.setOne(state, action.payload);
-        },
-        removeOne: (state, action: PayloadAction<string>) => {
-            employeesInfiniteListAdapter.removeOne(state, action.payload);
         },
     },
     extraReducers: (builder) => {
@@ -80,7 +74,31 @@ export const employeesInfiniteListSlice = createSlice({
             .addCase(fetchEmployeesInfiniteList.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.payload;
-            });
+            })
+            .addCase(createEmployee.pending, (state) => {})
+            .addCase(
+                createEmployee.fulfilled,
+                (state, action: PayloadAction<Employee>) => {
+                    employeesInfiniteListAdapter.addOne(state, action.payload);
+                },
+            )
+            .addCase(createEmployee.rejected, (state, action) => {})
+            .addCase(updateEmployee.pending, (state) => {})
+            .addCase(
+                updateEmployee.fulfilled,
+                (state, action: PayloadAction<Employee>) => {
+                    employeesInfiniteListAdapter.setOne(state, action.payload);
+                },
+            )
+            .addCase(updateEmployee.rejected, (state, action) => {})
+            .addCase(deleteEmployee.pending, (state, action) => {})
+            .addCase(deleteEmployee.fulfilled, (state, action) => {
+                employeesInfiniteListAdapter.removeOne(
+                    state,
+                    action.meta.arg.employeeId,
+                );
+            })
+            .addCase(deleteEmployee.rejected, (state, action) => {});
     },
 });
 

@@ -1,4 +1,4 @@
-import { EmployeeDetailsCard } from "@/features/Employees/employeeDetailsCard";
+import { EmployeeDetails } from "@/widgets/EmployeeDetails";
 import { memo } from "react";
 
 interface EmployeeDetailsPageProps {
@@ -6,7 +6,7 @@ interface EmployeeDetailsPageProps {
 }
 
 const EmployeeDetailsPage = (props: EmployeeDetailsPageProps) => {
-    return <EmployeeDetailsCard />;
+    return <EmployeeDetails />;
 };
 
 export default memo(EmployeeDetailsPage);

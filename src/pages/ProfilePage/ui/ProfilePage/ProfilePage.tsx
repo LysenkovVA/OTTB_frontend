@@ -1,4 +1,4 @@
-import { ProfileCard } from "@/features/Profiles/profileCard";
+import { ProfileDetails } from "@/widgets/ProfileDetails";
 import { memo } from "react";
 
 export interface ProfilePageProps {
@@ -7,7 +7,7 @@ export interface ProfilePageProps {
 
 const ProfilePage = (props: ProfilePageProps) => {
     const { className } = props;
-    return <ProfileCard />;
+    return <ProfileDetails />;
 };
 
 export default memo(ProfilePage);

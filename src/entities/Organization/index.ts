@@ -1,2 +1,4 @@
+export * from "./model/selectors/organizationDetailsSelectors";
+export { getOrganization } from "./model/services/getOrganization/getOrganization";
 export type { Organization } from "./model/types/Organization";
-export { OrganizationItem } from "./ui/OrganizationCard/OrganizationItem";
+export type { OrganizationDetailsSchema } from "./model/types/OrganizationDetailsSchema";

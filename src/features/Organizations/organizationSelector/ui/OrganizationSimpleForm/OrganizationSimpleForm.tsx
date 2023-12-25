@@ -2,8 +2,8 @@ import {
     getOrganizationDetailsError,
     getOrganizationDetailsForm,
     getOrganizationDetailsIsLoading,
-} from "@/features/Organizations/organizationDetailsCard/model/selectors/organizationDetailsSelectors";
-import { organizationDetailsActions } from "@/features/Organizations/organizationDetailsCard/model/slice/organizationDetailsSlice";
+} from "@/entities/Organization/model/selectors/organizationDetailsSelectors";
+import { organizationDetailsActions } from "@/entities/Organization/model/slice/organizationDetailsSlice";
 import { classNames } from "@/shared/lib/classNames/classNames";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
 import { FieldData } from "@/shared/types/FieldData";

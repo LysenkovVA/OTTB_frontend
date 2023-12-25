@@ -1,5 +1,8 @@
 import { Organization } from "@/entities/Organization";
+import { createOrganization } from "@/features/Organizations/organizationsInfiniteList/model/services/createOrganization/createOrganization";
 import { fetchOrganizationsInfiniteList } from "@/features/Organizations/organizationsInfiniteList/model/services/fetchOrganizationsInfiniteList/fetchOrganizationsInfiniteList";
+import { removeOrganization } from "@/features/Organizations/organizationsInfiniteList/model/services/removeOrganization/removeOrganization";
+import { updateOrganization } from "@/features/Organizations/organizationsInfiniteList/model/services/updateOrganization/updateOrganization";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { organizationsInfiniteListAdapter } from "../adapter/organizationsInfiniteListAdapter";
 import { OrganizationsInfiniteListSchema } from "../types/OrganizationsInfiniteListSchema";
@@ -21,15 +24,6 @@ export const organizationsInfiniteListSlice = createSlice({
     reducers: {
         setOffset: (state, action: PayloadAction<number>) => {
             state.offset = action.payload;
-        },
-        addOne: (state, action: PayloadAction<Organization>) => {
-            organizationsInfiniteListAdapter.addOne(state, action.payload);
-        },
-        setOne: (state, action: PayloadAction<Organization>) => {
-            organizationsInfiniteListAdapter.setOne(state, action.payload);
-        },
-        removeOne: (state, action: PayloadAction<string>) => {
-            organizationsInfiniteListAdapter.removeOne(state, action.payload);
         },
     },
     extraReducers: (builder) => {
@@ -79,7 +73,37 @@ export const organizationsInfiniteListSlice = createSlice({
                     state.isLoading = false;
                     state.error = action.payload;
                 },
-            );
+            )
+            .addCase(createOrganization.pending, (state, action) => {})
+            .addCase(
+                createOrganization.fulfilled,
+                (state, action: PayloadAction<Organization>) => {
+                    organizationsInfiniteListAdapter.addOne(
+                        state,
+                        action.payload,
+                    );
+                },
+            )
+            .addCase(createOrganization.rejected, (state, action) => {})
+            .addCase(updateOrganization.pending, (state, action) => {})
+            .addCase(
+                updateOrganization.fulfilled,
+                (state, action: PayloadAction<Organization>) => {
+                    organizationsInfiniteListAdapter.setOne(
+                        state,
+                        action.payload,
+                    );
+                },
+            )
+            .addCase(updateOrganization.rejected, (state, action) => {})
+            .addCase(removeOrganization.pending, (state, action) => {})
+            .addCase(removeOrganization.fulfilled, (state, action) => {
+                organizationsInfiniteListAdapter.removeOne(
+                    state,
+                    action.meta.arg.organizationId,
+                );
+            })
+            .addCase(removeOrganization.rejected, (state, action) => {});
     },
 });
 

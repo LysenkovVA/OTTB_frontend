@@ -1,7 +1,5 @@
-import { OrganizationDetailsCard } from "@/features/Organizations/organizationDetailsCard";
-import { classNames } from "@/shared/lib/classNames/classNames";
+import { OrganizationDetails } from "@/widgets/OrganizationDetails";
 import { memo } from "react";
-import cls from "./OrganizationDetailsPage.module.scss";
 
 interface OrganizationDetailsPageProps {
     className?: string;
@@ -10,13 +8,7 @@ interface OrganizationDetailsPageProps {
 const OrganizationDetailsPage = (props: OrganizationDetailsPageProps) => {
     const { className } = props;
 
-    return (
-        <div
-            className={classNames(cls.OrganizationDetailsPage, {}, [className])}
-        >
-            <OrganizationDetailsCard />
-        </div>
-    );
+    return <OrganizationDetails />;
 };
 
 export default memo(OrganizationDetailsPage);

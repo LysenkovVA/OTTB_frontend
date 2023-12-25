@@ -99,8 +99,8 @@ export const DepartmentCard = memo((props: DepartmentCardProps) => {
                 <EditFormWrapper
                     title={`${departmentDetails?.name}`}
                     form={form}
-                    onSave={onSave}
-                    onCancel={onCancel}
+                    onSaveClick={onSave}
+                    onBackClick={onCancel}
                 >
                     <DepartmentForm form={form} />
                 </EditFormWrapper>

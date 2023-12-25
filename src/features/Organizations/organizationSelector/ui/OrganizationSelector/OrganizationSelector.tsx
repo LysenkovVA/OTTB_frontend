@@ -1,9 +1,9 @@
 import { Organization } from "@/entities/Organization";
+import { getOrganizationDetailsForm } from "@/entities/Organization/model/selectors/organizationDetailsSelectors";
+import { organizationDetailsReducer } from "@/entities/Organization/model/slice/organizationDetailsSlice";
 import { getUserActiveWorkspaceId } from "@/entities/User";
-import { getOrganizationDetailsForm } from "@/features/Organizations/organizationDetailsCard/model/selectors/organizationDetailsSelectors";
-import { createOrganization } from "@/features/Organizations/organizationDetailsCard/model/services/createOrganization/createOrganization";
-import { organizationDetailsReducer } from "@/features/Organizations/organizationDetailsCard/model/slice/organizationDetailsSlice";
 import { OrganizationSimpleForm } from "@/features/Organizations/organizationSelector/ui/OrganizationSimpleForm/OrganizationSimpleForm";
+import { createOrganization } from "@/features/Organizations/organizationsInfiniteList/model/services/createOrganization/createOrganization";
 import {
     DynamicModuleLoader,
     ReducersList,
@@ -107,7 +107,7 @@ export const OrganizationSelector = memo((props: OrganizationSelectorProps) => {
             // Создаем новую организацию
             const res = await dispatch(
                 createOrganization({
-                    organization: organizationDetails,
+                    data: organizationDetails,
                     workspaceId: activeWorkspaceId,
                 }),
             ).unwrap();

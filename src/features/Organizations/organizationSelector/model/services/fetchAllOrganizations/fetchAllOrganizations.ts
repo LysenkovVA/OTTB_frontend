@@ -33,10 +33,6 @@ export const fetchAllOrganizations = createAsyncThunk<
             },
         );
 
-        if (!response.data) {
-            return rejectWithValue("Ответ от сервера не получен");
-        }
-
         return response.data;
     } catch (e) {
         if (e instanceof AxiosError) {

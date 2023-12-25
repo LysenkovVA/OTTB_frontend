@@ -1,23 +1,10 @@
-import { getUserActiveWorkspaceId } from "@/entities/User";
-import { EmployeeDetailsForm } from "@/features/Employees/employeeDetailsCard";
-import {
-    getEmployeeDetailsForm,
-    getEmployeeDetailsFormAvatar,
-} from "@/features/Employees/employeeDetailsCard/model/selectors/getEmployeeDetails";
-import { createEmployee } from "@/features/Employees/employeeDetailsCard/model/services/createEmployee/createEmployee";
-import { fetchEmployeeDetailsById } from "@/features/Employees/employeeDetailsCard/model/services/fetchEmployeeDetailsById/fetchEmployeeDetailsById";
-import { updateEmployeeAvatar } from "@/features/Employees/employeeDetailsCard/model/services/updateEmployeeAvatar/updateEmployeeAvatar";
-import { employeeDetailsReducer } from "@/features/Employees/employeeDetailsCard/model/slice/employeeDetailsSlice";
-import { employeesInfiniteListActions } from "@/features/Employees/employeesInfiniteList/model/slice/employeesInfiniteListSlice";
+import { employeeDetailsReducer } from "@/entities/Employee/model/slice/employeeDetailsSlice";
+import { EditEmployee } from "@/features/Employees/editEmployee";
 import {
     DynamicModuleLoader,
     ReducersList,
 } from "@/shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
-import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
-import { EditFormWrapper } from "@/shared/ui/EditFormWrapper";
-import { useForm } from "antd/es/form/Form";
-import { memo, useCallback } from "react";
-import { useSelector } from "react-redux";
+import { memo } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface CreateEmployeePageProps {
@@ -31,66 +18,76 @@ const reducers: ReducersList = {
 const CreateEmployeePage = (props: CreateEmployeePageProps) => {
     const { className } = props;
 
-    const [form] = useForm();
+    // const [form] = useForm();
 
     const navigate = useNavigate();
-    const dispatch = useAppDispatch();
-    const employeeDetailsForm = useSelector(getEmployeeDetailsForm);
-    const frmAvatar = useSelector(getEmployeeDetailsFormAvatar);
-    const activeWorkspaceId = useSelector(getUserActiveWorkspaceId);
 
-    const onSave = useCallback(async () => {
-        if (employeeDetailsForm) {
-            try {
-                // Создаем сотрудника
-                const employee = await dispatch(
-                    createEmployee({
-                        employee: employeeDetailsForm,
-                        workspaceId: activeWorkspaceId,
-                    }),
-                ).unwrap();
+    // const dispatch = useAppDispatch();
+    // const employeeDetailsForm = useSelector(getEmployeeDetailsForm);
+    // const frmAvatar = useSelector(getEmployeeDetailsFormAvatar);
+    // const activeWorkspaceId = useSelector(getUserActiveWorkspaceId);
+    //
+    // const onSave = useCallback(async () => {
+    //     if (employeeDetailsForm) {
+    //         try {
+    //             // Создаем сотрудника
+    //             const employee = await dispatch(
+    //                 createEmployee({
+    //                     employee: employeeDetailsForm,
+    //                     workspaceId: activeWorkspaceId,
+    //                 }),
+    //             ).unwrap();
+    //
+    //             // Если сотрудник создан
+    //             if (employee?.id) {
+    //                 // Обновляем аватар
+    //                 if (frmAvatar && employee.id) {
+    //                     const blob = await fetch(frmAvatar).then((r) =>
+    //                         r.blob(),
+    //                     );
+    //                     await dispatch(
+    //                         updateEmployeeAvatar({
+    //                             employeeId: employee.id,
+    //                             file: blob,
+    //                         }),
+    //                     );
+    //                 }
+    //
+    //                 // Получаем свежие данные сотрудника из БД
+    //                 const updatedEmployee = await dispatch(
+    //                     getEmployee({ id: employee.id }),
+    //                 ).unwrap();
+    //
+    //                 // Добавляем в список сотрудников
+    //                 dispatch(
+    //                     employeesInfiniteListActions.addOne(updatedEmployee),
+    //                 );
+    //
+    //                 navigate(-1);
+    //             }
+    //         } catch {}
+    //     }
+    // }, [activeWorkspaceId, dispatch, employeeDetailsForm, frmAvatar, navigate]);
 
-                // Если сотрудник создан
-                if (employee?.id) {
-                    // Обновляем аватар
-                    if (frmAvatar && employee.id) {
-                        const blob = await fetch(frmAvatar).then((r) =>
-                            r.blob(),
-                        );
-                        await dispatch(
-                            updateEmployeeAvatar({
-                                employeeId: employee.id,
-                                file: blob,
-                            }),
-                        );
-                    }
-
-                    // Получаем свежие данные сотрудника из БД
-                    const updatedEmployee = await dispatch(
-                        fetchEmployeeDetailsById({ id: employee.id }),
-                    ).unwrap();
-
-                    // Добавляем в список сотрудников
-                    dispatch(
-                        employeesInfiniteListActions.addOne(updatedEmployee),
-                    );
-
-                    navigate(-1);
-                }
-            } catch {}
-        }
-    }, [activeWorkspaceId, dispatch, employeeDetailsForm, frmAvatar, navigate]);
+    // return (
+    //     <DynamicModuleLoader reducers={reducers}>
+    //         <EditFormWrapper
+    //             title={"Новый сотрудник"}
+    //             form={form}
+    //             onSaveClick={onSave}
+    //             onBackClick={() => {}}
+    //         >
+    //             <EmployeeDetailsForm form={form} />
+    //         </EditFormWrapper>
+    //     </DynamicModuleLoader>
+    // );
 
     return (
         <DynamicModuleLoader reducers={reducers}>
-            <EditFormWrapper
-                title={"Новый сотрудник"}
-                form={form}
-                onSave={onSave}
-                onCancel={() => {}}
-            >
-                <EmployeeDetailsForm form={form} />
-            </EditFormWrapper>
+            <EditEmployee
+                onUpdated={() => navigate(-1)}
+                onCanceled={() => navigate(-1)}
+            />
         </DynamicModuleLoader>
     );
 };

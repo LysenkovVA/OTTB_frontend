@@ -2,28 +2,27 @@ import { classNames } from "@/shared/lib/classNames/classNames";
 import { SubmitButton } from "@/shared/ui/EditFormWrapper/ui/SubmitButton/SubmitButton";
 import { ArrowLeftOutlined, SaveOutlined } from "@ant-design/icons";
 import { Button, Card, Flex, FormInstance, Typography } from "antd";
-import { ReactNode, memo, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { ReactNode, memo } from "react";
 import cls from "./EditFormWrapper.module.scss";
 
 export interface EditFormWrapperProps {
     className?: string;
     children?: ReactNode;
     title?: string;
-    onSave?: () => void;
-    onCancel?: () => void;
+    onSaveClick?: () => void;
+    onBackClick?: () => void;
     form?: FormInstance;
 }
 
 export const EditFormWrapper = memo((props: EditFormWrapperProps) => {
-    const { className, children, title = "", onSave, onCancel, form } = props;
-
-    const navigate = useNavigate();
-
-    const onBackClick = useCallback(() => {
-        onCancel?.();
-        navigate(-1);
-    }, [navigate, onCancel]);
+    const {
+        className,
+        children,
+        title = "",
+        onSaveClick,
+        onBackClick,
+        form,
+    } = props;
 
     const titleContent = (
         <Flex gap={8} justify={"start"} align={"center"}>
@@ -44,7 +43,7 @@ export const EditFormWrapper = memo((props: EditFormWrapperProps) => {
                 title={"Сохранить"}
                 icon={<SaveOutlined />}
                 form={form}
-                onClick={onSave}
+                onClick={onSaveClick}
             />
         </Flex>
     );

@@ -1,6 +1,5 @@
 import { ThunkConfig } from "@/app/providers/StoreProvider";
 import { Berth } from "@/entities/Berth";
-import { employeesInfiniteListActions } from "@/features/Employees/employeesInfiniteList/model/slice/employeesInfiniteListSlice";
 import { ServerError } from "@/shared/error/ServerError";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
@@ -21,12 +20,6 @@ export const updateBerth = createAsyncThunk<
             `/berthes/${berth.id}`,
             berth,
         );
-
-        if (!response.data) {
-            return rejectWithValue("Ответ от сервера не получен");
-        }
-
-        dispatch(employeesInfiniteListActions.setOne(response.data));
 
         return response.data;
     } catch (e) {

@@ -7,7 +7,7 @@ import {
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
 import { useInitialEffect } from "@/shared/lib/hooks/useInitialEffect/useInitialEffect";
 import { ErrorInfo } from "@/shared/ui/ErrorInfo/ErrorInfo";
-import { InfiniteScrollPage } from "@/widgets/InfiniteScrollPage";
+import { InfiniteScrollPage } from "@/shared/ui/InfiniteScrollPage";
 import { Empty, Flex } from "antd";
 import { memo, useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";

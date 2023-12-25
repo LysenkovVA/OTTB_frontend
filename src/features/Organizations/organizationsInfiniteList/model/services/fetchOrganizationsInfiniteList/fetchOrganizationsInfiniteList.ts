@@ -1,7 +1,6 @@
 import { ThunkConfig } from "@/app/providers/StoreProvider";
 import { Organization } from "@/entities/Organization";
 
-import { getUserActiveWorkspaceId } from "@/entities/User";
 import { ServerError } from "@/shared/error/ServerError";
 import { FetchRowsResult } from "@/shared/types/FetchRowsResult";
 import { createAsyncThunk } from "@reduxjs/toolkit";
@@ -12,6 +11,7 @@ import {
 } from "../../selectors/organizationsInfiniteListSelectors";
 
 export interface FetchOrganizationsInfiniteListProps {
+    workspaceId: string;
     replaceData?: boolean; // Для использования в action.meta.arg
 }
 
@@ -21,9 +21,9 @@ export const fetchOrganizationsInfiniteList = createAsyncThunk<
     ThunkConfig<string>
 >("organizations/fetchOrganizationsInfiniteList", async (props, thunkApi) => {
     const { extra, rejectWithValue, getState } = thunkApi;
+    const { workspaceId } = props;
 
     // Получаем параметры из стейта
-    const workspaceId = getUserActiveWorkspaceId(getState());
     const limit = getOrganizationsInfiniteListLimit(getState());
     const offset = getOrganizationsInfiniteListOffset(getState());
 
@@ -43,9 +43,6 @@ export const fetchOrganizationsInfiniteList = createAsyncThunk<
                 },
             },
         );
-        if (!response.data) {
-            return rejectWithValue("Ответ от сервера не получен");
-        }
 
         return response.data;
     } catch (e) {

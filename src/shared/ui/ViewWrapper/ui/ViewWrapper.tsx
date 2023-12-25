@@ -49,16 +49,20 @@ export const ViewWrapper = memo((props: ViewWrapperProps) => {
                 <Typography.Text>{deleteText}</Typography.Text>
             </Modal>
             <Flex gap={8}>
-                <Button icon={<EditOutlined />} onClick={onEditClick}>
-                    {"Править"}
-                </Button>
-                <Button
-                    danger
-                    icon={<DeleteOutlined />}
-                    onClick={() => setModalOpen(true)}
-                >
-                    {"Удалить"}
-                </Button>
+                {onEditClick && (
+                    <Button icon={<EditOutlined />} onClick={onEditClick}>
+                        {"Править"}
+                    </Button>
+                )}
+                {onDeleteClick && (
+                    <Button
+                        danger
+                        icon={<DeleteOutlined />}
+                        onClick={() => setModalOpen(true)}
+                    >
+                        {"Удалить"}
+                    </Button>
+                )}
             </Flex>
         </>
     );

@@ -10,6 +10,9 @@ export interface UploadFileProps {
     fileName?: string;
 }
 
+/**
+ * @deprecated
+ */
 export const uploadFile = createAsyncThunk<
     File,
     UploadFileProps,

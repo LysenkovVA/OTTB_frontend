@@ -13,18 +13,15 @@ export const removeOrganization = createAsyncThunk<
     RemoveOrganizationProps,
     ThunkConfig<string>
 >("organizations/removeOrganization", async (props, thunkApi) => {
-    const { dispatch, extra, rejectWithValue, getState } = thunkApi;
+    const { extra, rejectWithValue } = thunkApi;
 
     try {
         // Отправляем запрос
         const response = await extra.api.delete(
             `/organizations/${props.organizationId}`,
         );
-        if (!response.data) {
-            return rejectWithValue("Ответ от сервера не получен");
-        }
 
-        return response.data;
+        return undefined;
     } catch (e) {
         if (e instanceof AxiosError) {
             const serverError = e?.response?.data as ServerError;

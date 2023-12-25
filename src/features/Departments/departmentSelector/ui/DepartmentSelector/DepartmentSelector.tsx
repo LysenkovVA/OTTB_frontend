@@ -1,10 +1,10 @@
 import { Department } from "@/entities/Department";
+import { getEmployeeDetailsFormSelectedOrganization } from "@/entities/Employee/model/selectors/getEmployeeDetails";
 import { getUserActiveWorkspaceId } from "@/entities/User";
 import { getDepartmentDetailsForm } from "@/features/Departments/departmentDetailsCard/model/selectors/departmentDetailsSelectors";
 import { createDepartment } from "@/features/Departments/departmentDetailsCard/model/services/createDepartment/createDepartment";
 import { departmentDetailsReducer } from "@/features/Departments/departmentDetailsCard/model/slice/departmentDetailsSlice";
 import { DepartmentForm } from "@/features/Departments/departmentDetailsCard/ui/DepartmentForm/DepartmentForm";
-import { getEmployeeDetailsFormSelectedOrganization } from "@/features/Employees/employeeDetailsCard/model/selectors/getEmployeeDetails";
 import {
     DynamicModuleLoader,
     ReducersList,
