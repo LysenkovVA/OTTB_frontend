@@ -5,42 +5,55 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 
 export interface CreateBerthProps {
-    berth: Berth;
-    workspaceId: string;
+    data: Berth;
+    workspaceId: string | undefined;
+    organizationId: string | undefined;
 }
 
 export const createBerth = createAsyncThunk<
     Berth,
     CreateBerthProps,
     ThunkConfig<string>
->("berthes/createBerth", async ({ berth, workspaceId }, thunkApi) => {
-    const { dispatch, extra, rejectWithValue, getState } = thunkApi;
+>(
+    "berthes/createBerth",
+    async ({ data, workspaceId, organizationId }, thunkApi) => {
+        const { dispatch, extra, rejectWithValue, getState } = thunkApi;
 
-    try {
-        const response = await extra.api.post<Berth>(
-            "/berthes/create",
-            { ...berth, id: undefined },
-            {
-                params: {
-                    workspaceId,
+        if (!workspaceId) {
+            return rejectWithValue("Рабочее пространство неизвестно!");
+        }
+
+        if (!organizationId) {
+            return rejectWithValue("Организация не задана!");
+        }
+
+        try {
+            const response = await extra.api.post<Berth>(
+                "/berthes/create",
+                { ...data, id: undefined },
+                {
+                    params: {
+                        workspaceId,
+                        organizationId,
+                    },
                 },
-            },
-        );
+            );
 
-        if (!response.data) {
-            return rejectWithValue("Ответ от сервера не получен");
-        }
-
-        return response.data;
-    } catch (e) {
-        if (e instanceof AxiosError) {
-            const serverError = e?.response?.data as ServerError;
-
-            if (serverError) {
-                return rejectWithValue(serverError.error);
+            if (!response.data) {
+                return rejectWithValue("Ответ от сервера не получен");
             }
-        }
 
-        return rejectWithValue("Произошла ошибка при создании должности!");
-    }
-});
+            return response.data;
+        } catch (e) {
+            if (e instanceof AxiosError) {
+                const serverError = e?.response?.data as ServerError;
+
+                if (serverError) {
+                    return rejectWithValue(serverError.error);
+                }
+            }
+
+            return rejectWithValue("Произошла ошибка при создании должности!");
+        }
+    },
+);

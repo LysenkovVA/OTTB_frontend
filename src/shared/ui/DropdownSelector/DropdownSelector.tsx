@@ -12,7 +12,10 @@ interface DropdownSelectorType {
 }
 
 // Исключаем опции из свойств SelectProps
-type DDSelectorProps = Omit<SelectProps, "options" | "children" | "value">;
+type DDSelectorProps = Omit<
+    SelectProps,
+    "options" | "children" | "value" | "disabled"
+>;
 
 interface DropdownSelectorProps extends DDSelectorProps {
     reducers: ReducersList;
@@ -22,6 +25,7 @@ interface DropdownSelectorProps extends DDSelectorProps {
     error?: string;
     options: DropdownSelectorType[];
     onAdd?: () => void;
+    disabled?: boolean;
 }
 
 export const DropdownSelector = memo((props: DropdownSelectorProps) => {
@@ -34,6 +38,7 @@ export const DropdownSelector = memo((props: DropdownSelectorProps) => {
         onValueChanged,
         error,
         onAdd,
+        disabled,
         ...otherProps
     } = props;
 
@@ -53,13 +58,13 @@ export const DropdownSelector = memo((props: DropdownSelectorProps) => {
         onValueChanged(undefined);
     }, [onValueChanged]);
 
-    const disabled = useCallback(() => {
-        if (isLoading || error) {
-            return true;
-        }
-
-        return false;
-    }, [error, isLoading]);
+    // const disabled = useCallback(() => {
+    //     if (isLoading || error) {
+    //         return true;
+    //     }
+    //
+    //     return false;
+    // }, [error, isLoading]);
 
     return (
         <DynamicModuleLoader reducers={reducers} removeAfterUnmount={false}>
@@ -81,7 +86,7 @@ export const DropdownSelector = memo((props: DropdownSelectorProps) => {
                     onChange={onChange}
                     onClear={onClear}
                     loading={isLoading}
-                    disabled={disabled()}
+                    disabled={disabled}
                     placeholder={error}
                     notFoundContent={
                         <Empty
@@ -114,6 +119,7 @@ export const DropdownSelector = memo((props: DropdownSelectorProps) => {
                 <Button
                     type={"link"}
                     icon={<PlusCircleOutlined />}
+                    disabled={disabled}
                     onClick={() => {
                         onAdd?.();
                     }}

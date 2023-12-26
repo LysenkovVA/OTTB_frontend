@@ -37,6 +37,7 @@ export function createReducerManager(
                 return;
             }
 
+            // @ts-ignore
             reducers[key] = reducer;
 
             combinedReducer = combineReducers(reducers);

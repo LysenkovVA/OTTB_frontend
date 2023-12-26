@@ -1,13 +1,13 @@
 import { StateSchema } from "@/app/providers/StoreProvider";
 import { createSelector } from "@reduxjs/toolkit";
-import { allBerthesAdapter } from "../adapter/allBerthesAdapter";
+import { berthesListAdapter } from "../adapter/berthesListAdapter";
 
 const getAllBerthesSchema = (state: StateSchema) => {
     return state.allBerthesSchema;
 };
 
-export const getAllBerthes = allBerthesAdapter.getSelectors<StateSchema>(
-    (state) => state.allBerthesSchema ?? allBerthesAdapter.getInitialState(),
+export const getAllBerthes = berthesListAdapter.getSelectors<StateSchema>(
+    (state) => state.allBerthesSchema ?? berthesListAdapter.getInitialState(),
 );
 
 export const getAllBerthesIsLoading = createSelector(

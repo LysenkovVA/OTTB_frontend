@@ -1,22 +1,32 @@
-import { Berth } from "@/entities/Berth";
+import {
+    Berth,
+    berthDetailsReducer,
+    getBerthDetailsForm,
+} from "@/entities/Berth";
+import { getEmployeeDetailsForm } from "@/entities/Employee";
 import { getUserActiveWorkspaceId } from "@/entities/User";
 import {
     getAllBerthes,
     getAllBerthesError,
     getAllBerthesIsInitialized,
     getAllBerthesIsLoading,
-} from "@/features/Berthes/berthSelector/model/selectors/allBerthesSelectors";
+} from "@/features/Berthes/berthSelector/model/selectors/berthesListSelectors";
 import { createBerth } from "@/features/Berthes/berthSelector/model/services/createBerth/createBerth";
 import { fetchAllBerthes } from "@/features/Berthes/berthSelector/model/services/fetchAllBerthes/fetchAllBerthes";
-import { allBerthesReducer } from "@/features/Berthes/berthSelector/model/slice/allBerthesSlice";
-import { ReducersList } from "@/shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
+import { BerthesListReducer } from "@/features/Berthes/berthSelector/model/slice/berthesListSlice";
+import { BerthForm } from "@/features/Berthes/berthSelector/ui/BerthForm/BerthForm";
+import {
+    DynamicModuleLoader,
+    ReducersList,
+} from "@/shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
 import { useInitialEffect } from "@/shared/lib/hooks/useInitialEffect/useInitialEffect";
 import { DropdownSelector } from "@/shared/ui/DropdownSelector/DropdownSelector";
-import { Form, Input, Modal, SelectProps } from "antd";
+import { ModalFormWrapper } from "@/shared/ui/ModalFormWrapper";
+import { SelectProps } from "antd";
+import { useForm } from "antd/es/form/Form";
 import { memo, useCallback, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import cls from "./BerthSelector.module.scss";
 
 type DDSelectorProps = Omit<
     SelectProps,
@@ -25,12 +35,16 @@ type DDSelectorProps = Omit<
 
 interface BerthSelectorProps extends DDSelectorProps {
     className?: string;
-    value: Berth | undefined;
-    onValueChanged: (value: Berth | undefined) => void;
+    value?: Berth | undefined;
+    onValueChanged?: (value: Berth | undefined) => void;
 }
 
 const reducers: ReducersList = {
-    allBerthesSchema: allBerthesReducer,
+    allBerthesSchema: BerthesListReducer,
+};
+
+const reducersModal: ReducersList = {
+    berthDetailsSchema: berthDetailsReducer,
 };
 
 const convertBerthToSelectObject = (berth: Berth | undefined) => {
@@ -43,27 +57,38 @@ const convertBerthToSelectObject = (berth: Berth | undefined) => {
 export const BerthSelector = memo((props: BerthSelectorProps) => {
     const { className, onValueChanged, value, ...otherProps } = props;
 
+    const [form] = useForm();
     const [modalOpen, setModalOpen] = useState(false);
-    const [newBerth, setNewBerth] = useState<string>("");
 
     const dispatch = useAppDispatch();
     const isInitialized = useSelector(getAllBerthesIsInitialized);
     const isLoading = useSelector(getAllBerthesIsLoading);
     const error = useSelector(getAllBerthesError);
     const berthes = useSelector(getAllBerthes.selectAll);
+    const berthDetails = useSelector(getBerthDetailsForm);
     const activeWorkspaceId = useSelector(getUserActiveWorkspaceId);
+    // const employeeOrganization = useSelector(
+    //     getEmployeeDetailsFormSelectedOrganization,
+    // );
+    const employeeDetailsForm = useSelector(getEmployeeDetailsForm);
 
     // Список
     const options = useMemo(() => {
         return berthes.map((berth) => {
-            return { label: berth.value, value: berth.id! };
+            return { label: berth.value, value: berth.id };
         });
     }, [berthes]);
 
     // Выбрка данных с сервера
     const dataFetcher = useCallback(() => {
-        dispatch(fetchAllBerthes({ replaceData: true }));
-    }, [dispatch]);
+        dispatch(
+            fetchAllBerthes({
+                workspaceId: activeWorkspaceId,
+                organizationId: employeeDetailsForm?.organization?.id,
+                replaceData: true,
+            }),
+        );
+    }, [activeWorkspaceId, dispatch, employeeDetailsForm?.organization?.id]);
 
     // Инициализация значений
     useInitialEffect(() => {
@@ -76,14 +101,14 @@ export const BerthSelector = memo((props: BerthSelectorProps) => {
     const onChanged = useCallback(
         (id: string | undefined) => {
             if (!id) {
-                onValueChanged(undefined);
+                onValueChanged?.(undefined);
             }
 
             const berth = berthes.find((berth) => berth.id === id);
 
             if (berth) {
                 // Пробрасываем наверх значение
-                onValueChanged(berth);
+                onValueChanged?.(berth);
             }
         },
         [berthes, onValueChanged],
@@ -93,48 +118,48 @@ export const BerthSelector = memo((props: BerthSelectorProps) => {
         setModalOpen(true);
     }, []);
 
-    const onSave = useCallback(() => {
-        // TODO добавляем в БД
-        dispatch(
-            createBerth({
-                berth: { id: "", value: newBerth },
-                workspaceId: activeWorkspaceId,
-            }),
-        );
+    const onSave = useCallback(async () => {
+        if (berthDetails) {
+            // Создаем новую организацию
+            const res = await dispatch(
+                createBerth({
+                    data: berthDetails,
+                    workspaceId: activeWorkspaceId,
+                    organizationId: employeeDetailsForm?.organization?.id,
+                }),
+            ).unwrap();
 
-        dispatch(fetchAllBerthes({ replaceData: true }));
+            // Получаем новый список
+            dataFetcher();
+            // Устанавливаем в качестве нового значения
+            onValueChanged?.(res);
 
-        setModalOpen(false);
-        setNewBerth("");
-    }, [activeWorkspaceId, dispatch, newBerth]);
-
-    const onCancel = useCallback(() => {
-        setModalOpen(false);
-        setNewBerth("");
-    }, []);
-
-    const modalDialog = (
-        <Modal
-            title="Новая должность"
-            centered
-            open={modalOpen}
-            onOk={onSave}
-            onCancel={onCancel}
-            okText={"Сохранить"}
-            cancelText={"Отмена"}
-        >
-            <Form key={"modalForm"}>
-                <Form.Item>
-                    <Input onChange={(e) => setNewBerth(e.target.value)} />
-                </Form.Item>
-            </Form>
-        </Modal>
-    );
+            // Закрываем окно
+            setModalOpen(false);
+        }
+    }, [
+        activeWorkspaceId,
+        berthDetails,
+        dataFetcher,
+        dispatch,
+        employeeDetailsForm?.organization?.id,
+        onValueChanged,
+    ]);
 
     return (
         <>
+            <ModalFormWrapper
+                form={form}
+                title={"Новая должность"}
+                isVisible={modalOpen}
+                onCancel={() => setModalOpen(false)}
+                onSave={onSave}
+            >
+                <DynamicModuleLoader reducers={reducersModal}>
+                    <BerthForm form={form} />
+                </DynamicModuleLoader>
+            </ModalFormWrapper>
             <DropdownSelector
-                className={cls.selector}
                 reducers={reducers}
                 value={convertBerthToSelectObject(value)}
                 isLoading={isLoading}
@@ -142,6 +167,7 @@ export const BerthSelector = memo((props: BerthSelectorProps) => {
                 options={options}
                 error={error}
                 onAdd={onAdd}
+                disabled={isLoading || !!error}
                 {...otherProps}
             />
         </>

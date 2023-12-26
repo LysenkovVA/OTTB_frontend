@@ -1,11 +1,15 @@
 import {
+    getEmployeeDetailsAvatarChanged,
+    getEmployeeDetailsDataChanged,
     getEmployeeDetailsForm,
     getEmployeeDetailsFormAvatar,
 } from "@/entities/Employee";
 import { getUserActiveWorkspaceId } from "@/entities/User";
 import { EmployeeDetailsForm } from "@/features/Employees/editEmployee/ui/EmployeeDetailsForm/EmployeeDetailsForm";
 import { createEmployee } from "@/features/Employees/employeesInfiniteList/model/services/createEmployee/createEmployee";
+import { deleteEmployeeAvatar } from "@/features/Employees/employeesInfiniteList/model/services/deleteEmployeeAvatar/deleteEmployeeAvatar";
 import { updateEmployee } from "@/features/Employees/employeesInfiniteList/model/services/updateEmployee/updateEmployee";
+import { updateEmployeeAvatar } from "@/features/Employees/employeesInfiniteList/model/services/updateEmployeeAvatar/updateEmployeeAvatar";
 import { FilesHelper } from "@/shared/helpers/FilesHelper";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
 import { EditFormWrapper } from "@/shared/ui/EditFormWrapper";
@@ -27,38 +31,79 @@ export const EditEmployee = memo((props: EditEmployeeProps) => {
     const detailsForm = useSelector(getEmployeeDetailsForm);
     const workspaceId = useSelector(getUserActiveWorkspaceId);
     const formAvatar = useSelector(getEmployeeDetailsFormAvatar);
+    const dataChanged = useSelector(getEmployeeDetailsDataChanged);
+    const avatarChanged = useSelector(getEmployeeDetailsAvatarChanged);
 
     const onSave = useCallback(async () => {
         if (detailsForm) {
             try {
                 if (!detailsForm.id) {
                     // Создаем запись
-                    await dispatch(
+                    const newEmployee = await dispatch(
                         createEmployee({
                             data: detailsForm,
                             workspaceId,
-                            file: await FilesHelper.getBlobFromString(
-                                formAvatar,
-                            ),
                         }),
-                    );
+                    ).unwrap();
+
+                    // Добавляем аватар только если он выбран
+                    if (avatarChanged && newEmployee?.id && formAvatar) {
+                        await dispatch(
+                            updateEmployeeAvatar({
+                                employeeId: newEmployee?.id,
+                                file: await FilesHelper.getBlobFromString(
+                                    formAvatar,
+                                ),
+                            }),
+                        );
+                    }
+
+                    onUpdated();
                 } else {
                     // Обновляем запись
-                    await dispatch(
-                        updateEmployee({
-                            id: detailsForm.id,
-                            data: detailsForm,
-                            file: await FilesHelper.getBlobFromString(
-                                formAvatar,
-                            ),
-                        }),
-                    );
-                }
+                    if (dataChanged) {
+                        await dispatch(
+                            updateEmployee({
+                                id: detailsForm.id,
+                                data: detailsForm,
+                            }),
+                        );
+                    }
 
-                onUpdated();
+                    if (avatarChanged) {
+                        if (formAvatar) {
+                            // Обновляем аватар
+                            await dispatch(
+                                updateEmployeeAvatar({
+                                    employeeId: detailsForm.id,
+                                    file: await FilesHelper.getBlobFromString(
+                                        formAvatar,
+                                    ),
+                                }),
+                            );
+                        } else {
+                            // Удаляем аватар
+                            await dispatch(
+                                deleteEmployeeAvatar({
+                                    employeeId: detailsForm.id,
+                                }),
+                            );
+                        }
+                    }
+
+                    onUpdated();
+                }
             } catch {}
         }
-    }, [detailsForm, onUpdated, dispatch, workspaceId, formAvatar]);
+    }, [
+        detailsForm,
+        dispatch,
+        workspaceId,
+        formAvatar,
+        onUpdated,
+        dataChanged,
+        avatarChanged,
+    ]);
 
     return (
         <EditFormWrapper

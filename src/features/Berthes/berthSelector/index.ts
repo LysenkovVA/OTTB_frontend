@@ -1,2 +1,2 @@
-export type { AllBerthesSchema } from "./model/types/AllBerthesSchema";
+export type { BerthesListSchema } from "./model/types/BerthesListSchema";
 export { BerthSelector } from "./ui/BerthSelector/BerthSelector";

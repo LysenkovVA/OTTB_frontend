@@ -19,12 +19,12 @@ export const getEmployeeDetailsForm = createSelector(
     },
 );
 
-export const getEmployeeDetailsFormSelectedOrganization = createSelector(
-    getEmployeeDetailsSchema,
-    (schema) => {
-        return schema?.employeeDetailsFormSelectedOrganization ?? undefined;
-    },
-);
+// export const getEmployeeDetailsFormSelectedOrganization = createSelector(
+//     getEmployeeDetailsSchema,
+//     (schema) => {
+//         return schema?.employeeDetailsFormSelectedOrganization ?? undefined;
+//     },
+// );
 
 export const getEmployeeDetailsIsDataLoading = createSelector(
     getEmployeeDetailsSchema,
@@ -51,5 +51,19 @@ export const getEmployeeDetailsFormAvatar = createSelector(
     getEmployeeDetailsSchema,
     (schema) => {
         return schema?.employeeDetailsFormAvatar ?? undefined;
+    },
+);
+
+export const getEmployeeDetailsDataChanged = createSelector(
+    getEmployeeDetailsSchema,
+    (schema) => {
+        return schema?.dataChanged ?? false;
+    },
+);
+
+export const getEmployeeDetailsAvatarChanged = createSelector(
+    getEmployeeDetailsSchema,
+    (schema) => {
+        return schema?.avatarChanged ?? false;
     },
 );

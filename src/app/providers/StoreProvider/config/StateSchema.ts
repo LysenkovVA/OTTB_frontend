@@ -1,9 +1,12 @@
 // Схема данных приложения
+import { BerthDetailsSchema } from "@/entities/Berth";
+import { BerthTypeDetailsSchema } from "@/entities/BerthType/model/types/BerthTypeDetailsSchema";
 import { EmployeeDetailsSchema } from "@/entities/Employee";
 import { OrganizationDetailsSchema } from "@/entities/Organization";
 import { ProfileSchema } from "@/entities/Profile";
 import { UserSchema } from "@/entities/User/model/types/UserSchema";
-import { AllBerthesSchema } from "@/features/Berthes/berthSelector";
+import { BerthTypeListSchema } from "@/features/BerthTypes/berthTypeSelector";
+import { BerthesListSchema } from "@/features/Berthes/berthSelector";
 import { DepartmentDetailsSchema } from "@/features/Departments/departmentDetailsCard";
 import { AllDepartmentsSchema } from "@/features/Departments/departmentSelector";
 import { AllOrganizationsSchema } from "@/features/Organizations/organizationSelector";
@@ -52,10 +55,13 @@ export interface StateSchema {
     // ДЕТАЛИ РАБОТНИКА
     employeeDetailsSchema?: EmployeeDetailsSchema;
     departmentDetailsSchema?: DepartmentDetailsSchema;
-    allBerthesSchema?: AllBerthesSchema;
+    berthDetailsSchema?: BerthDetailsSchema;
+    allBerthesSchema?: BerthesListSchema;
     allOrganizationsSchema?: AllOrganizationsSchema;
     allDepartmentsSchema?: AllDepartmentsSchema;
     organizationDetailsSchema?: OrganizationDetailsSchema;
+    berthTypeDetailsSchema?: BerthTypeDetailsSchema;
+    berthTypesListSchema?: BerthTypeListSchema;
 }
 
 // Для автокоплита

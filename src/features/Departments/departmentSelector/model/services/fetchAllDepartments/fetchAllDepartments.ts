@@ -1,13 +1,13 @@
 import { ThunkConfig } from "@/app/providers/StoreProvider";
 import { Department } from "@/entities/Department";
-import { getUserActiveWorkspaceId } from "@/entities/User";
 import { ServerError } from "@/shared/error/ServerError";
 import { FetchRowsResult } from "@/shared/types/FetchRowsResult";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 export interface FetchAllDepartmentsProps {
     replaceData?: boolean; // Для использования в action.meta.arg
-    organizationId?: string;
+    workspaceId: string | undefined;
+    organizationId: string | undefined;
 }
 
 export const fetchAllDepartments = createAsyncThunk<
@@ -17,8 +17,15 @@ export const fetchAllDepartments = createAsyncThunk<
 >("departments/fetchAllDepartments", async (props, thunkApi) => {
     const { extra, rejectWithValue, getState } = thunkApi;
 
-    const { organizationId } = props;
-    const workspaceId = getUserActiveWorkspaceId(getState());
+    const { organizationId, workspaceId } = props;
+
+    if (!workspaceId) {
+        return rejectWithValue("Рабочее пространство неизвестно!");
+    }
+
+    if (!organizationId) {
+        return rejectWithValue("Организация не задана!");
+    }
 
     try {
         // Отправляем запрос

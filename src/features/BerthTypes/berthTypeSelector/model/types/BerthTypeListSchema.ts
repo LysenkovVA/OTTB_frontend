@@ -1,7 +1,7 @@
-import { Berth } from "@/entities/Berth";
+import { BerthType } from "@/entities/BerthType";
 import { EntityState } from "@reduxjs/toolkit";
 
-export interface AllBerthesSchema extends EntityState<Berth> {
+export interface BerthTypeListSchema extends EntityState<BerthType> {
     isLoading?: boolean;
     error?: string;
     _isInitialized: boolean;

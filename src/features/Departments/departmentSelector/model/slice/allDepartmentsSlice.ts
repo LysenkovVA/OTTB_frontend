@@ -45,6 +45,12 @@ export const allDepartmentsSlice = createSlice({
             .addCase(fetchAllDepartments.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.payload;
+
+                // Если данные заменяются
+                if (action.meta.arg.replaceData) {
+                    // Очищаем старые
+                    allDepartmentsAdapter.removeAll(state);
+                }
             });
     },
 });

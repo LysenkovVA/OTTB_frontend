@@ -6,6 +6,8 @@ export interface EmployeeDetailsSchema {
     dataError?: string;
     employeeDetails?: Employee;
     employeeDetailsForm?: Employee;
+    dataChanged?: boolean;
+    avatarChanged?: boolean;
     employeeDetailsFormSelectedOrganization?: Organization;
     employeeDetailsFormAvatar?: string;
     _isInitialized?: boolean;

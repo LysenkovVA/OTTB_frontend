@@ -2,50 +2,25 @@ import { ThunkConfig } from "@/app/providers/StoreProvider";
 import { Employee } from "@/entities/Employee/model/types/Employee";
 import { ServerError } from "@/shared/error/ServerError";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AxiosError, AxiosHeaders } from "axios";
+import { AxiosError } from "axios";
 
 export interface UpdateEmployeeDetailsByIdProps {
     id: string;
     data: Employee;
-    file?: Blob;
 }
 
 export const updateEmployee = createAsyncThunk<
     Employee,
     UpdateEmployeeDetailsByIdProps,
     ThunkConfig<string>
->("employee/updateEmployee", async ({ id, data, file }, thunkApi) => {
-    const { dispatch, extra, rejectWithValue } = thunkApi;
+>("updateEmployee", async ({ id, data }, thunkApi) => {
+    const { extra, rejectWithValue } = thunkApi;
 
     try {
-        const formData = new FormData();
-
-        // Данные
-        if (data) {
-            Object.keys(data).forEach((key) => {
-                // @ts-ignore
-                if (data[key]) {
-                    // @ts-ignore
-                    formData.append(key, data[key]);
-                }
-            });
-        }
-
-        // Аватар
-        if (file) {
-            formData.append("avatar", file, "avatar");
-        }
-
-        const headers = new AxiosHeaders();
-        headers.setContentType("multipart/form-data");
-
-        const response = await extra.api.patch<Employee>(
-            `/employees/${id}`,
-            formData,
-            {
-                headers,
-            },
-        );
+        const response = await extra.api.patch<Employee>(`/employees/${id}`, {
+            ...data,
+            id: undefined,
+        });
 
         return response.data;
     } catch (e) {

@@ -5,21 +5,19 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 
 export interface UpdateBerthProps {
-    berth: Berth;
+    id: string;
+    data: Berth;
 }
 
 export const updateBerth = createAsyncThunk<
     Berth,
     UpdateBerthProps,
     ThunkConfig<string>
->("berthes/updateBerth", async ({ berth }, thunkApi) => {
+>("berthes/updateBerth", async ({ id, data }, thunkApi) => {
     const { dispatch, extra, rejectWithValue } = thunkApi;
 
     try {
-        const response = await extra.api.patch<Berth>(
-            `/berthes/${berth.id}`,
-            berth,
-        );
+        const response = await extra.api.patch<Berth>(`/berthes/${id}`, data);
 
         return response.data;
     } catch (e) {

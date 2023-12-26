@@ -1,8 +1,10 @@
 import { Employee } from "@/entities/Employee";
 import { createEmployee } from "@/features/Employees/employeesInfiniteList/model/services/createEmployee/createEmployee";
 import { deleteEmployee } from "@/features/Employees/employeesInfiniteList/model/services/deleteEmployee/deleteEmployee";
+import { deleteEmployeeAvatar } from "@/features/Employees/employeesInfiniteList/model/services/deleteEmployeeAvatar/deleteEmployeeAvatar";
 import { fetchEmployeesInfiniteList } from "@/features/Employees/employeesInfiniteList/model/services/fetchEmployeesInfiniteList/fetchEmployeesInfiniteList";
 import { updateEmployee } from "@/features/Employees/employeesInfiniteList/model/services/updateEmployee/updateEmployee";
+import { updateEmployeeAvatar } from "@/features/Employees/employeesInfiniteList/model/services/updateEmployeeAvatar/updateEmployeeAvatar";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { employeesInfiniteListAdapter } from "../adapter/employeesInfiniteListAdapter";
 import { EmployeesInfiniteListSchema } from "../types/EmployeesInfiniteListSchema";
@@ -90,6 +92,31 @@ export const employeesInfiniteListSlice = createSlice({
                     employeesInfiniteListAdapter.setOne(state, action.payload);
                 },
             )
+            .addCase(updateEmployeeAvatar.fulfilled, (state, action) => {
+                const employee = employeesInfiniteListAdapter
+                    .getSelectors()
+                    .selectById(state, action.meta.arg.employeeId);
+                const avatar = action.payload;
+
+                if (employee && avatar) {
+                    employeesInfiniteListAdapter.setOne(state, {
+                        ...employee,
+                        avatar,
+                    });
+                }
+            })
+            .addCase(deleteEmployeeAvatar.fulfilled, (state, action) => {
+                const employee = employeesInfiniteListAdapter
+                    .getSelectors()
+                    .selectById(state, action.meta.arg.employeeId);
+
+                if (employee) {
+                    employeesInfiniteListAdapter.setOne(state, {
+                        ...employee,
+                        avatar: undefined,
+                    });
+                }
+            })
             .addCase(updateEmployee.rejected, (state, action) => {})
             .addCase(deleteEmployee.pending, (state, action) => {})
             .addCase(deleteEmployee.fulfilled, (state, action) => {

@@ -50,7 +50,7 @@ export const EditFormWrapper = memo((props: EditFormWrapperProps) => {
 
     return (
         <Card
-            className={classNames(cls.EditFormWrapper, {}, [className])}
+            rootClassName={classNames(cls.EditFormWrapper, {}, [className])}
             title={titleContent}
             extra={extraContent}
         >
