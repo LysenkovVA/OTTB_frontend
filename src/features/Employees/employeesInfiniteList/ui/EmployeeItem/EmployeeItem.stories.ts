@@ -33,6 +33,7 @@ export const Primary: Story = {
             berth: {
                 id: "1",
                 value: "Электрик",
+                hasRank: false,
                 berthType: {
                     id: "1",
                     value: "Рабочий",

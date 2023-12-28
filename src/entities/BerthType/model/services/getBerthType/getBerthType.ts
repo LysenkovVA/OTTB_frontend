@@ -16,7 +16,7 @@ export const getBerthType = createAsyncThunk<
     const { dispatch, extra, rejectWithValue } = thunkApi;
 
     try {
-        const response = await extra.api.get<BerthType>(`/berthtypes/${id}`);
+        const response = await extra.api.get<BerthType>(`/berth-types/${id}`);
         return response.data;
     } catch (e) {
         if (e instanceof AxiosError) {

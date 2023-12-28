@@ -62,7 +62,8 @@ export const DepartmentCard = memo((props: DepartmentCardProps) => {
             try {
                 await dispatch(
                     updateDepartment({
-                        department: departmentDetailsForm,
+                        id: departmentDetailsForm.id,
+                        data: departmentDetailsForm,
                     }),
                 );
 

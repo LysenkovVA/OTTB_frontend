@@ -20,16 +20,18 @@ import {
     Alert,
     Col,
     DatePicker,
-    Divider,
     Flex,
     Form,
     FormInstance,
     Input,
     Row,
+    Tabs,
+    TabsProps,
 } from "antd";
 import dayjs from "dayjs";
 import { memo, useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
+import cls from "./EmployeeDetailsForm.module.scss";
 
 interface EmployeeDetailsFormProps {
     className?: string;
@@ -159,6 +161,105 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
         [dispatch, employeeDetailsForm, workspaceId],
     );
 
+    const workContent = (
+        <>
+            <Row gutter={[8, 8]}>
+                <Col span={12}>
+                    <Form.Item label={"Организация"}>
+                        <OrganizationSelector
+                            value={employeeDetailsForm?.organization}
+                            onValueChanged={onChangeOrganization}
+                        />
+                    </Form.Item>
+                </Col>
+            </Row>
+            <Row gutter={[8, 8]}>
+                <Col span={12}>
+                    <Form.Item label={"Подразделение"}>
+                        <DepartmentSelector
+                            disabled={
+                                employeeDetailsForm?.organization === undefined
+                            }
+                            value={employeeDetailsForm?.department}
+                            onValueChanged={onChangeDepartment}
+                        />
+                    </Form.Item>
+                </Col>
+            </Row>
+            <Row gutter={[8, 8]}>
+                <Col span={12}>
+                    <Form.Item label={"Должность"}>
+                        <BerthSelector
+                            disabled={
+                                employeeDetailsForm?.organization === undefined
+                            }
+                            value={employeeDetailsForm?.berth}
+                            onValueChanged={onChangeBerth}
+                        />
+                    </Form.Item>
+                </Col>
+                {employeeDetailsForm?.berth?.hasRank && (
+                    <Col span={12}>
+                        <Form.Item label={"Разряд"} name={"rank"}>
+                            <Input
+                                disabled={
+                                    employeeDetailsForm?.organization ===
+                                    undefined
+                                }
+                            />
+                        </Form.Item>
+                    </Col>
+                )}
+            </Row>
+            <Form.Item label={"Принят на работу"} name={"hireDate"}>
+                <DatePicker format={"DD.MM.YYYY"} />
+            </Form.Item>
+        </>
+    );
+
+    const contactsContent = (
+        <>
+            <Row gutter={[8, 8]}>
+                <Col span={8}>
+                    <Form.Item
+                        label={"Телефон"}
+                        name={"phone"}
+                        rules={[
+                            {
+                                message: "Телефон указан неверно",
+                            },
+                        ]}
+                    >
+                        <Input inputMode={"tel"} />
+                    </Form.Item>
+                </Col>
+            </Row>
+            <Row gutter={[8, 8]}>
+                <Col span={8}>
+                    <Form.Item
+                        label={"E-mail"}
+                        name={"email"}
+                        rules={[
+                            {
+                                required: false,
+                                type: "email",
+                                message:
+                                    "Пожалуйста, укажите корректный E-mail!",
+                            },
+                        ]}
+                    >
+                        <Input inputMode={"email"} />
+                    </Form.Item>
+                </Col>
+            </Row>
+        </>
+    );
+
+    const items: TabsProps["items"] = [
+        { key: "1", label: "Работа", children: workContent },
+        { key: "2", label: "Контакты", children: contactsContent },
+    ];
+
     return (
         <>
             {error && <Alert type={"error"} message={error} />}
@@ -203,7 +304,9 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
                     <Col span={12}>
                         <Flex justify={"flex-end"}>
                             <EditableAvatar
-                                size={150}
+                                className={cls.avatar}
+                                size={200}
+                                shape={"square"}
                                 // style={{ backgroundColor: "#87d068" }}
                                 file={employeeDetailsForm?.avatar}
                                 onChangeAvatar={onChangeAvatar}
@@ -212,93 +315,7 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
                         </Flex>
                     </Col>
                 </Row>
-                <Row gutter={[8, 8]}>
-                    <Col span={8}>
-                        <Form.Item
-                            label={"Телефон"}
-                            name={"phone"}
-                            rules={[
-                                {
-                                    message: "Телефон указан неверно",
-                                },
-                            ]}
-                        >
-                            <Input inputMode={"tel"} />
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Row gutter={[8, 8]}>
-                    <Col span={8}>
-                        <Form.Item
-                            label={"E-mail"}
-                            name={"email"}
-                            rules={[
-                                {
-                                    required: false,
-                                    type: "email",
-                                    message:
-                                        "Пожалуйста, укажите корректный E-mail!",
-                                },
-                            ]}
-                        >
-                            <Input inputMode={"email"} />
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Divider orientation={"left"} orientationMargin={0}>
-                    Работа
-                </Divider>
-                <Row gutter={[8, 8]}>
-                    <Col span={12}>
-                        <Form.Item label={"Организация"}>
-                            <OrganizationSelector
-                                value={employeeDetailsForm?.organization}
-                                onValueChanged={onChangeOrganization}
-                            />
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Row gutter={[8, 8]}>
-                    <Col span={12}>
-                        <Form.Item label={"Подразделение"}>
-                            <DepartmentSelector
-                                disabled={
-                                    employeeDetailsForm?.organization ===
-                                    undefined
-                                }
-                                value={employeeDetailsForm?.department}
-                                onValueChanged={onChangeDepartment}
-                            />
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Row gutter={[8, 8]}>
-                    <Col span={12}>
-                        <Form.Item label={"Должность"}>
-                            <BerthSelector
-                                disabled={
-                                    employeeDetailsForm?.organization ===
-                                    undefined
-                                }
-                                value={employeeDetailsForm?.berth}
-                                onValueChanged={onChangeBerth}
-                            />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item label={"Разряд"} name={"rank"}>
-                            <Input
-                                disabled={
-                                    employeeDetailsForm?.organization ===
-                                    undefined
-                                }
-                            />
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Form.Item label={"Принят на работу"} name={"hireDate"}>
-                    <DatePicker format={"DD.MM.YYYY"} />
-                </Form.Item>
+                <Tabs defaultActiveKey={"1"} items={items} />
             </Form>
         </>
     );

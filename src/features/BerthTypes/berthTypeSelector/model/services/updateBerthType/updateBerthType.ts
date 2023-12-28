@@ -18,7 +18,7 @@ export const updateBerthType = createAsyncThunk<
 
     try {
         const response = await extra.api.patch<BerthType>(
-            `/berthtypes/${id}`,
+            `/berth-types/${id}`,
             data,
         );
 

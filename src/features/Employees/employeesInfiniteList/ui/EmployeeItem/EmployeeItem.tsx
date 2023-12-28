@@ -56,7 +56,7 @@ export const EmployeeItem = (props: EmployeeItemProps) => {
                 />
                 <PreviewField
                     component={organizationSvg}
-                    value={employee.department?.organization?.name}
+                    value={employee.organization?.name}
                 />
             </Flex>
         </Card>

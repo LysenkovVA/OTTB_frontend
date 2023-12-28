@@ -2,7 +2,7 @@ import {
     DynamicModuleLoader,
     ReducersList,
 } from "@/shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
-import { PlusCircleOutlined } from "@ant-design/icons";
+import { EditOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { Button, Empty, Flex, Select, SelectProps } from "antd";
 import { memo, useCallback } from "react";
 
@@ -25,6 +25,7 @@ interface DropdownSelectorProps extends DDSelectorProps {
     error?: string;
     options: DropdownSelectorType[];
     onAdd?: () => void;
+    onEdit?: () => void;
     disabled?: boolean;
 }
 
@@ -38,6 +39,7 @@ export const DropdownSelector = memo((props: DropdownSelectorProps) => {
         onValueChanged,
         error,
         onAdd,
+        onEdit,
         disabled,
         ...otherProps
     } = props;
@@ -57,14 +59,6 @@ export const DropdownSelector = memo((props: DropdownSelectorProps) => {
     const onClear = useCallback(() => {
         onValueChanged(undefined);
     }, [onValueChanged]);
-
-    // const disabled = useCallback(() => {
-    //     if (isLoading || error) {
-    //         return true;
-    //     }
-    //
-    //     return false;
-    // }, [error, isLoading]);
 
     return (
         <DynamicModuleLoader reducers={reducers} removeAfterUnmount={false}>
@@ -94,36 +88,28 @@ export const DropdownSelector = memo((props: DropdownSelectorProps) => {
                             style={{ paddingBottom: 10 }}
                         />
                     }
-                    // dropdownRender={(menu) => (
-                    //     <>
-                    //         {menu}
-                    //         <Flex
-                    //             justify={"center"}
-                    //             align={"center"}
-                    //             style={{ paddingTop: 8 }}
-                    //         >
-                    //             <Button
-                    //                 icon={<PlusOutlined />}
-                    //                 type={"link"}
-                    //                 onClick={() => {
-                    //                     onAdd?.();
-                    //                 }}
-                    //             >
-                    //                 {"Добавить"}
-                    //             </Button>
-                    //         </Flex>
-                    //     </>
-                    // )}
                     {...otherProps}
                 />
-                <Button
-                    type={"link"}
-                    icon={<PlusCircleOutlined />}
-                    disabled={disabled}
-                    onClick={() => {
-                        onAdd?.();
-                    }}
-                />
+                {onAdd && (
+                    <Button
+                        type={"link"}
+                        icon={<PlusCircleOutlined />}
+                        disabled={disabled}
+                        onClick={() => {
+                            onAdd?.();
+                        }}
+                    />
+                )}
+                {onEdit && (
+                    <Button
+                        type={"link"}
+                        icon={<EditOutlined />}
+                        disabled={disabled || value.length === 0}
+                        onClick={() => {
+                            onEdit?.();
+                        }}
+                    />
+                )}
             </Flex>
         </DynamicModuleLoader>
     );

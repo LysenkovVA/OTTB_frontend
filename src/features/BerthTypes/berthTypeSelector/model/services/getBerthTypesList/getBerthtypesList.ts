@@ -30,7 +30,7 @@ export const getBerthTypesList = createAsyncThunk<
     try {
         // Отправляем запрос
         const response = await extra.api.get<FetchRowsResult<BerthType>>(
-            "/berthtypes",
+            "/berth-types",
             {
                 params: {
                     workspaceId,

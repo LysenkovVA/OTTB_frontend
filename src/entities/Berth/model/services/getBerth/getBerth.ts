@@ -1,6 +1,5 @@
 import { ThunkConfig } from "@/app/providers/StoreProvider";
 import { Berth } from "@/entities/Berth";
-import { BerthType } from "@/entities/BerthType";
 import { ServerError } from "@/shared/error/ServerError";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
@@ -10,7 +9,7 @@ export interface GetBerthProps {
 }
 
 export const getBerth = createAsyncThunk<
-    BerthType,
+    Berth,
     GetBerthProps,
     ThunkConfig<string>
 >("getBerth", async ({ id }, thunkApi) => {

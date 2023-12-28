@@ -78,8 +78,8 @@ export const EmployeeDetails = memo((props: EmployeeDetailsProps) => {
 
     const viewContent = employeeDetails ? (
         <ViewWrapper
-            title={`${employeeDetails?.surname}`}
-            deleteText={`Удалить ${employeeDetails?.surname}?`}
+            title={`${employeeDetails?.surname} ${employeeDetails?.name}`}
+            deleteText={`Удалить ${employeeDetails?.surname} ${employeeDetails?.name}?`}
             onEditClick={() => {
                 setIsEditMode(true);
             }}

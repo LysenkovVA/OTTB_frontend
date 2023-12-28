@@ -1,4 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { Department } from "@/entities/Department";
+import { updateDepartment } from "@/features/Departments/departmentDetailsCard/model/services/updateDepartment/updateDepartment";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { allDepartmentsAdapter } from "../adapter/allDepartmentsAdapter";
 import { fetchAllDepartments } from "../services/fetchAllDepartments/fetchAllDepartments";
 import { AllDepartmentsSchema } from "../types/AllDepartmentsSchema";
@@ -51,7 +53,13 @@ export const allDepartmentsSlice = createSlice({
                     // Очищаем старые
                     allDepartmentsAdapter.removeAll(state);
                 }
-            });
+            })
+            .addCase(
+                updateDepartment.fulfilled,
+                (state, action: PayloadAction<Department>) => {
+                    allDepartmentsAdapter.setOne(state, action.payload);
+                },
+            );
     },
 });
 

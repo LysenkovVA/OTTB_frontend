@@ -1,8 +1,9 @@
-import { Organization } from "@/entities/Organization";
+import { getOrganization, Organization } from "@/entities/Organization";
 import { getOrganizationDetailsForm } from "@/entities/Organization/model/selectors/organizationDetailsSelectors";
 import { organizationDetailsReducer } from "@/entities/Organization/model/slice/organizationDetailsSlice";
 import { getUserActiveWorkspaceId } from "@/entities/User";
 import { OrganizationSimpleForm } from "@/features/Organizations/organizationSelector/ui/OrganizationSimpleForm/OrganizationSimpleForm";
+import { updateOrganization } from "@/features/Organizations/organizationsInfiniteList";
 import { createOrganization } from "@/features/Organizations/organizationsInfiniteList/model/services/createOrganization/createOrganization";
 import {
     DynamicModuleLoader,
@@ -50,6 +51,7 @@ const convertOrganizationToSelectObject = (
 export const OrganizationSelector = memo((props: OrganizationSelectorProps) => {
     const { className, onValueChanged, value, ...otherProps } = props;
 
+    const [form] = useForm();
     const [modalOpen, setModalOpen] = useState(false);
 
     const dispatch = useAppDispatch();
@@ -67,15 +69,10 @@ export const OrganizationSelector = memo((props: OrganizationSelectorProps) => {
         });
     }, [organizations]);
 
-    // Выбрка данных с сервера
-    const dataFetcher = useCallback(() => {
-        dispatch(fetchAllOrganizations({ replaceData: true }));
-    }, [dispatch]);
-
     // Инициализация значений
     useInitialEffect(() => {
         if (!isInitialized) {
-            dataFetcher();
+            dispatch(fetchAllOrganizations({ replaceData: true }));
         }
     });
 
@@ -102,39 +99,52 @@ export const OrganizationSelector = memo((props: OrganizationSelectorProps) => {
         setModalOpen(true);
     }, []);
 
+    const onEditOrganization = useCallback(() => {
+        if (value?.id) {
+            dispatch(getOrganization({ id: value?.id }));
+            setModalOpen(true);
+        } else {
+            alert("Организация не выбрана!");
+        }
+    }, [dispatch, value?.id]);
+
     const onSaveOrganization = useCallback(async () => {
         if (organizationDetails) {
-            // Создаем новую организацию
-            const res = await dispatch(
-                createOrganization({
-                    data: organizationDetails,
-                    workspaceId: activeWorkspaceId,
-                }),
-            ).unwrap();
+            if (!organizationDetails.id) {
+                // Создаем новую организацию
+                const newOrganization = await dispatch(
+                    createOrganization({
+                        data: organizationDetails,
+                        workspaceId: activeWorkspaceId,
+                    }),
+                ).unwrap();
 
-            // Получаем новый список
-            dataFetcher();
-            // Устанавливаем в качестве нового значения
-            onValueChanged?.(res);
+                // Устанавливаем в качестве нового значения
+                onValueChanged?.(newOrganization);
+            } else {
+                // Обновляем организацию
+                await dispatch(
+                    updateOrganization({
+                        id: organizationDetails.id,
+                        data: organizationDetails,
+                    }),
+                ).unwrap();
+            }
 
             // Закрываем окно
             setModalOpen(false);
         }
-    }, [
-        activeWorkspaceId,
-        dataFetcher,
-        dispatch,
-        onValueChanged,
-        organizationDetails,
-    ]);
-
-    const [form] = useForm();
+    }, [activeWorkspaceId, dispatch, onValueChanged, organizationDetails]);
 
     return (
         <>
             <ModalFormWrapper
                 form={form}
-                title={"Новая организация"}
+                title={
+                    organizationDetails?.id
+                        ? "Редактирование"
+                        : "Новая организация"
+                }
                 isVisible={modalOpen}
                 onCancel={() => setModalOpen(false)}
                 onSave={onSaveOrganization}
@@ -151,6 +161,7 @@ export const OrganizationSelector = memo((props: OrganizationSelectorProps) => {
                 options={options}
                 error={error}
                 onAdd={onAddOrganization}
+                onEdit={onEditOrganization}
                 {...otherProps}
             />
         </>

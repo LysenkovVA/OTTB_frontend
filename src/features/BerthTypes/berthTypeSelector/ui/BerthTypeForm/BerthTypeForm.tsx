@@ -7,7 +7,7 @@ import {
 import { classNames } from "@/shared/lib/classNames/classNames";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
 import { FieldData } from "@/shared/types/FieldData";
-import { Alert, Col, Form, FormInstance, Input, Row } from "antd";
+import { Alert, Form, FormInstance, Input } from "antd";
 import { memo, useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
 import cls from "./BerthTypeForm.module.scss";
@@ -64,24 +64,19 @@ export const BerthTypeForm = memo((props: BerthTypeFormProps) => {
                 fields={fields}
                 onValuesChange={onValueChanged}
             >
-                <Row gutter={[8, 8]}>
-                    <Col span={24}>
-                        <Form.Item
-                            required
-                            name={"value"}
-                            label={"Тип должности"}
-                            rules={[
-                                {
-                                    required: true,
-                                    message:
-                                        "Пожалуйста, укажите тип должности!",
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                    </Col>
-                </Row>
+                <Form.Item
+                    required
+                    name={"value"}
+                    label={"Тип должности"}
+                    rules={[
+                        {
+                            required: true,
+                            message: "Пожалуйста, укажите тип должности!",
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
             </Form>
         </>
     );

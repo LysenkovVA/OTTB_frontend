@@ -3,6 +3,8 @@ import { getEmployeeDetailsForm } from "@/entities/Employee/model/selectors/getE
 import { getUserActiveWorkspaceId } from "@/entities/User";
 import { getDepartmentDetailsForm } from "@/features/Departments/departmentDetailsCard/model/selectors/departmentDetailsSelectors";
 import { createDepartment } from "@/features/Departments/departmentDetailsCard/model/services/createDepartment/createDepartment";
+import { getDepartment } from "@/features/Departments/departmentDetailsCard/model/services/getDepartment/getDepartment";
+import { updateDepartment } from "@/features/Departments/departmentDetailsCard/model/services/updateDepartment/updateDepartment";
 import { departmentDetailsReducer } from "@/features/Departments/departmentDetailsCard/model/slice/departmentDetailsSlice";
 import { DepartmentForm } from "@/features/Departments/departmentDetailsCard/ui/DepartmentForm/DepartmentForm";
 import {
@@ -57,6 +59,7 @@ const convertDepartmentToSelectObject = (
 export const DepartmentSelector = memo((props: DepartmentSelectorProps) => {
     const { className, onValueChanged, value, ...otherProps } = props;
 
+    const [form] = useForm();
     const [modalOpen, setModalOpen] = useState(false);
 
     const dispatch = useAppDispatch();
@@ -66,9 +69,6 @@ export const DepartmentSelector = memo((props: DepartmentSelectorProps) => {
     const departments = useSelector(getAllDepartments.selectAll);
     const departmentDetails = useSelector(getDepartmentDetailsForm);
     const activeWorkspaceId = useSelector(getUserActiveWorkspaceId);
-    // const employeeOrganization = useSelector(
-    //     getEmployeeDetailsFormSelectedOrganization,
-    // );
     const employeeDetailsForm = useSelector(getEmployeeDetailsForm);
 
     // Список
@@ -78,21 +78,16 @@ export const DepartmentSelector = memo((props: DepartmentSelectorProps) => {
         });
     }, [departments]);
 
-    // Выбрка данных с сервера
-    const dataFetcher = useCallback(() => {
-        dispatch(
-            fetchAllDepartments({
-                workspaceId: activeWorkspaceId,
-                organizationId: employeeDetailsForm?.organization?.id,
-                replaceData: true,
-            }),
-        );
-    }, [activeWorkspaceId, dispatch, employeeDetailsForm?.organization?.id]);
-
     // Инициализация значений
     useInitialEffect(() => {
         if (!isInitialized) {
-            dataFetcher();
+            dispatch(
+                fetchAllDepartments({
+                    workspaceId: activeWorkspaceId,
+                    organizationId: employeeDetailsForm?.organization?.id,
+                    replaceData: true,
+                }),
+            );
         }
     });
 
@@ -119,23 +114,42 @@ export const DepartmentSelector = memo((props: DepartmentSelectorProps) => {
         setModalOpen(true);
     }, []);
 
+    const onEditDepartment = useCallback(() => {
+        if (value?.id) {
+            dispatch(getDepartment({ id: value?.id }));
+            setModalOpen(true);
+        } else {
+            alert("Подразделение не выбрано!");
+        }
+    }, [dispatch, value?.id]);
+
     const onSaveDepartment = useCallback(async () => {
         if (departmentDetails && employeeDetailsForm?.organization) {
-            // Создаем новую организацию
-            const res = await dispatch(
-                createDepartment({
-                    department: {
-                        ...departmentDetails,
-                        organization: { ...employeeDetailsForm?.organization },
-                    },
-                    workspaceId: activeWorkspaceId,
-                }),
-            ).unwrap();
+            if (!departmentDetails.id) {
+                // Создаем новую организацию
+                const res = await dispatch(
+                    createDepartment({
+                        department: {
+                            ...departmentDetails,
+                            organization: {
+                                ...employeeDetailsForm?.organization,
+                            },
+                        },
+                        workspaceId: activeWorkspaceId,
+                    }),
+                ).unwrap();
 
-            // Получаем новый список
-            dataFetcher();
-            // Устанавливаем в качестве нового значения
-            onValueChanged?.(res);
+                // Устанавливаем в качестве нового значения
+                onValueChanged?.(res);
+            } else {
+                // Обновляем
+                await dispatch(
+                    updateDepartment({
+                        id: departmentDetails.id,
+                        data: departmentDetails,
+                    }),
+                );
+            }
 
             // Закрываем окно
             setModalOpen(false);
@@ -144,20 +158,21 @@ export const DepartmentSelector = memo((props: DepartmentSelectorProps) => {
         }
     }, [
         activeWorkspaceId,
-        dataFetcher,
         departmentDetails,
         dispatch,
         employeeDetailsForm?.organization,
         onValueChanged,
     ]);
 
-    const [form] = useForm();
-
     return (
         <>
             <ModalFormWrapper
                 form={form}
-                title={"Новое подразделение"}
+                title={
+                    departmentDetails?.id
+                        ? "Редактирование"
+                        : "Новое подразделение"
+                }
                 isVisible={modalOpen}
                 onCancel={() => setModalOpen(false)}
                 onSave={onSaveDepartment}
@@ -174,6 +189,7 @@ export const DepartmentSelector = memo((props: DepartmentSelectorProps) => {
                 options={options}
                 error={error}
                 onAdd={onAddDepartment}
+                onEdit={onEditDepartment}
                 disabled={isLoading || !!error}
                 {...otherProps}
             />

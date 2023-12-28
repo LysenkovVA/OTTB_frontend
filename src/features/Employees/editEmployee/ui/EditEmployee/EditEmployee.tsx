@@ -108,7 +108,9 @@ export const EditEmployee = memo((props: EditEmployeeProps) => {
     return (
         <EditFormWrapper
             title={
-                detailsForm?.id ? `${detailsForm?.surname}` : "Новый сотрудник"
+                detailsForm?.id
+                    ? `${detailsForm?.surname} ${detailsForm?.name}`
+                    : "Новый сотрудник"
             }
             form={form}
             onSaveClick={onSave}

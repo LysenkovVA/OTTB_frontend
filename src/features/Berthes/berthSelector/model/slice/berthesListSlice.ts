@@ -2,6 +2,7 @@ import { Berth } from "@/entities/Berth";
 import { createBerth } from "@/features/Berthes/berthSelector/model/services/createBerth/createBerth";
 import { deleteBerth } from "@/features/Berthes/berthSelector/model/services/deleteBerth/deleteBerth";
 import { updateBerth } from "@/features/Berthes/berthSelector/model/services/updateBerth/updateBerth";
+import { updateBerthType } from "@/features/BerthTypes/berthTypeSelector/model/services/updateBerthType/updateBerthType";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { berthesListAdapter } from "../adapter/berthesListAdapter";
 import { fetchAllBerthes } from "../services/fetchAllBerthes/fetchAllBerthes";
@@ -70,6 +71,22 @@ export const BerthesListSlice = createSlice({
             )
             .addCase(deleteBerth.fulfilled, (state, action) => {
                 berthesListAdapter.removeOne(state, action.meta.arg.berthId);
+            })
+            .addCase(updateBerthType.fulfilled, (state, action) => {
+                const berthes = berthesListAdapter
+                    .getSelectors()
+                    .selectAll(state)
+                    .filter(
+                        (berth) => berth.berthType?.id === action.meta.arg.id,
+                    );
+
+                // Обновляем значение
+                berthes.forEach((berth) => {
+                    berthesListAdapter.setOne(state, {
+                        ...berth,
+                        berthType: action.payload,
+                    });
+                });
             });
     },
 });

@@ -17,7 +17,7 @@ export const deleteBerthType = createAsyncThunk<
 
     try {
         // Отправляем запрос
-        const response = await extra.api.delete(`/berthtypes/${props.id}`);
+        const response = await extra.api.delete(`/berth-types/${props.id}`);
 
         return undefined;
     } catch (e) {

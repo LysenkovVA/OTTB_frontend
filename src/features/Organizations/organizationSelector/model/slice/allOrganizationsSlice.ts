@@ -4,7 +4,7 @@ import {
     removeOrganization,
     updateOrganization,
 } from "@/features/Organizations/organizationsInfiniteList";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { allOrganizationsAdapter } from "../adapter/allOrganizationsAdapter";
 import { fetchAllOrganizations } from "../services/fetchAllOrganizations/fetchAllOrganizations";
 import { AllOrganizationsSchema } from "../types/AllOrganizationsSchema";
@@ -20,17 +20,7 @@ const initialState: AllOrganizationsSchema = {
 export const allOrganizationsSlice = createSlice({
     name: "allOrganizationsSlice",
     initialState,
-    reducers: {
-        // addOne: (state, action: PayloadAction<Organization>) => {
-        //     allOrganizationsAdapter.addOne(state, action.payload);
-        // },
-        // setOne: (state, action: PayloadAction<Organization>) => {
-        //     allOrganizationsAdapter.setOne(state, action.payload);
-        // },
-        // removeOne: (state, action: PayloadAction<string>) => {
-        //     allOrganizationsAdapter.removeOne(state, action.payload);
-        // },
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
             .addCase(fetchAllOrganizations.pending, (state, action) => {
@@ -62,30 +52,24 @@ export const allOrganizationsSlice = createSlice({
                 state.isLoading = false;
                 state.error = action.payload;
             })
-            .addCase(createOrganization.pending, (state, action) => {})
             .addCase(
                 createOrganization.fulfilled,
                 (state, action: PayloadAction<Organization>) => {
                     allOrganizationsAdapter.addOne(state, action.payload);
                 },
             )
-            .addCase(createOrganization.rejected, (state, action) => {})
-            .addCase(updateOrganization.pending, (state, action) => {})
             .addCase(
                 updateOrganization.fulfilled,
                 (state, action: PayloadAction<Organization>) => {
                     allOrganizationsAdapter.setOne(state, action.payload);
                 },
             )
-            .addCase(updateOrganization.rejected, (state, action) => {})
-            .addCase(removeOrganization.pending, (state, action) => {})
             .addCase(removeOrganization.fulfilled, (state, action) => {
                 allOrganizationsAdapter.removeOne(
                     state,
                     action.meta.arg.organizationId,
                 );
-            })
-            .addCase(removeOrganization.rejected, (state, action) => {});
+            });
     },
 });
 

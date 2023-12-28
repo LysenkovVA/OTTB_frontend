@@ -1,9 +1,12 @@
+import { Berth } from "@/entities/Berth";
+import { Department } from "@/entities/Department";
 import { EmployeeDetailsSchema } from "@/entities/Employee";
 import { getEmployee } from "@/entities/Employee/model/services/getEmployee/getEmployee";
 import { Employee } from "@/entities/Employee/model/types/Employee";
-import { createEmployee } from "@/features/Employees/employeesInfiniteList/model/services/createEmployee/createEmployee";
-import { deleteEmployee } from "@/features/Employees/employeesInfiniteList/model/services/deleteEmployee/deleteEmployee";
-import { updateEmployee } from "@/features/Employees/employeesInfiniteList/model/services/updateEmployee/updateEmployee";
+import { Organization } from "@/entities/Organization";
+import { updateBerth } from "@/features/Berthes/berthSelector/model/services/updateBerth/updateBerth";
+import { updateDepartment } from "@/features/Departments/departmentDetailsCard/model/services/updateDepartment/updateDepartment";
+import { updateOrganization } from "@/features/Organizations/organizationsInfiniteList";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 const initialState: EmployeeDetailsSchema = {
@@ -11,7 +14,6 @@ const initialState: EmployeeDetailsSchema = {
     dataError: undefined,
     employeeDetails: {},
     employeeDetailsForm: {},
-    employeeDetailsFormSelectedOrganization: undefined, // TODO Удалить, т.к. организация будет в работнике
     employeeDetailsFormAvatar: "",
     dataChanged: false,
     avatarChanged: false,
@@ -26,12 +28,6 @@ export const employeeDetailsSlice = createSlice({
             state.employeeDetailsForm = action.payload;
             state.dataChanged = true;
         },
-        // setFormDataSelectedOrganization: (
-        //     state,
-        //     action: PayloadAction<Organization | undefined>,
-        // ) => {
-        //     state.employeeDetailsFormSelectedOrganization = action.payload;
-        // },
         // Используется когда в форме выбирается файл на диске
         setEmployeeDetailsFormDataAvatar: (
             state,
@@ -61,42 +57,33 @@ export const employeeDetailsSlice = createSlice({
                 state.isDataLoading = false;
                 state.dataError = action.payload;
             })
-            .addCase(createEmployee.pending, (state, action) => {
-                state.isDataLoading = true;
-                state.dataError = undefined;
-            })
-            .addCase(createEmployee.fulfilled, (state, action) => {
-                state.isDataLoading = false;
-                state.dataError = undefined;
-            })
-            .addCase(createEmployee.rejected, (state, action) => {
-                state.isDataLoading = false;
-                state.dataError = action.payload;
-            })
-            .addCase(updateEmployee.pending, (state, action) => {
-                state.isDataLoading = true;
-                state.dataError = undefined;
-            })
-            .addCase(updateEmployee.fulfilled, (state, action) => {
-                state.isDataLoading = false;
-                state.dataError = undefined;
-            })
-            .addCase(updateEmployee.rejected, (state, action) => {
-                state.isDataLoading = false;
-                state.dataError = action.payload;
-            })
-            .addCase(deleteEmployee.pending, (state, action) => {
-                state.isDataLoading = true;
-                state.dataError = undefined;
-            })
-            .addCase(deleteEmployee.fulfilled, (state, action) => {
-                state.isDataLoading = false;
-                state.dataError = undefined;
-            })
-            .addCase(deleteEmployee.rejected, (state, action) => {
-                state.isDataLoading = false;
-                state.dataError = action.payload;
-            });
+            .addCase(
+                updateOrganization.fulfilled,
+                (state, action: PayloadAction<Organization>) => {
+                    state.employeeDetailsForm = {
+                        ...state.employeeDetailsForm,
+                        organization: action.payload,
+                    };
+                },
+            )
+            .addCase(
+                updateDepartment.fulfilled,
+                (state, action: PayloadAction<Department>) => {
+                    state.employeeDetailsForm = {
+                        ...state.employeeDetailsForm,
+                        department: action.payload,
+                    };
+                },
+            )
+            .addCase(
+                updateBerth.fulfilled,
+                (state, action: PayloadAction<Berth>) => {
+                    state.employeeDetailsForm = {
+                        ...state.employeeDetailsForm,
+                        berth: action.payload,
+                    };
+                },
+            );
     },
 });
 

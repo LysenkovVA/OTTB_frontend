@@ -1,6 +1,7 @@
 import {
     Berth,
     berthDetailsReducer,
+    getBerth,
     getBerthDetailsForm,
 } from "@/entities/Berth";
 import { getEmployeeDetailsForm } from "@/entities/Employee";
@@ -13,6 +14,7 @@ import {
 } from "@/features/Berthes/berthSelector/model/selectors/berthesListSelectors";
 import { createBerth } from "@/features/Berthes/berthSelector/model/services/createBerth/createBerth";
 import { fetchAllBerthes } from "@/features/Berthes/berthSelector/model/services/fetchAllBerthes/fetchAllBerthes";
+import { updateBerth } from "@/features/Berthes/berthSelector/model/services/updateBerth/updateBerth";
 import { BerthesListReducer } from "@/features/Berthes/berthSelector/model/slice/berthesListSlice";
 import { BerthForm } from "@/features/Berthes/berthSelector/ui/BerthForm/BerthForm";
 import {
@@ -79,21 +81,16 @@ export const BerthSelector = memo((props: BerthSelectorProps) => {
         });
     }, [berthes]);
 
-    // Выбрка данных с сервера
-    const dataFetcher = useCallback(() => {
-        dispatch(
-            fetchAllBerthes({
-                workspaceId: activeWorkspaceId,
-                organizationId: employeeDetailsForm?.organization?.id,
-                replaceData: true,
-            }),
-        );
-    }, [activeWorkspaceId, dispatch, employeeDetailsForm?.organization?.id]);
-
     // Инициализация значений
     useInitialEffect(() => {
         if (!isInitialized) {
-            dataFetcher();
+            dispatch(
+                fetchAllBerthes({
+                    workspaceId: activeWorkspaceId,
+                    organizationId: employeeDetailsForm?.organization?.id,
+                    replaceData: true,
+                }),
+            );
         }
     });
 
@@ -118,31 +115,49 @@ export const BerthSelector = memo((props: BerthSelectorProps) => {
         setModalOpen(true);
     }, []);
 
-    const onSave = useCallback(async () => {
-        if (berthDetails) {
-            // Создаем новую организацию
-            const res = await dispatch(
-                createBerth({
-                    data: berthDetails,
-                    workspaceId: activeWorkspaceId,
-                    organizationId: employeeDetailsForm?.organization?.id,
-                }),
-            ).unwrap();
+    const onEditBerth = useCallback(() => {
+        if (value?.id) {
+            dispatch(getBerth({ id: value?.id }));
+            setModalOpen(true);
+        } else {
+            alert("Должность не выбрана!");
+        }
+    }, [dispatch, value?.id]);
 
-            // Получаем новый список
-            dataFetcher();
-            // Устанавливаем в качестве нового значения
-            onValueChanged?.(res);
+    const onSave = useCallback(async () => {
+        if (berthDetails && employeeDetailsForm?.organization) {
+            if (!berthDetails.id) {
+                // Создаем
+                const res = await dispatch(
+                    createBerth({
+                        data: berthDetails,
+                        workspaceId: activeWorkspaceId,
+                        organizationId: employeeDetailsForm?.organization?.id,
+                    }),
+                ).unwrap();
+
+                // Устанавливаем в качестве нового значения
+                onValueChanged?.(res);
+            } else {
+                // Обновляем
+                await dispatch(
+                    updateBerth({
+                        id: berthDetails.id,
+                        data: berthDetails,
+                    }),
+                );
+            }
 
             // Закрываем окно
             setModalOpen(false);
+        } else {
+            alert("Сначала нужно выбрать организацию!");
         }
     }, [
         activeWorkspaceId,
         berthDetails,
-        dataFetcher,
         dispatch,
-        employeeDetailsForm?.organization?.id,
+        employeeDetailsForm?.organization,
         onValueChanged,
     ]);
 
@@ -150,7 +165,7 @@ export const BerthSelector = memo((props: BerthSelectorProps) => {
         <>
             <ModalFormWrapper
                 form={form}
-                title={"Новая должность"}
+                title={berthDetails?.id ? "Редактирование" : "Новая должность"}
                 isVisible={modalOpen}
                 onCancel={() => setModalOpen(false)}
                 onSave={onSave}
@@ -167,6 +182,7 @@ export const BerthSelector = memo((props: BerthSelectorProps) => {
                 options={options}
                 error={error}
                 onAdd={onAdd}
+                onEdit={onEditBerth}
                 disabled={isLoading || !!error}
                 {...otherProps}
             />

@@ -1,12 +1,14 @@
 import { Berth, BerthDetailsSchema } from "@/entities/Berth";
 import { getBerth } from "@/entities/Berth/model/services/getBerth/getBerth";
+import { BerthType } from "@/entities/BerthType";
+import { updateBerthType } from "@/features/BerthTypes/berthTypeSelector/model/services/updateBerthType/updateBerthType";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 const initialState: BerthDetailsSchema = {
     isLoading: false,
     error: undefined,
-    berthDetails: { id: "", value: "" },
-    berthDetailsForm: { id: "", value: "" },
+    berthDetails: { id: "", value: "", hasRank: false },
+    berthDetailsForm: { id: "", value: "", hasRank: false },
     _isInitialized: false,
 };
 
@@ -37,7 +39,18 @@ export const berthDetailsSlice = createSlice({
             .addCase(getBerth.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.payload;
-            });
+            })
+            .addCase(
+                updateBerthType.fulfilled,
+                (state, action: PayloadAction<BerthType>) => {
+                    if (state.berthDetailsForm) {
+                        state.berthDetailsForm = {
+                            ...state.berthDetailsForm,
+                            berthType: action.payload,
+                        };
+                    }
+                },
+            );
     },
 });
 

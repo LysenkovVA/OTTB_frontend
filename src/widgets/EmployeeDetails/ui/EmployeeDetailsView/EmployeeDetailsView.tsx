@@ -44,7 +44,7 @@ export const EmployeeDetailsView = memo((props: EmployeeDetailsViewProps) => {
                     </Flex>
                     <Flex vertical justify={"flex-end"} align={"flex-end"}>
                         <Typography.Text type={"warning"} className={cls.name}>
-                            {employee?.department?.organization?.name}
+                            {employee?.organization?.name}
                         </Typography.Text>
                         <Typography.Text
                             type={"secondary"}

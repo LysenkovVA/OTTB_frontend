@@ -29,7 +29,7 @@ export const createBerthType = createAsyncThunk<
 
         try {
             const response = await extra.api.post<BerthType>(
-                "/berthtypes/create",
+                "/berth-types/create",
                 { ...data, id: undefined },
                 {
                     params: {

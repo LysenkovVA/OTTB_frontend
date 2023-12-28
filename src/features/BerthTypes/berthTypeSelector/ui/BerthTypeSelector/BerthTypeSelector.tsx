@@ -1,6 +1,7 @@
 import {
     BerthType,
     berthTypeDetailsReducer,
+    getBerthType,
     getBerthTypeDetailsForm,
 } from "@/entities/BerthType";
 import { getEmployeeDetailsForm } from "@/entities/Employee";
@@ -13,6 +14,7 @@ import {
 } from "@/features/BerthTypes/berthTypeSelector/model/selectors/berthTypeListSelectors";
 import { createBerthType } from "@/features/BerthTypes/berthTypeSelector/model/services/createBerthType/createBerthType";
 import { getBerthTypesList } from "@/features/BerthTypes/berthTypeSelector/model/services/getBerthTypesList/getBerthtypesList";
+import { updateBerthType } from "@/features/BerthTypes/berthTypeSelector/model/services/updateBerthType/updateBerthType";
 import { berthTypesListReducer } from "@/features/BerthTypes/berthTypeSelector/model/slice/berthTypesListSlice";
 import { BerthTypeForm } from "@/features/BerthTypes/berthTypeSelector/ui/BerthTypeForm/BerthTypeForm";
 import {
@@ -67,9 +69,6 @@ export const BerthTypeSelector = memo((props: BerthTypeSelectorProps) => {
     const berthTypes = useSelector(getBerthTypesListSelectors.selectAll);
     const berthTypeDetails = useSelector(getBerthTypeDetailsForm);
     const activeWorkspaceId = useSelector(getUserActiveWorkspaceId);
-    // const employeeOrganization = useSelector(
-    //     getEmployeeDetailsFormSelectedOrganization,
-    // );
     const employeeDetailsForm = useSelector(getEmployeeDetailsForm);
 
     // Список
@@ -79,21 +78,16 @@ export const BerthTypeSelector = memo((props: BerthTypeSelectorProps) => {
         });
     }, [berthTypes]);
 
-    // Выбрка данных с сервера
-    const dataFetcher = useCallback(() => {
-        dispatch(
-            getBerthTypesList({
-                workspaceId: activeWorkspaceId,
-                organizationId: employeeDetailsForm?.organization?.id,
-                replaceData: true,
-            }),
-        );
-    }, [activeWorkspaceId, dispatch, employeeDetailsForm?.organization?.id]);
-
     // Инициализация значений
     useInitialEffect(() => {
         if (!isInitialized) {
-            dataFetcher();
+            dispatch(
+                getBerthTypesList({
+                    workspaceId: activeWorkspaceId,
+                    organizationId: employeeDetailsForm?.organization?.id,
+                    replaceData: true,
+                }),
+            );
         }
     });
 
@@ -120,21 +114,38 @@ export const BerthTypeSelector = memo((props: BerthTypeSelectorProps) => {
         setModalOpen(true);
     }, []);
 
+    const onEditBerthType = useCallback(() => {
+        if (value?.id) {
+            dispatch(getBerthType({ id: value.id }));
+            setModalOpen(true);
+        } else {
+            alert("Тип должности не выбран!");
+        }
+    }, [dispatch, value?.id]);
+
     const onSave = useCallback(async () => {
         if (berthTypeDetails) {
-            // Создаем новую организацию
-            const res = await dispatch(
-                createBerthType({
-                    data: berthTypeDetails,
-                    workspaceId: activeWorkspaceId,
-                    organizationId: employeeDetailsForm?.organization?.id,
-                }),
-            ).unwrap();
+            if (!berthTypeDetails.id) {
+                // Создаем
+                const res = await dispatch(
+                    createBerthType({
+                        data: berthTypeDetails,
+                        workspaceId: activeWorkspaceId,
+                        organizationId: employeeDetailsForm?.organization?.id,
+                    }),
+                ).unwrap();
 
-            // Получаем новый список
-            dataFetcher();
-            // Устанавливаем в качестве нового значения
-            onValueChanged?.(res);
+                // Устанавливаем в качестве нового значения
+                onValueChanged?.(res);
+            } else {
+                // Обновляем
+                await dispatch(
+                    updateBerthType({
+                        id: berthTypeDetails.id,
+                        data: berthTypeDetails,
+                    }),
+                );
+            }
 
             // Закрываем окно
             setModalOpen(false);
@@ -142,7 +153,6 @@ export const BerthTypeSelector = memo((props: BerthTypeSelectorProps) => {
     }, [
         activeWorkspaceId,
         berthTypeDetails,
-        dataFetcher,
         dispatch,
         employeeDetailsForm?.organization?.id,
         onValueChanged,
@@ -152,7 +162,11 @@ export const BerthTypeSelector = memo((props: BerthTypeSelectorProps) => {
         <>
             <ModalFormWrapper
                 form={form}
-                title={"Новый тип должности"}
+                title={
+                    berthTypeDetails?.id
+                        ? "Редактирование"
+                        : "Новый тип должности"
+                }
                 isVisible={modalOpen}
                 onCancel={() => setModalOpen(false)}
                 onSave={onSave}
@@ -162,6 +176,7 @@ export const BerthTypeSelector = memo((props: BerthTypeSelectorProps) => {
                 </DynamicModuleLoader>
             </ModalFormWrapper>
             <DropdownSelector
+                placeholder={"ИТР, Рабочий..."}
                 reducers={reducers}
                 value={convertBerthTypeToSelectObject(value)}
                 isLoading={isLoading}
@@ -169,6 +184,7 @@ export const BerthTypeSelector = memo((props: BerthTypeSelectorProps) => {
                 options={options}
                 error={error}
                 onAdd={onAdd}
+                onEdit={onEditBerthType}
                 {...otherProps}
             />
         </>
