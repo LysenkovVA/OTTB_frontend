@@ -13,35 +13,30 @@ export const createOrganization = createAsyncThunk<
     Organization,
     CreateOrganizationProps,
     ThunkConfig<string>
->(
-    "organization/createOrganization",
-    async ({ data, workspaceId }, thunkApi) => {
-        const { extra, rejectWithValue } = thunkApi;
+>("organization/createCertificate", async ({ data, workspaceId }, thunkApi) => {
+    const { extra, rejectWithValue } = thunkApi;
 
-        try {
-            const response = await extra.api.post<Organization>(
-                "/organizations/create",
-                { ...data, id: undefined },
-                {
-                    params: {
-                        workspaceId,
-                    },
+    try {
+        const response = await extra.api.post<Organization>(
+            "/organizations/create",
+            { ...data, id: undefined },
+            {
+                params: {
+                    workspaceId,
                 },
-            );
+            },
+        );
 
-            return response.data;
-        } catch (e) {
-            if (e instanceof AxiosError) {
-                const serverError = e?.response?.data as ServerError;
+        return response.data;
+    } catch (e) {
+        if (e instanceof AxiosError) {
+            const serverError = e?.response?.data as ServerError;
 
-                if (serverError) {
-                    return rejectWithValue(serverError.error);
-                }
+            if (serverError) {
+                return rejectWithValue(serverError.error);
             }
-
-            return rejectWithValue(
-                "Произошла ошибка при создании организации!",
-            );
         }
-    },
-);
+
+        return rejectWithValue("Произошла ошибка при создании организации!");
+    }
+});

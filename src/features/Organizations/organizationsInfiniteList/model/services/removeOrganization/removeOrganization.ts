@@ -12,7 +12,7 @@ export const removeOrganization = createAsyncThunk<
     void,
     RemoveOrganizationProps,
     ThunkConfig<string>
->("organizations/removeOrganization", async (props, thunkApi) => {
+>("organizations/removeCertificate", async (props, thunkApi) => {
     const { extra, rejectWithValue } = thunkApi;
 
     try {

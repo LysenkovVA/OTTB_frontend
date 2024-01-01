@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { BerthTypeSelector } from "./BerthTypeSelector";
 
 const meta = {
-    title: "component/BerthTypeSelector",
+    title: "component/CertificateTypeSelector",
     component: BerthTypeSelector,
     tags: ["autodocs"],
     parameters: {

@@ -1,4 +1,8 @@
+import { Certificate } from "@/entities/Certificate";
+import { createCertificate } from "@/features/Certificates/certificatesInfiniteList/model/services/createCertificate/createCertificate";
 import { fetchInfiniteListCertificates } from "@/features/Certificates/certificatesInfiniteList/model/services/fetchInfiniteListCertificates/fetchInfiniteListCertificates";
+import { removeCertificate } from "@/features/Certificates/certificatesInfiniteList/model/services/removeCertificate/removeCertificate";
+import { updateCertificate } from "@/features/Certificates/certificatesInfiniteList/model/services/updateCertificate/updateCertificate";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { certificatesInfiniteListAdapter } from "../adapter/certificatesInfiniteListAdapter";
 import { CertificatesInfiniteListSchema } from "../types/CertificatesInfiniteListSchema";
@@ -66,7 +70,31 @@ export const certificatesInfiniteListSlice = createSlice({
                     state.isLoading = false;
                     state.error = action.payload;
                 },
-            );
+            )
+            .addCase(
+                createCertificate.fulfilled,
+                (state, action: PayloadAction<Certificate>) => {
+                    certificatesInfiniteListAdapter.addOne(
+                        state,
+                        action.payload,
+                    );
+                },
+            )
+            .addCase(
+                updateCertificate.fulfilled,
+                (state, action: PayloadAction<Certificate>) => {
+                    certificatesInfiniteListAdapter.setOne(
+                        state,
+                        action.payload,
+                    );
+                },
+            )
+            .addCase(removeCertificate.fulfilled, (state, action) => {
+                certificatesInfiniteListAdapter.removeOne(
+                    state,
+                    action.meta.arg.id,
+                );
+            });
     },
 });
 

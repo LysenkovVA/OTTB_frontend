@@ -1,12 +1,15 @@
 // Схема данных приложения
 import { BerthDetailsSchema } from "@/entities/Berth";
 import { BerthTypeDetailsSchema } from "@/entities/BerthType/model/types/BerthTypeDetailsSchema";
+import { CertificateDetailsSchema } from "@/entities/Certificate";
+import { CertificateTypeDetailsSchema } from "@/entities/CertificateType";
 import { EmployeeDetailsSchema } from "@/entities/Employee";
 import { OrganizationDetailsSchema } from "@/entities/Organization";
 import { ProfileSchema } from "@/entities/Profile";
 import { UserSchema } from "@/entities/User/model/types/UserSchema";
 import { BerthTypeListSchema } from "@/features/BerthTypes/berthTypeSelector";
 import { BerthesListSchema } from "@/features/Berthes/berthSelector";
+import { CertificateTypeListSchema } from "@/features/CertificateTypes/certificateTypeSelector";
 import { DepartmentDetailsSchema } from "@/features/Departments/departmentDetailsCard";
 import { AllDepartmentsSchema } from "@/features/Departments/departmentSelector";
 import { AllOrganizationsSchema } from "@/features/Organizations/organizationSelector";
@@ -62,6 +65,9 @@ export interface StateSchema {
     organizationDetailsSchema?: OrganizationDetailsSchema;
     berthTypeDetailsSchema?: BerthTypeDetailsSchema;
     berthTypesListSchema?: BerthTypeListSchema;
+    certificateTypeDetailsSchema?: CertificateTypeDetailsSchema;
+    certificateTypesListSchema?: CertificateTypeListSchema;
+    certificateDetailsSchema?: CertificateDetailsSchema;
 }
 
 // Для автокоплита

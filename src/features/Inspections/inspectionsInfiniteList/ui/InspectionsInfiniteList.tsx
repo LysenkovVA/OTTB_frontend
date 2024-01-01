@@ -1,4 +1,5 @@
 import { InspectionItem } from "@/entities/Inspection";
+import { getUserActiveWorkspaceId } from "@/entities/User";
 import { fetchInspectionsInfiniteList } from "@/features/Inspections/inspectionsInfiniteList/model/services/fetchInspectionsInfiniteList/fetchInspectionsInfiniteList";
 import {
     DynamicModuleLoader,
@@ -48,10 +49,16 @@ export const InspectionsInfiniteList = memo(
         const isInitialized = useSelector(
             getInspectionsInfiniteListIsInitialized,
         );
+        const activeWorkspaceId = useSelector(getUserActiveWorkspaceId);
 
         useInitialEffect(() => {
             if (!isInitialized) {
-                dispatch(fetchInspectionsInfiniteList({ replaceData: true }));
+                dispatch(
+                    fetchInspectionsInfiniteList({
+                        workspaceId: activeWorkspaceId,
+                        replaceData: true,
+                    }),
+                );
             }
         });
 
@@ -60,7 +67,12 @@ export const InspectionsInfiniteList = memo(
                 dispatch(
                     inspectionsInfiniteListActions.setOffset(limit + offset),
                 );
-                dispatch(fetchInspectionsInfiniteList({ replaceData: false }));
+                dispatch(
+                    fetchInspectionsInfiniteList({
+                        workspaceId: activeWorkspaceId,
+                        replaceData: false,
+                    }),
+                );
             }
         }, [dispatch, hasMore, isInitialized, isLoading, limit, offset]);
 

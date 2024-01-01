@@ -13,7 +13,7 @@ export const updateOrganization = createAsyncThunk<
     Organization,
     UpdateOrganizationProps,
     ThunkConfig<string>
->("organization/updateOrganization", async ({ id, data }, thunkApi) => {
+>("organization/updateCertificate", async ({ id, data }, thunkApi) => {
     const { extra, rejectWithValue } = thunkApi;
 
     try {

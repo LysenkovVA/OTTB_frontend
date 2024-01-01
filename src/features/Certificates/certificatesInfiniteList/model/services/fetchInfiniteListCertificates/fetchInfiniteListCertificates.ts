@@ -10,6 +10,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 
 export interface FetchInfiniteListCertificatesProps {
+    workspaceId: string;
     replaceData?: boolean; // Для использования в action.meta.arg
 }
 
@@ -19,6 +20,11 @@ export const fetchInfiniteListCertificates = createAsyncThunk<
     ThunkConfig<string>
 >("certificates/fetchInfiniteListCertificates", async (props, thunkApi) => {
     const { extra, rejectWithValue, getState } = thunkApi;
+    const { workspaceId } = props;
+
+    if (!workspaceId) {
+        return rejectWithValue("Рабочее пространство неизвестно!");
+    }
 
     // Получаем параметры из стейта
     const limit = getCertificatesInfiniteListLimit(getState());
@@ -30,6 +36,7 @@ export const fetchInfiniteListCertificates = createAsyncThunk<
             "/certificates",
             {
                 params: {
+                    workspaceId,
                     limit,
                     offset,
                 },
@@ -50,6 +57,6 @@ export const fetchInfiniteListCertificates = createAsyncThunk<
             }
         }
 
-        return rejectWithValue("Ошибка при получении списка органзизаций");
+        return rejectWithValue("Ошибка при получении списка организаций");
     }
 });

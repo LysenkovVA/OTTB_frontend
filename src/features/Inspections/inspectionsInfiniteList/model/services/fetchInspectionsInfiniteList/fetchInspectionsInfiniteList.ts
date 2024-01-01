@@ -10,6 +10,7 @@ import {
 } from "../../selectors/inspectionsInfiniteListSelectors";
 
 export interface FetchInspectionsInfiniteListProps {
+    workspaceId: string;
     replaceData?: boolean; // Для использования в action.meta.arg
 }
 
@@ -19,6 +20,11 @@ export const fetchInspectionsInfiniteList = createAsyncThunk<
     ThunkConfig<string>
 >("inspections/fetchInspectionsInfiniteList", async (props, thunkApi) => {
     const { extra, rejectWithValue, getState } = thunkApi;
+    const { workspaceId } = props;
+
+    if (!workspaceId) {
+        return rejectWithValue("Рабочее пространство неизвестно!");
+    }
 
     // Получаем параметры из стейта
     const limit = getInspectionsInfiniteListLimit(getState());
@@ -29,15 +35,12 @@ export const fetchInspectionsInfiniteList = createAsyncThunk<
             "/inspections",
             {
                 params: {
+                    workspaceId,
                     limit,
                     offset,
                 },
             },
         );
-
-        if (!response.data) {
-            return rejectWithValue("Ответ от сервера не получен");
-        }
 
         return response.data;
     } catch (e) {
@@ -49,6 +52,6 @@ export const fetchInspectionsInfiniteList = createAsyncThunk<
             }
         }
 
-        return rejectWithValue("Ошибка при получении списка органзизаций");
+        return rejectWithValue("Ошибка при получении списка проверок");
     }
 });

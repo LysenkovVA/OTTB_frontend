@@ -74,7 +74,23 @@ export const employeesInfiniteListSlice = createSlice({
                 }
 
                 // Есть ли еще данные
-                state.hasMore = action.payload.count > state.ids.length;
+                console.log("Payload: " + JSON.stringify(action.payload));
+                console.log("Count: " + action.payload.count);
+                console.log("IDs Count: " + state.ids.length);
+
+                // Из-за include на бэкэнде иногда возвращается правильное количество записей
+                // а сами записи не приходят!
+                // и может возникнуть ситуация, когда условие action.payload.count > state.ids.length
+                // будет отрабатывать неправильно, поэтому проверяем, если ничего не приходит, то
+                // больше нечего загружать
+                if (
+                    action.payload.count > 0 &&
+                    action.payload.rows.length === 0
+                ) {
+                    state.hasMore = false;
+                } else {
+                    state.hasMore = action.payload.count > state.ids.length;
+                }
             })
             .addCase(fetchEmployeesInfiniteList.rejected, (state, action) => {
                 state.isLoading = false;

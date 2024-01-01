@@ -1,31 +1,31 @@
-import { classNames } from "@/shared/lib/classNames/classNames";
-import { EditFormWrapper } from "@/shared/ui/EditFormWrapper";
-import { ErrorInfo } from "@/shared/ui/ErrorInfo/ErrorInfo";
+import { certificateDetailsReducer } from "@/entities/Certificate/model/slice/certificateDetailsSlice";
+import { EditCertificate } from "@/features/Certificates/editCertificate";
+import {
+    DynamicModuleLoader,
+    ReducersList,
+} from "@/shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 import { memo } from "react";
-import cls from "./CreateCertificatePage.module.scss";
+import { useNavigate } from "react-router-dom";
 
 export interface CreateCertificatePageProps {
     className?: string;
 }
 
+const reducers: ReducersList = {
+    certificateDetailsSchema: certificateDetailsReducer,
+};
 const CreateCertificatePage = (props: CreateCertificatePageProps) => {
     const { className } = props;
 
+    const navigate = useNavigate();
+
     return (
-        <div className={classNames(cls.CreateCertificatePage, {}, [className])}>
-            <EditFormWrapper
-                title={"Новое удостоверение"}
-                // form={form}
-                // onSave={onSave}
-                // onCancel={() => {}}
-            >
-                <ErrorInfo
-                    status={"info"}
-                    title={"Создание нового удостоверения"}
-                    subtitle={"Эта страница находится в разработке..."}
-                />
-            </EditFormWrapper>
-        </div>
+        <DynamicModuleLoader reducers={reducers}>
+            <EditCertificate
+                onUpdated={() => navigate(-1)}
+                onCanceled={() => navigate(-1)}
+            />
+        </DynamicModuleLoader>
     );
 };
 

@@ -12,7 +12,7 @@ export const getBerthType = createAsyncThunk<
     BerthType,
     GetBerthTypeProps,
     ThunkConfig<string>
->("berthType/getBerth", async ({ id }, thunkApi) => {
+>("berthType/getCertificate", async ({ id }, thunkApi) => {
     const { dispatch, extra, rejectWithValue } = thunkApi;
 
     try {
