@@ -1,23 +1,25 @@
 import { ThunkConfig } from "@/app/providers/StoreProvider";
-import { Organization } from "@/entities/Organization";
+import { Inspection } from "@/entities/Inspection";
 import { ServerError } from "@/shared/error/ServerError";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 
-export interface GetOrganizationProps {
+export interface UpdateInspectionProps {
     id: string;
+    data: Inspection;
 }
 
-export const getOrganization = createAsyncThunk<
-    Organization,
-    GetOrganizationProps,
+export const updateInspection = createAsyncThunk<
+    Inspection,
+    UpdateInspectionProps,
     ThunkConfig<string>
->("organization/getInspection", async ({ id }, thunkApi) => {
+>("updateInspection", async ({ id, data }, thunkApi) => {
     const { extra, rejectWithValue } = thunkApi;
 
     try {
-        const response = await extra.api.get<Organization>(
-            `/organizations/${id}`,
+        const response = await extra.api.patch<Inspection>(
+            `/inspections/${id}`,
+            data,
         );
 
         return response.data;
@@ -29,6 +31,7 @@ export const getOrganization = createAsyncThunk<
                 return rejectWithValue(serverError.error);
             }
         }
-        return rejectWithValue("Ошибка при получении данных организации!");
+
+        return rejectWithValue("Произошла ошибка при обновлении проверки!");
     }
 });

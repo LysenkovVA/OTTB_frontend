@@ -1,32 +1,32 @@
-import { classNames } from "@/shared/lib/classNames/classNames";
-import { EditFormWrapper } from "@/shared/ui/EditFormWrapper";
-import { ErrorInfo } from "@/shared/ui/ErrorInfo/ErrorInfo";
+import { inspectionDetailsReducer } from "@/entities/Inspection/model/slice/inspectionDetailsSlice";
+import { EditInspection } from "@/features/Inspections/editInspection";
+import {
+    DynamicModuleLoader,
+    ReducersList,
+} from "@/shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 import { memo } from "react";
-import cls from "./CreateInspectionPage.module.scss";
+import { useNavigate } from "react-router-dom";
 
 interface CreateInspectionPageProps {
     className?: string;
 }
 
+const reducers: ReducersList = {
+    inspectionDetailsSchema: inspectionDetailsReducer,
+};
+
 const CreateInspectionPage = (props: CreateInspectionPageProps) => {
     const { className } = props;
 
+    const navigate = useNavigate();
+
     return (
-        <div className={classNames(cls.CreateInspectionPage, {}, [className])}>
-            {/* eslint-disable-next-line react/jsx-no-undef */}
-            <EditFormWrapper
-                title={"Новая проверка"}
-                // form={form}
-                // onSave={onSave}
-                // onCancel={() => {}}
-            >
-                <ErrorInfo
-                    status={"info"}
-                    title={"Создание новой проверки"}
-                    subtitle={"Эта страница находится в разработке..."}
-                />
-            </EditFormWrapper>
-        </div>
+        <DynamicModuleLoader reducers={reducers}>
+            <EditInspection
+                onUpdated={() => navigate(-1)}
+                onCanceled={() => navigate(-1)}
+            />
+        </DynamicModuleLoader>
     );
 };
 

@@ -1,0 +1,1 @@
+export { InspectionDetailsPageAsync as InspectionDetailsPage } from "./ui/InspectionDetailsPage.async";

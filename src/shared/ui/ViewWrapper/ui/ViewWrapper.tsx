@@ -27,6 +27,14 @@ export const ViewWrapper = memo((props: ViewWrapperProps) => {
 
     const [modalOpen, setModalOpen] = useState(false);
 
+    const titleContent = (
+        <Flex gap={8} justify={"start"} align={"center"}>
+            <Typography.Text type={"secondary"} style={{ fontSize: "large" }}>
+                {title}
+            </Typography.Text>
+        </Flex>
+    );
+
     const extraContent = (
         <>
             <Modal
@@ -70,7 +78,7 @@ export const ViewWrapper = memo((props: ViewWrapperProps) => {
     return (
         <Card
             className={classNames(cls.ViewWrapper, {}, [className])}
-            title={title}
+            title={titleContent}
             extra={extraContent}
         >
             {children}

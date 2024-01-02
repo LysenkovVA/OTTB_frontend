@@ -1,4 +1,8 @@
+import { Inspection } from "@/entities/Inspection";
+import { createInspection } from "@/features/Inspections/inspectionsInfiniteList/model/services/createInspection/createInspection";
 import { fetchInspectionsInfiniteList } from "@/features/Inspections/inspectionsInfiniteList/model/services/fetchInspectionsInfiniteList/fetchInspectionsInfiniteList";
+import { removeInspection } from "@/features/Inspections/inspectionsInfiniteList/model/services/removeInspection/removeInspection";
+import { updateInspection } from "@/features/Inspections/inspectionsInfiniteList/model/services/updateInspection/updateInspection";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { inspectionsInfiniteListAdapter } from "../adapter/inspectionsInfiniteListAdapter";
 import { InspectionsInfiniteListSchema } from "../types/InspectionsInfiniteListSchema";
@@ -63,6 +67,30 @@ export const inspectionsInfiniteListSlice = createSlice({
             .addCase(fetchInspectionsInfiniteList.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.payload;
+            })
+            .addCase(
+                createInspection.fulfilled,
+                (state, action: PayloadAction<Inspection>) => {
+                    inspectionsInfiniteListAdapter.addOne(
+                        state,
+                        action.payload,
+                    );
+                },
+            )
+            .addCase(
+                updateInspection.fulfilled,
+                (state, action: PayloadAction<Inspection>) => {
+                    inspectionsInfiniteListAdapter.setOne(
+                        state,
+                        action.payload,
+                    );
+                },
+            )
+            .addCase(removeInspection.fulfilled, (state, action) => {
+                inspectionsInfiniteListAdapter.removeOne(
+                    state,
+                    action.meta.arg.id,
+                );
             });
     },
 });

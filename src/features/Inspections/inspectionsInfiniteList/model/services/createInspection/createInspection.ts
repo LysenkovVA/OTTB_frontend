@@ -1,24 +1,24 @@
 import { ThunkConfig } from "@/app/providers/StoreProvider";
-import { Organization } from "@/entities/Organization";
+import { Inspection } from "@/entities/Inspection";
 import { ServerError } from "@/shared/error/ServerError";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 
-export interface CreateOrganizationProps {
-    data: Organization;
+export interface CreateInspectionProps {
+    data: Inspection;
     workspaceId: string;
 }
 
-export const createOrganization = createAsyncThunk<
-    Organization,
-    CreateOrganizationProps,
+export const createInspection = createAsyncThunk<
+    Inspection,
+    CreateInspectionProps,
     ThunkConfig<string>
->("organization/createInspection", async ({ data, workspaceId }, thunkApi) => {
+>("createInspection", async ({ data, workspaceId }, thunkApi) => {
     const { extra, rejectWithValue } = thunkApi;
 
     try {
-        const response = await extra.api.post<Organization>(
-            "/organizations/create",
+        const response = await extra.api.post<Inspection>(
+            "/inspections/create",
             { ...data, id: undefined },
             {
                 params: {
@@ -37,6 +37,6 @@ export const createOrganization = createAsyncThunk<
             }
         }
 
-        return rejectWithValue("Произошла ошибка при создании организации!");
+        return rejectWithValue("Произошла ошибка при создании проверки!");
     }
 });

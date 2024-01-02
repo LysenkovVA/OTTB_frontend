@@ -4,6 +4,7 @@ import { BerthTypeDetailsSchema } from "@/entities/BerthType/model/types/BerthTy
 import { CertificateDetailsSchema } from "@/entities/Certificate";
 import { CertificateTypeDetailsSchema } from "@/entities/CertificateType";
 import { EmployeeDetailsSchema } from "@/entities/Employee";
+import { InspectionDetailsSchema } from "@/entities/Inspection/model/types/InspectionDetailsSchema";
 import { OrganizationDetailsSchema } from "@/entities/Organization";
 import { ProfileSchema } from "@/entities/Profile";
 import { UserSchema } from "@/entities/User/model/types/UserSchema";
@@ -50,6 +51,7 @@ export interface StateSchema {
     profileSchema?: ProfileSchema;
     // ГЛАВНЫЕ СТРАНИЦЫ
     inspectionsInfiniteListSchema?: InspectionsInfiniteListSchema;
+    inspectionDetailsSchema?: InspectionDetailsSchema;
     certificatesInfiniteListSchema?: CertificatesInfiniteListSchema;
     organizationsInfiniteListSchema?: OrganizationsInfiniteListSchema;
     constructionObjectsInfiniteListSchema?: ConstructionObjectsInfiniteListSchema;

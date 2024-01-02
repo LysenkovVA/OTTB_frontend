@@ -9,6 +9,7 @@ import { CreateOrganizationPage } from "@/pages/CreateOrganizationPage";
 import { DepartmentsPage } from "@/pages/DepartmentsPage";
 import { EmployeeDetailsPage } from "@/pages/EmployeeDetailsPage";
 import { EmployeesPage } from "@/pages/EmployeesPage";
+import { InspectionDetailsPage } from "@/pages/InspectionDetailsPage";
 import { InspectionsPage } from "@/pages/InspectionsPage";
 import { LoginPage } from "@/pages/LoginPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
@@ -23,6 +24,8 @@ export enum AppRoutes {
     SIGNUP = "signup",
     PROFILE = "profile",
     INSPECTIONS = "inspections",
+    CREATE_INSPECTION = "create_inspection",
+    INSPECTION_DETAILS = "inspection_details",
     CERTIFICATES = "certificates",
     CREATE_CERTIFICATE = "create_certificate",
     ORGANIZATIONS = "organizations",
@@ -35,7 +38,6 @@ export enum AppRoutes {
     EMPLOYEES = "employees",
     EMPLOYEE_DETAILS = "employee_details",
     CREATE_EMPLOYEE = "create_employee",
-    CREATE_INSPECTION = "create_inspection",
 
     // Несуществующий маршрут - последний!
     NOT_FOUND = "not_found",
@@ -45,20 +47,28 @@ export const RoutePath: Record<AppRoutes, string> = {
     [AppRoutes.LOGIN]: "/",
     [AppRoutes.SIGNUP]: "/signup",
     [AppRoutes.PROFILE]: "/profile/", // +id
+
     [AppRoutes.INSPECTIONS]: "/inspections",
     [AppRoutes.CREATE_INSPECTION]: "/inspections/create",
+    [AppRoutes.INSPECTION_DETAILS]: "/inspections/",
+
     [AppRoutes.CERTIFICATES]: "/certificates",
     [AppRoutes.CREATE_CERTIFICATE]: "/certificates/create",
+
     [AppRoutes.ORGANIZATIONS]: "/organizations",
     [AppRoutes.CREATE_ORGANIZATION]: "/organizations/create",
     [AppRoutes.ORGANIZATION_DETAILS]: "/organizations/", // +id
+
     [AppRoutes.CONSTRUCTION_OBJECTS]: "/objects",
     [AppRoutes.CREATE_CONSTRUCTION_OBJECT]: "/objects/create",
+
     [AppRoutes.DEPARTMENTS]: "/departments",
     [AppRoutes.CREATE_DEPARTMENT]: "/departments/create",
+
     [AppRoutes.EMPLOYEES]: "/employees",
     [AppRoutes.EMPLOYEE_DETAILS]: "/employees/", // +id
     [AppRoutes.CREATE_EMPLOYEE]: "/employees/create",
+
     [AppRoutes.NOT_FOUND]: "*",
 };
 
@@ -89,6 +99,11 @@ export const routeConfig: Record<AppRoutes, AppRouteProps> = {
     [AppRoutes.CREATE_INSPECTION]: {
         path: RoutePath.create_inspection,
         element: <CreateInspectionPage />,
+        authOnly: true,
+    },
+    [AppRoutes.INSPECTION_DETAILS]: {
+        path: `${RoutePath.inspection_details}:id`,
+        element: <InspectionDetailsPage />,
         authOnly: true,
     },
     [AppRoutes.CERTIFICATES]: {

@@ -1,26 +1,24 @@
 import { ThunkConfig } from "@/app/providers/StoreProvider";
-import { Organization } from "@/entities/Organization";
 import { ServerError } from "@/shared/error/ServerError";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 
-export interface GetOrganizationProps {
+export interface RemoveInspectionProps {
     id: string;
 }
 
-export const getOrganization = createAsyncThunk<
-    Organization,
-    GetOrganizationProps,
+export const removeInspection = createAsyncThunk<
+    void,
+    RemoveInspectionProps,
     ThunkConfig<string>
->("organization/getInspection", async ({ id }, thunkApi) => {
+>("removeInspection", async (props, thunkApi) => {
     const { extra, rejectWithValue } = thunkApi;
 
     try {
-        const response = await extra.api.get<Organization>(
-            `/organizations/${id}`,
-        );
+        // Отправляем запрос
+        const response = await extra.api.delete(`/inspections/${props.id}`);
 
-        return response.data;
+        return undefined;
     } catch (e) {
         if (e instanceof AxiosError) {
             const serverError = e?.response?.data as ServerError;
@@ -29,6 +27,6 @@ export const getOrganization = createAsyncThunk<
                 return rejectWithValue(serverError.error);
             }
         }
-        return rejectWithValue("Ошибка при получении данных организации!");
+        return rejectWithValue("Ошибка при удалении проверки");
     }
 });
