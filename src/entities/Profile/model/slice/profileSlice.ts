@@ -1,4 +1,6 @@
 import { Profile } from "@/entities/Profile";
+import { deleteProfileAvatar } from "@/entities/Profile/model/services/deleteProfileAvatar/deleteProfileAvatar";
+import { updateProfileAvatar } from "@/entities/Profile/model/services/updateProfileAvatar/updateProfileAvatar";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { fetchProfileData } from "../services/fetchProfileData/fetchProfileData";
 import { updateProfileData } from "../services/updateProfileData/updateProfileData";
@@ -19,6 +21,7 @@ export const profileSlice = createSlice({
     reducers: {
         setFormData: (state, action: PayloadAction<Profile>) => {
             state.profileFormData = action.payload;
+            state.dataChanged = true;
         },
         // Используется когда в форме выбирается файл на диске
         setProfileFormDataAvatar: (
@@ -26,6 +29,7 @@ export const profileSlice = createSlice({
             action: PayloadAction<string | undefined>,
         ) => {
             state.profileFormDataAvatar = action.payload;
+            state.avatarChanged = true;
         },
     },
     extraReducers: (builder) => {
@@ -59,11 +63,29 @@ export const profileSlice = createSlice({
                     state.dataError = undefined;
                     state.profileData = action.payload;
                     state.profileFormData = action.payload;
+                    state.dataChanged = false;
                 },
             )
             .addCase(updateProfileData.rejected, (state, action) => {
                 state.isDataLoading = false;
                 state.dataError = action.payload;
+            })
+            .addCase(updateProfileAvatar.fulfilled, (state, action) => {
+                const avatar = action.payload;
+
+                if (state.profileData && state.profileFormData && avatar) {
+                    state.profileData.avatar = avatar;
+                    state.profileFormData.avatar = avatar;
+                    state.profileFormDataAvatar = undefined;
+                    state.avatarChanged = false;
+                }
+            })
+            .addCase(deleteProfileAvatar.fulfilled, (state, action) => {
+                if (state.profileData && state.profileFormData) {
+                    state.profileData.avatar = undefined;
+                    state.profileFormData.avatar = undefined;
+                    state.profileFormDataAvatar = undefined;
+                }
             });
     },
 });

@@ -1,13 +1,8 @@
 .AppSideMenuItem {
-    display: flex;
-    width: 100%;
-    justify-content: start;
-    align-items: center;
-}
-
-.button {
     width: 100%;
     text-align: start;
-    font-size: large;
+    font-size: medium;
     padding: 0;
+    margin: auto;
+    //border: 1px solid gray;
 }

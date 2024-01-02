@@ -13,7 +13,7 @@ export const AppHeader = memo((props: AppHeaderProps) => {
 
     return (
         <div className={classNames(cls.AppHeader, {}, [className])}>
-            <AppHeaderLogo className={classNames(cls.logo)} />
+            <AppHeaderLogo />
             <HeaderAvatar className={classNames(cls.actions)} />
         </div>
     );

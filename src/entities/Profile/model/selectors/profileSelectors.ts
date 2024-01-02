@@ -43,3 +43,17 @@ export const getProfileDataInitialized = createSelector(
         return schema?._isDataInitialized ?? false;
     },
 );
+
+export const getProfileDataChanged = createSelector(
+    getDProfileSchema,
+    (schema) => {
+        return schema?.dataChanged ?? false;
+    },
+);
+
+export const getProfileDataAvatarChanged = createSelector(
+    getDProfileSchema,
+    (schema) => {
+        return schema?.avatarChanged ?? false;
+    },
+);

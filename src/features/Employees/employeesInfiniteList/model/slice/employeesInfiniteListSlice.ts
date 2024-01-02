@@ -73,11 +73,6 @@ export const employeesInfiniteListSlice = createSlice({
                     );
                 }
 
-                // Есть ли еще данные
-                console.log("Payload: " + JSON.stringify(action.payload));
-                console.log("Count: " + action.payload.count);
-                console.log("IDs Count: " + state.ids.length);
-
                 // Из-за include на бэкэнде иногда возвращается правильное количество записей
                 // а сами записи не приходят!
                 // и может возникнуть ситуация, когда условие action.payload.count > state.ids.length
@@ -96,15 +91,12 @@ export const employeesInfiniteListSlice = createSlice({
                 state.isLoading = false;
                 state.error = action.payload;
             })
-            .addCase(createEmployee.pending, (state) => {})
             .addCase(
                 createEmployee.fulfilled,
                 (state, action: PayloadAction<Employee>) => {
                     employeesInfiniteListAdapter.addOne(state, action.payload);
                 },
             )
-            .addCase(createEmployee.rejected, (state, action) => {})
-            .addCase(updateEmployee.pending, (state) => {})
             .addCase(
                 updateEmployee.fulfilled,
                 (state, action: PayloadAction<Employee>) => {
@@ -136,15 +128,12 @@ export const employeesInfiniteListSlice = createSlice({
                     });
                 }
             })
-            .addCase(updateEmployee.rejected, (state, action) => {})
-            .addCase(deleteEmployee.pending, (state, action) => {})
             .addCase(deleteEmployee.fulfilled, (state, action) => {
                 employeesInfiniteListAdapter.removeOne(
                     state,
                     action.meta.arg.employeeId,
                 );
             })
-            .addCase(deleteEmployee.rejected, (state, action) => {})
             // При обновлении органзации нужно обновлять организации сотрудников в списке
             .addCase(updateOrganization.fulfilled, (state, action) => {
                 // Выбираем всех работников для которых обновилась организация

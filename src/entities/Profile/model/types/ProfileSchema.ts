@@ -6,5 +6,7 @@ export interface ProfileSchema {
     profileData?: Profile;
     profileFormData?: Profile;
     profileFormDataAvatar?: string;
+    dataChanged?: boolean;
+    avatarChanged?: boolean;
     _isDataInitialized: boolean;
 }

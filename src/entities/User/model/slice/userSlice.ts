@@ -1,4 +1,6 @@
 import { Profile, updateProfileData } from "@/entities/Profile";
+import { deleteProfileAvatar } from "@/entities/Profile/model/services/deleteProfileAvatar/deleteProfileAvatar";
+import { updateProfileAvatar } from "@/entities/Profile/model/services/updateProfileAvatar/updateProfileAvatar";
 import { initAuthData } from "@/entities/User/model/services/initAuthData/initAuthData";
 import { USER_LOCALSTORAGE_KEY } from "@/shared/const/localstorage";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
@@ -59,7 +61,19 @@ export const userSlice = createSlice({
                         state.authenticatedUser.profile = action.payload;
                     }
                 },
-            );
+            )
+            .addCase(updateProfileAvatar.fulfilled, (state, action) => {
+                const avatar = action.payload;
+
+                if (state?.authenticatedUser?.profile && avatar) {
+                    state.authenticatedUser.profile.avatar = action.payload;
+                }
+            })
+            .addCase(deleteProfileAvatar.fulfilled, (state, action) => {
+                if (state?.authenticatedUser?.profile) {
+                    state.authenticatedUser.profile.avatar = undefined;
+                }
+            });
     },
 });
 

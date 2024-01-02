@@ -1,8 +1,12 @@
 import {
+    getProfileDataAvatarChanged,
+    getProfileDataChanged,
     getProfileFormData,
     getProfileFormDataAvatar,
     updateProfileData,
 } from "@/entities/Profile";
+import { deleteProfileAvatar } from "@/entities/Profile/model/services/deleteProfileAvatar/deleteProfileAvatar";
+import { updateProfileAvatar } from "@/entities/Profile/model/services/updateProfileAvatar/updateProfileAvatar";
 import { ProfileDetailsForm } from "@/features/Profiles/editProfile/ui/ProfileDetailsForm/ProfileDetailsForm";
 import { FilesHelper } from "@/shared/helpers/FilesHelper";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
@@ -24,23 +28,54 @@ export const EditProfile = memo((props: EditProfileProps) => {
     const dispatch = useAppDispatch();
     const detailsForm = useSelector(getProfileFormData);
     const formAvatar = useSelector(getProfileFormDataAvatar);
+    const dataChanged = useSelector(getProfileDataChanged);
+    const avatarChanged = useSelector(getProfileDataAvatarChanged);
 
     const onSave = useCallback(async () => {
         if (detailsForm?.id) {
             try {
-                // Обновляем запись
-                await dispatch(
-                    updateProfileData({
-                        id: detailsForm.id,
-                        data: detailsForm,
-                        file: await FilesHelper.getBlobFromString(formAvatar),
-                    }),
-                );
+                if (dataChanged) {
+                    // Обновляем запись
+                    await dispatch(
+                        updateProfileData({
+                            id: detailsForm.id,
+                            data: detailsForm,
+                        }),
+                    );
+                }
+
+                if (avatarChanged) {
+                    if (formAvatar) {
+                        // Обновляем аватар
+                        await dispatch(
+                            updateProfileAvatar({
+                                profileId: detailsForm.id,
+                                file: await FilesHelper.getBlobFromString(
+                                    formAvatar,
+                                ),
+                            }),
+                        );
+                    } else {
+                        // Удаляем аватар
+                        await dispatch(
+                            deleteProfileAvatar({
+                                profileId: detailsForm.id,
+                            }),
+                        );
+                    }
+                }
 
                 onUpdated();
             } catch {}
         }
-    }, [detailsForm, onUpdated, dispatch, formAvatar]);
+    }, [
+        detailsForm,
+        dataChanged,
+        avatarChanged,
+        onUpdated,
+        dispatch,
+        formAvatar,
+    ]);
 
     return (
         <EditFormWrapper

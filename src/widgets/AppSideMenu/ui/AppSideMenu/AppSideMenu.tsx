@@ -1,4 +1,3 @@
-import { classNames } from "@/shared/lib/classNames/classNames";
 import { getAppSideMenuItems } from "@/widgets/AppSideMenu/model/selectors/getAppSideMenuItems";
 import { Space } from "antd";
 import { memo, useMemo } from "react";
@@ -25,13 +24,7 @@ export const AppSideMenu = memo((props: HeaderProps) => {
     );
 
     return (
-        <div
-            className={classNames(
-                cls.AppSideMenu,
-                { [cls.collapsed]: collapsed },
-                [className],
-            )}
-        >
+        <div className={cls.AppSideMenu}>
             <Space direction={"vertical"}>{itemsList}</Space>
         </div>
     );

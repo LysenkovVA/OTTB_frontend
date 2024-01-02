@@ -30,52 +30,18 @@ export const ProfileDetailsForm = memo((props: ProfileDetailsFormProps) => {
         return [
             { name: ["surname"], value: profileFormData?.surname },
             { name: ["name"], value: profileFormData?.name },
-            {
-                name: ["birthDate"],
-                value:
-                    dayjs(profileFormData?.birthDate, [
-                        "DD.MM.YYYY",
-                        "YYYY-MM-DD",
-                    ]) ?? undefined,
-            },
         ];
-    }, [
-        profileFormData?.birthDate,
-        profileFormData?.name,
-        profileFormData?.surname,
-    ]);
+    }, [profileFormData?.name, profileFormData?.surname]);
 
     const onValueChanged = useCallback(
         async (changedValues: any) => {
-            const keys: string[] = Object.keys(changedValues);
-
-            keys.forEach((key) => {
-                switch (key) {
-                    case "surname":
-                        dispatch(
-                            profileActions.setFormData({
-                                ...profileFormData,
-                                surname: changedValues[key],
-                            }),
-                        );
-                        break;
-                    case "name":
-                        dispatch(
-                            profileActions.setFormData({
-                                ...profileFormData,
-                                name: changedValues[key],
-                            }),
-                        );
-                        break;
-                    case "birthDate":
-                        dispatch(
-                            profileActions.setFormData({
-                                ...profileFormData,
-                                birthDate: changedValues[key],
-                            }),
-                        );
-                        break;
-                }
+            Object.keys(changedValues).forEach((key) => {
+                dispatch(
+                    profileActions.setFormData({
+                        ...profileFormData,
+                        [key]: changedValues[key],
+                    }),
+                );
             });
         },
         [dispatch, profileFormData],
@@ -137,10 +103,28 @@ export const ProfileDetailsForm = memo((props: ProfileDetailsFormProps) => {
                 >
                     <Input />
                 </Form.Item>
-                <Form.Item name={"birthDate"} label={"Дата рождения"}>
+                <Form.Item label={"Дата рождения"}>
                     <DatePicker
                         placeholder={"Укажите ДР"}
                         format={"DD.MM.YYYY"}
+                        value={
+                            profileFormData?.birthDate
+                                ? dayjs(profileFormData?.birthDate)
+                                : undefined
+                        }
+                        onChange={(date, dateString) => {
+                            if (profileFormData) {
+                                dispatch(
+                                    profileActions.setFormData({
+                                        ...profileFormData,
+                                        birthDate: dayjs(
+                                            dateString,
+                                            "DD.MM.YYYY",
+                                        ).toString(),
+                                    }),
+                                );
+                            }
+                        }}
                     />
                 </Form.Item>
             </Form>
