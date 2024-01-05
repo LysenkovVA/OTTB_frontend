@@ -35,5 +35,8 @@ export function buildWebpackConfig(
         // Dev server
         devServer: isDev ? buildDevServer(options) : undefined,
         plugins: buildPlugins(options),
+        // TODO: Эта опция включена, чтобы не было предупреждения в модуле sass
+        // Там какой-то глюк с совместимостью
+        ignoreWarnings: [() => true],
     };
 }
