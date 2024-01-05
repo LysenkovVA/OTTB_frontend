@@ -18,6 +18,7 @@ export function buildTypeScriptLoader({ mode }: BuildOptions) {
                     }),
                     transpileOnly: isDev, // ускорение сборки
                 },
+
             },
         ],
         exclude: /node_modules/,

@@ -2,6 +2,7 @@ import { getOrganization, Organization } from "@/entities/Organization";
 import { getOrganizationDetailsForm } from "@/entities/Organization/model/selectors/organizationDetailsSelectors";
 import { organizationDetailsReducer } from "@/entities/Organization/model/slice/organizationDetailsSlice";
 import { getUserActiveWorkspaceId } from "@/entities/User";
+import { fetchOrganizations } from "@/features/Organizations/organizationSelector/model/services/fetchOrganizations/fetchOrganizations";
 import { OrganizationSimpleForm } from "@/features/Organizations/organizationSelector/ui/OrganizationSimpleForm/OrganizationSimpleForm";
 import { updateOrganization } from "@/features/Organizations/organizationsInfiniteList";
 import { createOrganization } from "@/features/Organizations/organizationsInfiniteList/model/services/createOrganization/createOrganization";
@@ -21,9 +22,8 @@ import {
     getAllOrganizationsError,
     getAllOrganizationsIsInitialized,
     getAllOrganizationsIsLoading,
-} from "../../model/selectors/allOrganizationsSelectors";
-import { fetchAllOrganizations } from "../../model/services/fetchAllOrganizations/fetchAllOrganizations";
-import { allOrganizationsReducer } from "../../model/slice/allOrganizationsSlice";
+} from "../../model/selectors/organizationSelectorSelectors";
+import { organizationSelectorReducer } from "../../model/slice/organizationSelectorSlice";
 
 interface OrganizationSelectorProps {
     className?: string;
@@ -32,7 +32,7 @@ interface OrganizationSelectorProps {
 }
 
 const reducers: ReducersList = {
-    allOrganizationsSchema: allOrganizationsReducer,
+    organizationSelectorSchema: organizationSelectorReducer,
 };
 
 const reducersModal: ReducersList = {
@@ -72,7 +72,7 @@ export const OrganizationSelector = memo((props: OrganizationSelectorProps) => {
     // Инициализация значений
     useInitialEffect(() => {
         if (!isInitialized) {
-            dispatch(fetchAllOrganizations({ replaceData: true }));
+            dispatch(fetchOrganizations({ replaceData: true }));
         }
     });
 

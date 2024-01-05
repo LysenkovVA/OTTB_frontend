@@ -13,7 +13,7 @@ import { BerthesListSchema } from "@/features/Berthes/berthSelector";
 import { CertificateTypeListSchema } from "@/features/CertificateTypes/certificateTypeSelector";
 import { DepartmentDetailsSchema } from "@/features/Departments/departmentDetailsCard";
 import { AllDepartmentsSchema } from "@/features/Departments/departmentSelector";
-import { AllOrganizationsSchema } from "@/features/Organizations/organizationSelector";
+import { OrganizationSelectorSchema } from "@/features/Organizations/organizationSelector";
 import { OrganizationsInfiniteListSchema } from "@/features/Organizations/organizationsInfiniteList/model/types/OrganizationsInfiniteListSchema";
 import { UISchema } from "@/features/UI";
 import { AuthSchema } from "@/features/auth";
@@ -62,7 +62,7 @@ export interface StateSchema {
     departmentDetailsSchema?: DepartmentDetailsSchema;
     berthDetailsSchema?: BerthDetailsSchema;
     allBerthesSchema?: BerthesListSchema;
-    allOrganizationsSchema?: AllOrganizationsSchema;
+    organizationSelectorSchema?: OrganizationSelectorSchema;
     allDepartmentsSchema?: AllDepartmentsSchema;
     organizationDetailsSchema?: OrganizationDetailsSchema;
     berthTypeDetailsSchema?: BerthTypeDetailsSchema;

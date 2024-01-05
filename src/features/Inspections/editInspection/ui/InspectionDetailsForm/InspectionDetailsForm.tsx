@@ -8,7 +8,17 @@ import { getUserActiveWorkspaceId } from "@/entities/User";
 import { classNames } from "@/shared/lib/classNames/classNames";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
 import { FieldData } from "@/shared/types/FieldData";
-import { Alert, DatePicker, Form, FormInstance, Input, Switch } from "antd";
+import { CheckCircleOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import {
+    Alert,
+    DatePicker,
+    Form,
+    FormInstance,
+    Input,
+    Switch,
+    Tabs,
+    TabsProps,
+} from "antd";
 import { memo, useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
 import cls from "./InspectionDetailsForm.module.scss";
@@ -82,6 +92,91 @@ export const InspectionDetailsForm = memo(
         //     [certificateDetailsForm, dispatch],
         // );
 
+        const infoContent = (
+            <>
+                <Form.Item
+                    required
+                    name={"date"}
+                    label={"Дата"}
+                    rules={[
+                        {
+                            required: true,
+                            message: "Пожалуйста, укажите дату!",
+                        },
+                    ]}
+                >
+                    <DatePicker />
+                </Form.Item>
+                <Form.Item label={"Штрафная"}>
+                    <Switch
+                        checked={detailsForm?.isPenalty}
+                        onChange={(checked) => {
+                            if (detailsForm) {
+                                inspectionDetailsActions.setFormData({
+                                    ...detailsForm,
+                                    isPenalty: checked,
+                                });
+                            }
+                        }}
+                    />
+                </Form.Item>
+                <Form.Item label={"Комиссионная"}>
+                    <Switch
+                        checked={detailsForm?.isCommitional}
+                        onChange={(checked) => {
+                            if (detailsForm) {
+                                inspectionDetailsActions.setFormData({
+                                    ...detailsForm,
+                                    isCommitional: checked,
+                                });
+                            }
+                        }}
+                    />
+                </Form.Item>
+                <Form.Item
+                    name={"dateOfElimination"}
+                    label={"Срок устранения нарушений"}
+                >
+                    <DatePicker />
+                </Form.Item>
+                <Form.Item
+                    required
+                    name={"documentNumber"}
+                    label={"Номер документа"}
+                >
+                    <Input />
+                </Form.Item>
+                <Form.Item name={"documentDate"} label={"Дата документа"}>
+                    <DatePicker />
+                </Form.Item>
+                <Form.Item required name={"notes"} label={"Примечания"}>
+                    <Input />
+                </Form.Item>
+            </>
+        );
+
+        const checkListContent = (
+            <>
+                <div>Check list content</div>
+            </>
+        );
+
+        const items: TabsProps["items"] = [
+            {
+                key: "1",
+                label: "Информация",
+                children: infoContent,
+                icon: <InfoCircleOutlined />,
+            },
+            // eslint-disable-next-line react/jsx-no-undef
+            {
+                key: "2",
+                label: "Чек-лист",
+                children: checkListContent,
+                icon: <CheckCircleOutlined />,
+            },
+        ];
+
         return (
             <>
                 {error && <Alert type={"error"} message={error} />}
@@ -97,74 +192,13 @@ export const InspectionDetailsForm = memo(
                     fields={fields}
                     onValuesChange={onValueChanged}
                 >
-                    <Form.Item
-                        required
-                        name={"date"}
-                        label={"Дата"}
-                        rules={[
-                            {
-                                required: true,
-                                message: "Пожалуйста, укажите дату!",
-                            },
-                        ]}
-                    >
-                        <DatePicker />
-                    </Form.Item>
-                    <Form.Item label={"Штрафная"}>
-                        <Switch
-                            checked={detailsForm?.isPenalty}
-                            onChange={(checked) => {
-                                if (detailsForm) {
-                                    inspectionDetailsActions.setFormData({
-                                        ...detailsForm,
-                                        isPenalty: checked,
-                                    });
-                                }
-                            }}
-                        />
-                    </Form.Item>
-                    <Form.Item label={"Комиссионная"}>
-                        <Switch
-                            checked={detailsForm?.isCommitional}
-                            onChange={(checked) => {
-                                if (detailsForm) {
-                                    inspectionDetailsActions.setFormData({
-                                        ...detailsForm,
-                                        isCommitional: checked,
-                                    });
-                                }
-                            }}
-                        />
-                    </Form.Item>
-                    <Form.Item
-                        name={"dateOfElimination"}
-                        label={"Срок устранения нарушений"}
-                    >
-                        <DatePicker />
-                    </Form.Item>
-                    <Form.Item
-                        required
-                        name={"documentNumber"}
-                        label={"Номер документа"}
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item name={"documentDate"} label={"Дата документа"}>
-                        <DatePicker />
-                    </Form.Item>
-                    <Form.Item required name={"notes"} label={"Примечания"}>
-                        <Input />
-                    </Form.Item>
-                    {/* <Form.Item required label={"Тип удостоверения"}> */}
-                    {/*     <CertificateTypeSelector */}
-                    {/*         value={certificateDetailsForm?.certificateType} */}
-                    {/*         onValueChanged={onChangeCertificateType} */}
-                    {/*     /> */}
-                    {/* </Form.Item> */}
-
-                    {/* <Form.Item name={"group"} label={"Группа"}> */}
-                    {/*     <Input /> */}
-                    {/* </Form.Item> */}
+                    <Tabs
+                        defaultActiveKey={"1"}
+                        type={"line"}
+                        centered
+                        tabPosition={"right"}
+                        items={items}
+                    />
                 </Form>
             </>
         );

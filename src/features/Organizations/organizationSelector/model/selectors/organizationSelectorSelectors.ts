@@ -1,34 +1,34 @@
 import { StateSchema } from "@/app/providers/StoreProvider";
 import { createSelector } from "@reduxjs/toolkit";
-import { allOrganizationsAdapter } from "../adapter/allOrganizationsAdapter";
+import { organizationSelectorAdapter } from "../adapter/organizationSelectorAdapter";
 
-const getAllOrganizationsSchema = (state: StateSchema) => {
-    return state.allOrganizationsSchema;
+const getOrganizationSelectorSchema = (state: StateSchema) => {
+    return state.organizationSelectorSchema;
 };
 
 export const getAllOrganizations =
-    allOrganizationsAdapter.getSelectors<StateSchema>(
+    organizationSelectorAdapter.getSelectors<StateSchema>(
         (state) =>
-            state.allOrganizationsSchema ??
-            allOrganizationsAdapter.getInitialState(),
+            state.organizationSelectorSchema ??
+            organizationSelectorAdapter.getInitialState(),
     );
 
 export const getAllOrganizationsIsLoading = createSelector(
-    getAllOrganizationsSchema,
+    getOrganizationSelectorSchema,
     (schema) => {
         return schema?.isLoading ?? false;
     },
 );
 
 export const getAllOrganizationsError = createSelector(
-    getAllOrganizationsSchema,
+    getOrganizationSelectorSchema,
     (schema) => {
         return schema?.error ?? "";
     },
 );
 
 export const getAllOrganizationsIsInitialized = createSelector(
-    getAllOrganizationsSchema,
+    getOrganizationSelectorSchema,
     (schema) => {
         return schema?._isInitialized ?? false;
     },

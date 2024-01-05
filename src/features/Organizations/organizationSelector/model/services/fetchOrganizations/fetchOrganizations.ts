@@ -5,15 +5,16 @@ import { ServerError } from "@/shared/error/ServerError";
 import { FetchRowsResult } from "@/shared/types/FetchRowsResult";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
+
 export interface FetchAllOrganizationsProps {
     replaceData?: boolean; // Для использования в action.meta.arg
 }
 
-export const fetchAllOrganizations = createAsyncThunk<
+export const fetchOrganizations = createAsyncThunk<
     FetchRowsResult<Organization>,
     FetchAllOrganizationsProps,
     ThunkConfig<string>
->("organizations/fetchAllOrganizations", async (props, thunkApi) => {
+>("fetchOrganizations", async (props, thunkApi) => {
     const { extra, rejectWithValue, getState } = thunkApi;
 
     const workspaceId = getUserActiveWorkspaceId(getState());
