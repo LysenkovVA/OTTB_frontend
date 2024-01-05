@@ -5,6 +5,7 @@ import { CertificateDetailsSchema } from "@/entities/Certificate";
 import { CertificateTypeDetailsSchema } from "@/entities/CertificateType";
 import { EmployeeDetailsSchema } from "@/entities/Employee";
 import { InspectionDetailsSchema } from "@/entities/Inspection/model/types/InspectionDetailsSchema";
+import { InspectionTypeDetailsSchema } from "@/entities/InspectionType";
 import { OrganizationDetailsSchema } from "@/entities/Organization";
 import { ProfileSchema } from "@/entities/Profile";
 import { UserSchema } from "@/entities/User/model/types/UserSchema";
@@ -13,6 +14,7 @@ import { BerthesListSchema } from "@/features/Berthes/berthSelector";
 import { CertificateTypeListSchema } from "@/features/CertificateTypes/certificateTypeSelector";
 import { DepartmentDetailsSchema } from "@/features/Departments/departmentDetailsCard";
 import { AllDepartmentsSchema } from "@/features/Departments/departmentSelector";
+import { InspectionTypeSelectorSchema } from "@/features/InspectionTypes/inspectionTypeSelector";
 import { OrganizationSelectorSchema } from "@/features/Organizations/organizationSelector";
 import { OrganizationsInfiniteListSchema } from "@/features/Organizations/organizationsInfiniteList/model/types/OrganizationsInfiniteListSchema";
 import { UISchema } from "@/features/UI";
@@ -70,6 +72,8 @@ export interface StateSchema {
     certificateTypeDetailsSchema?: CertificateTypeDetailsSchema;
     certificateTypesListSchema?: CertificateTypeListSchema;
     certificateDetailsSchema?: CertificateDetailsSchema;
+    inspectionTypeDetailsSchema?: InspectionTypeDetailsSchema;
+    inspectionTypeSelectorSchema?: InspectionTypeSelectorSchema;
 }
 
 // Для автокоплита

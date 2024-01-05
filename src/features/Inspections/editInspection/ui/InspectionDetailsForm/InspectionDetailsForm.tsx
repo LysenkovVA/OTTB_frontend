@@ -4,7 +4,9 @@ import {
     getInspectionDetailsIsLoading,
 } from "@/entities/Inspection/model/selectors/inspectionDetailsSelectors";
 import { inspectionDetailsActions } from "@/entities/Inspection/model/slice/inspectionDetailsSlice";
+import { InspectionType } from "@/entities/InspectionType";
 import { getUserActiveWorkspaceId } from "@/entities/User";
+import { InspectionTypeSelector } from "@/features/InspectionTypes/inspectionTypeSelector";
 import { classNames } from "@/shared/lib/classNames/classNames";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
 import { FieldData } from "@/shared/types/FieldData";
@@ -78,19 +80,19 @@ export const InspectionDetailsForm = memo(
             [detailsForm, dispatch],
         );
 
-        // const onChangeCertificateType = useCallback(
-        //     (value: CertificateType | undefined) => {
-        //         if (certificateDetailsForm) {
-        //             dispatch(
-        //                 certificateDetailsActions.setFormData({
-        //                     ...certificateDetailsForm,
-        //                     certificateType: value,
-        //                 }),
-        //             );
-        //         }
-        //     },
-        //     [certificateDetailsForm, dispatch],
-        // );
+        const onChangeInspectionType = useCallback(
+            (value: InspectionType | undefined) => {
+                if (detailsForm) {
+                    dispatch(
+                        inspectionDetailsActions.setFormData({
+                            ...detailsForm,
+                            inspectionType: value,
+                        }),
+                    );
+                }
+            },
+            [detailsForm, dispatch],
+        );
 
         const infoContent = (
             <>
@@ -106,6 +108,12 @@ export const InspectionDetailsForm = memo(
                     ]}
                 >
                     <DatePicker />
+                </Form.Item>
+                <Form.Item>
+                    <InspectionTypeSelector
+                        value={detailsForm?.inspectionType}
+                        onValueChanged={onChangeInspectionType}
+                    />
                 </Form.Item>
                 <Form.Item label={"Штрафная"}>
                     <Switch
