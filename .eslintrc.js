@@ -67,6 +67,7 @@ module.exports = {
         "@typescript-eslint/no-invalid-void-type": "off",
         "@typescript-eslint/ban-types": "off",
         "eol-last": "off",
+        "@typescript-eslint/no-unsafe-argument": "off"
     },
     globals: {
         __IS_DEV__: true,
