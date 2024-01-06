@@ -1,6 +1,6 @@
 import { Department } from "@/entities/Department";
 import { getEmployeeDetailsForm } from "@/entities/Employee/model/selectors/getEmployeeDetails";
-import { getUserActiveWorkspaceId } from "@/entities/User";
+import { getUserActiveWorkspace } from "@/entities/User";
 import { getDepartmentDetailsForm } from "@/features/Departments/departmentDetailsCard/model/selectors/departmentDetailsSelectors";
 import { createDepartment } from "@/features/Departments/departmentDetailsCard/model/services/createDepartment/createDepartment";
 import { getDepartment } from "@/features/Departments/departmentDetailsCard/model/services/getDepartment/getDepartment";
@@ -68,7 +68,7 @@ export const DepartmentSelector = memo((props: DepartmentSelectorProps) => {
     const error = useSelector(getAllDepartmentsError);
     const departments = useSelector(getAllDepartments.selectAll);
     const departmentDetails = useSelector(getDepartmentDetailsForm);
-    const activeWorkspaceId = useSelector(getUserActiveWorkspaceId);
+    const activeWorkspace = useSelector(getUserActiveWorkspace);
     const employeeDetailsForm = useSelector(getEmployeeDetailsForm);
 
     // Список
@@ -83,8 +83,7 @@ export const DepartmentSelector = memo((props: DepartmentSelectorProps) => {
         if (!isInitialized) {
             dispatch(
                 fetchAllDepartments({
-                    workspaceId: activeWorkspaceId,
-                    organizationId: employeeDetailsForm?.organization?.id,
+                    workspaceId: activeWorkspace?.id,
                     replaceData: true,
                 }),
             );
@@ -124,18 +123,15 @@ export const DepartmentSelector = memo((props: DepartmentSelectorProps) => {
     }, [dispatch, value?.id]);
 
     const onSaveDepartment = useCallback(async () => {
-        if (departmentDetails && employeeDetailsForm?.organization) {
+        if (departmentDetails) {
             if (!departmentDetails.id) {
                 // Создаем новую организацию
                 const res = await dispatch(
                     createDepartment({
                         department: {
                             ...departmentDetails,
-                            organization: {
-                                ...employeeDetailsForm?.organization,
-                            },
                         },
-                        workspaceId: activeWorkspaceId,
+                        workspaceId: activeWorkspace?.id,
                     }),
                 ).unwrap();
 
@@ -156,13 +152,7 @@ export const DepartmentSelector = memo((props: DepartmentSelectorProps) => {
         } else {
             alert("Сначала нужно выбрать организацию!");
         }
-    }, [
-        activeWorkspaceId,
-        departmentDetails,
-        dispatch,
-        employeeDetailsForm?.organization,
-        onValueChanged,
-    ]);
+    }, [activeWorkspace?.id, departmentDetails, dispatch, onValueChanged]);
 
     return (
         <>

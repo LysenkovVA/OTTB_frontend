@@ -7,7 +7,6 @@ import { AxiosError } from "axios";
 export interface CreateBerthProps {
     data: Berth;
     workspaceId: string | undefined;
-    organizationId: string | undefined;
 }
 
 export const createBerth = createAsyncThunk<
@@ -15,16 +14,12 @@ export const createBerth = createAsyncThunk<
     CreateBerthProps,
     ThunkConfig<string>
 >(
-    "berthes/createBerth",
-    async ({ data, workspaceId, organizationId }, thunkApi) => {
+    "berthes/createConstructionObject",
+    async ({ data, workspaceId }, thunkApi) => {
         const { dispatch, extra, rejectWithValue, getState } = thunkApi;
 
         if (!workspaceId) {
             return rejectWithValue("Рабочее пространство неизвестно!");
-        }
-
-        if (!organizationId) {
-            return rejectWithValue("Организация не задана!");
         }
 
         try {
@@ -34,7 +29,6 @@ export const createBerth = createAsyncThunk<
                 {
                     params: {
                         workspaceId,
-                        organizationId,
                     },
                 },
             );

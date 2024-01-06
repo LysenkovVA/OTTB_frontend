@@ -10,6 +10,7 @@ import {
 } from "../../selectors/constructionObjectsInfiniteListSelectors";
 
 export interface FetchConstructionObjectsInfiniteListProps {
+    workspaceId: string | undefined;
     replaceData?: boolean; // Для использования в action.meta.arg
 }
 
@@ -19,8 +20,12 @@ export const fetchConstructionObjectsInfiniteList = createAsyncThunk<
     ThunkConfig<string>
 >(
     "constructionObjects/fetchConstructionObjectsInfiniteList",
-    async (props, thunkApi) => {
+    async ({ workspaceId }, thunkApi) => {
         const { extra, rejectWithValue, getState } = thunkApi;
+
+        if (!workspaceId) {
+            return rejectWithValue("Рабочее пространство неизвестно!");
+        }
 
         // Получаем параметры из стейта
         const limit = getConstructionObjectsInfiniteListLimit(getState());
@@ -31,6 +36,7 @@ export const fetchConstructionObjectsInfiniteList = createAsyncThunk<
                 FetchRowsResult<ConstructionObject>
             >("/construction-objects", {
                 params: {
+                    workspaceId,
                     limit,
                     offset,
                 },

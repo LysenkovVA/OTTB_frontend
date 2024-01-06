@@ -5,7 +5,7 @@ import {
     getBerthTypeDetailsForm,
 } from "@/entities/BerthType";
 import { getEmployeeDetailsForm } from "@/entities/Employee";
-import { getUserActiveWorkspaceId } from "@/entities/User";
+import { getUserActiveWorkspace } from "@/entities/User";
 import {
     getBerthTypesListError,
     getBerthTypesListIsInitialized,
@@ -68,7 +68,7 @@ export const BerthTypeSelector = memo((props: BerthTypeSelectorProps) => {
     const error = useSelector(getBerthTypesListError);
     const berthTypes = useSelector(getBerthTypesListSelectors.selectAll);
     const berthTypeDetails = useSelector(getBerthTypeDetailsForm);
-    const activeWorkspaceId = useSelector(getUserActiveWorkspaceId);
+    const activeWorkspace = useSelector(getUserActiveWorkspace);
     const employeeDetailsForm = useSelector(getEmployeeDetailsForm);
 
     // Список
@@ -83,8 +83,7 @@ export const BerthTypeSelector = memo((props: BerthTypeSelectorProps) => {
         if (!isInitialized) {
             dispatch(
                 getBerthTypesList({
-                    workspaceId: activeWorkspaceId,
-                    organizationId: employeeDetailsForm?.organization?.id,
+                    workspaceId: activeWorkspace?.id,
                     replaceData: true,
                 }),
             );
@@ -130,8 +129,7 @@ export const BerthTypeSelector = memo((props: BerthTypeSelectorProps) => {
                 const res = await dispatch(
                     createBerthType({
                         data: berthTypeDetails,
-                        workspaceId: activeWorkspaceId,
-                        organizationId: employeeDetailsForm?.organization?.id,
+                        workspaceId: activeWorkspace?.id,
                     }),
                 ).unwrap();
 
@@ -150,13 +148,7 @@ export const BerthTypeSelector = memo((props: BerthTypeSelectorProps) => {
             // Закрываем окно
             setModalOpen(false);
         }
-    }, [
-        activeWorkspaceId,
-        berthTypeDetails,
-        dispatch,
-        employeeDetailsForm?.organization?.id,
-        onValueChanged,
-    ]);
+    }, [activeWorkspace?.id, berthTypeDetails, dispatch, onValueChanged]);
 
     return (
         <>

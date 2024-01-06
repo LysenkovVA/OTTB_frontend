@@ -1,10 +1,10 @@
 import {
     getInspectionType,
-    getInspectionTypeDetails,
+    getInspectionTypeDetailsForm,
     InspectionType,
     inspectionTypeDetailsReducer,
 } from "@/entities/InspectionType";
-import { getUserActiveWorkspaceId } from "@/entities/User";
+import { getUserActiveWorkspace } from "@/entities/User";
 import {
     getInspectionTypesListError,
     getInspectionTypesListIsInitialized,
@@ -65,13 +65,13 @@ export const InspectionTypeSelector = memo(
         const inspectionTypes = useSelector(
             getInspectionTypesListSelectors.selectAll,
         );
-        const inspectionTypeDetails = useSelector(getInspectionTypeDetails);
-        const activeWorkspaceId = useSelector(getUserActiveWorkspaceId);
+        const inspectionTypeDetails = useSelector(getInspectionTypeDetailsForm);
+        const activeWorkspace = useSelector(getUserActiveWorkspace);
 
         // Список
         const options = useMemo(() => {
-            return inspectionTypes.map((organization) => {
-                return { label: organization.value, value: organization.id };
+            return inspectionTypes.map((item) => {
+                return { label: item.value, value: item.id };
             });
         }, [inspectionTypes]);
 
@@ -80,7 +80,7 @@ export const InspectionTypeSelector = memo(
             if (!isInitialized) {
                 dispatch(
                     fetchInspectionTypesList({
-                        workspaceId: activeWorkspaceId,
+                        workspaceId: activeWorkspace?.id,
                         replaceData: true,
                     }),
                 );
@@ -95,7 +95,7 @@ export const InspectionTypeSelector = memo(
                 }
 
                 const inspectionType = inspectionTypes.find(
-                    (organization) => organization.id === id,
+                    (item) => item.id === id,
                 );
 
                 if (inspectionType) {
@@ -126,7 +126,7 @@ export const InspectionTypeSelector = memo(
                     const newInspectionType = await dispatch(
                         createInspectionType({
                             data: inspectionTypeDetails,
-                            workspaceId: activeWorkspaceId,
+                            workspaceId: activeWorkspace?.id,
                         }),
                     ).unwrap();
 
@@ -139,14 +139,14 @@ export const InspectionTypeSelector = memo(
                             id: inspectionTypeDetails.id,
                             data: inspectionTypeDetails,
                         }),
-                    ).unwrap();
+                    );
                 }
 
                 // Закрываем окно
                 setModalOpen(false);
             }
         }, [
-            activeWorkspaceId,
+            activeWorkspace?.id,
             dispatch,
             inspectionTypeDetails,
             onValueChanged,
@@ -159,7 +159,7 @@ export const InspectionTypeSelector = memo(
                     title={
                         inspectionTypeDetails?.id
                             ? "Редактирование"
-                            : "Новая организация"
+                            : "Новый тип проверки"
                     }
                     isVisible={modalOpen}
                     onCancel={() => setModalOpen(false)}

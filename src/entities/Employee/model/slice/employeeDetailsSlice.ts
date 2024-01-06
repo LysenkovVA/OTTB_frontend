@@ -3,10 +3,8 @@ import { Department } from "@/entities/Department";
 import { EmployeeDetailsSchema } from "@/entities/Employee";
 import { getEmployee } from "@/entities/Employee/model/services/getEmployee/getEmployee";
 import { Employee } from "@/entities/Employee/model/types/Employee";
-import { Organization } from "@/entities/Organization";
 import { updateBerth } from "@/features/Berthes/berthSelector/model/services/updateBerth/updateBerth";
 import { updateDepartment } from "@/features/Departments/departmentDetailsCard/model/services/updateDepartment/updateDepartment";
-import { updateOrganization } from "@/features/Organizations/organizationsInfiniteList";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 const initialState: EmployeeDetailsSchema = {
@@ -57,15 +55,6 @@ export const employeeDetailsSlice = createSlice({
                 state.isDataLoading = false;
                 state.dataError = action.payload;
             })
-            .addCase(
-                updateOrganization.fulfilled,
-                (state, action: PayloadAction<Organization>) => {
-                    state.employeeDetailsForm = {
-                        ...state.employeeDetailsForm,
-                        organization: action.payload,
-                    };
-                },
-            )
             .addCase(
                 updateDepartment.fulfilled,
                 (state, action: PayloadAction<Department>) => {

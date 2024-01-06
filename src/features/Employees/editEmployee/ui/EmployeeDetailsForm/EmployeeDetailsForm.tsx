@@ -6,13 +6,9 @@ import {
     getEmployeeDetailsIsDataLoading,
 } from "@/entities/Employee/model/selectors/getEmployeeDetails";
 import { employeeDetailsActions } from "@/entities/Employee/model/slice/employeeDetailsSlice";
-import { Organization } from "@/entities/Organization";
-import { getUserActiveWorkspaceId } from "@/entities/User";
-import { fetchAllBerthes } from "@/features/Berthes/berthSelector/model/services/fetchAllBerthes/fetchAllBerthes";
+import { getUserActiveWorkspace } from "@/entities/User";
 import { BerthSelector } from "@/features/Berthes/berthSelector/ui/BerthSelector/BerthSelector";
 import { DepartmentSelector } from "@/features/Departments/departmentSelector";
-import { fetchAllDepartments } from "@/features/Departments/departmentSelector/model/services/fetchAllDepartments/fetchAllDepartments";
-import { OrganizationSelector } from "@/features/Organizations/organizationSelector";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
 import { FieldData } from "@/shared/types/FieldData";
 import { EditableAvatar } from "@/shared/ui/EditableAvatar/EditableAvatar";
@@ -45,7 +41,7 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
     const isLoading = useSelector(getEmployeeDetailsIsDataLoading);
     const error = useSelector(getEmployeeDetailsDataError);
     const employeeDetailsForm = useSelector(getEmployeeDetailsForm);
-    const workspaceId = useSelector(getUserActiveWorkspaceId);
+    const activeWorkspace = useSelector(getUserActiveWorkspace);
 
     const fields = useMemo((): FieldData[] => {
         return [
@@ -125,60 +121,50 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
         [dispatch, employeeDetailsForm],
     );
 
-    const onChangeOrganization = useCallback(
-        async (value: Organization | undefined) => {
-            // Установка организации и Сброс значений селекторов
-            dispatch(
-                employeeDetailsActions.setFormData({
-                    ...employeeDetailsForm,
-                    organization: value,
-                    department: undefined,
-                    berth: undefined,
-                }),
-            );
-
-            if (value) {
-                // Если значение поменялось, меняем значения селекторов
-                // Подразделения
-                dispatch(
-                    fetchAllDepartments({
-                        workspaceId,
-                        organizationId: value.id,
-                        replaceData: true,
-                    }),
-                );
-
-                // Должности
-                dispatch(
-                    fetchAllBerthes({
-                        workspaceId,
-                        organizationId: value.id,
-                        replaceData: true,
-                    }),
-                );
-            }
-        },
-        [dispatch, employeeDetailsForm, workspaceId],
-    );
+    // const onChangeOrganization = useCallback(
+    //     async (value: Organization | undefined) => {
+    //         // Установка организации и Сброс значений селекторов
+    //         dispatch(
+    //             employeeDetailsActions.setFormData({
+    //                 ...employeeDetailsForm,
+    //                 organization: value,
+    //                 department: undefined,
+    //                 berth: undefined,
+    //             }),
+    //         );
+    //
+    //         if (value) {
+    //             // Если значение поменялось, меняем значения селекторов
+    //             // Подразделения
+    //             dispatch(
+    //                 fetchAllDepartments({
+    //                     workspaceId,
+    //                     organizationId: value.id,
+    //                     replaceData: true,
+    //                 }),
+    //             );
+    //
+    //             // Должности
+    //             dispatch(
+    //                 fetchAllBerthes({
+    //                     workspaceId,
+    //                     organizationId: value.id,
+    //                     replaceData: true,
+    //                 }),
+    //             );
+    //         }
+    //     },
+    //     [dispatch, employeeDetailsForm, workspaceId],
+    // );
 
     const workContent = (
         <>
             <Row gutter={[8, 8]}>
                 <Col span={12}>
-                    <Form.Item label={"Организация"}>
-                        <OrganizationSelector
-                            value={employeeDetailsForm?.organization}
-                            onValueChanged={onChangeOrganization}
-                        />
-                    </Form.Item>
-                </Col>
-            </Row>
-            <Row gutter={[8, 8]}>
-                <Col span={12}>
                     <Form.Item label={"Подразделение"}>
                         <DepartmentSelector
                             disabled={
-                                employeeDetailsForm?.organization === undefined
+                                employeeDetailsForm?.workspace === undefined
                             }
                             value={employeeDetailsForm?.department}
                             onValueChanged={onChangeDepartment}
@@ -191,7 +177,7 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
                     <Form.Item label={"Должность"}>
                         <BerthSelector
                             disabled={
-                                employeeDetailsForm?.organization === undefined
+                                employeeDetailsForm?.workspace === undefined
                             }
                             value={employeeDetailsForm?.berth}
                             onValueChanged={onChangeBerth}
@@ -203,8 +189,7 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
                         <Form.Item label={"Разряд"} name={"rank"}>
                             <Input
                                 disabled={
-                                    employeeDetailsForm?.organization ===
-                                    undefined
+                                    employeeDetailsForm?.workspace === undefined
                                 }
                             />
                         </Form.Item>

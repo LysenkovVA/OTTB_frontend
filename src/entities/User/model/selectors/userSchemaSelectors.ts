@@ -8,10 +8,10 @@ export const getUser = createSelector(getUserSchema, (userSchema) => {
     return userSchema?.authenticatedUser ?? undefined;
 });
 
-export const getUserActiveWorkspaceId = createSelector(
+export const getUserActiveWorkspace = createSelector(
     getUserSchema,
     (userSchema) => {
-        return userSchema?.activeWorkspaceId ?? "";
+        return userSchema?.activeWorkspace ?? undefined;
     },
 );
 

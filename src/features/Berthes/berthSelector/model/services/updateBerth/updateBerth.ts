@@ -13,7 +13,7 @@ export const updateBerth = createAsyncThunk<
     Berth,
     UpdateBerthProps,
     ThunkConfig<string>
->("berthes/updateBerth", async ({ id, data }, thunkApi) => {
+>("berthes/updateConstructionObject", async ({ id, data }, thunkApi) => {
     const { dispatch, extra, rejectWithValue } = thunkApi;
 
     try {

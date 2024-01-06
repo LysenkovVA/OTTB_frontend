@@ -6,7 +6,7 @@ import { AxiosError } from "axios";
 
 export interface CreateDepartmentProps {
     department: Department;
-    workspaceId: string;
+    workspaceId: string | undefined;
 }
 
 export const createDepartment = createAsyncThunk<
@@ -17,6 +17,10 @@ export const createDepartment = createAsyncThunk<
     "department/createDepartment",
     async ({ department, workspaceId }, thunkApi) => {
         const { dispatch, extra, rejectWithValue, getState } = thunkApi;
+
+        if (!workspaceId) {
+            return rejectWithValue("Рабочее пространство не задано!");
+        }
 
         try {
             const response = await extra.api.post<Department>(

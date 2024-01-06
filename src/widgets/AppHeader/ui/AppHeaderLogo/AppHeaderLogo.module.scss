@@ -1,7 +1,6 @@
 .AppHeaderLogo {
-    width: calc(var(--sidemenu-width) - 16px);
+    width: calc(var(--sidemenu-width) - 16px + 16px); // сдвинули workspace
     margin-left: 16px;
-    position: absolute;
 }
 
 .text {

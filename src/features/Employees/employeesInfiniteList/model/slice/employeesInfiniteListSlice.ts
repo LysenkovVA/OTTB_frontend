@@ -7,7 +7,6 @@ import { deleteEmployeeAvatar } from "@/features/Employees/employeesInfiniteList
 import { fetchEmployeesInfiniteList } from "@/features/Employees/employeesInfiniteList/model/services/fetchEmployeesInfiniteList/fetchEmployeesInfiniteList";
 import { updateEmployee } from "@/features/Employees/employeesInfiniteList/model/services/updateEmployee/updateEmployee";
 import { updateEmployeeAvatar } from "@/features/Employees/employeesInfiniteList/model/services/updateEmployeeAvatar/updateEmployeeAvatar";
-import { updateOrganization } from "@/features/Organizations/organizationsInfiniteList";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { employeesInfiniteListAdapter } from "../adapter/employeesInfiniteListAdapter";
 import { EmployeesInfiniteListSchema } from "../types/EmployeesInfiniteListSchema";
@@ -133,24 +132,6 @@ export const employeesInfiniteListSlice = createSlice({
                     state,
                     action.meta.arg.employeeId,
                 );
-            })
-            // При обновлении органзации нужно обновлять организации сотрудников в списке
-            .addCase(updateOrganization.fulfilled, (state, action) => {
-                // Выбираем всех работников для которых обновилась организация
-                const employees = employeesInfiniteListAdapter
-                    .getSelectors()
-                    .selectAll(state)
-                    .filter(
-                        (empl) => empl.organization?.id === action.meta.arg.id,
-                    );
-
-                // Обновляем значение организации
-                employees.forEach((employee) => {
-                    employeesInfiniteListAdapter.setOne(state, {
-                        ...employee,
-                        organization: action.payload,
-                    });
-                });
             })
             // При обновлении подразделения нужно обновлять подразделение сотрудников в списке
             .addCase(updateDepartment.fulfilled, (state, action) => {

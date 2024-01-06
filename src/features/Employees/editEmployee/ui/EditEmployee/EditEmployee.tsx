@@ -4,7 +4,7 @@ import {
     getEmployeeDetailsForm,
     getEmployeeDetailsFormAvatar,
 } from "@/entities/Employee";
-import { getUserActiveWorkspaceId } from "@/entities/User";
+import { getUserActiveWorkspace } from "@/entities/User";
 import { EmployeeDetailsForm } from "@/features/Employees/editEmployee/ui/EmployeeDetailsForm/EmployeeDetailsForm";
 import { createEmployee } from "@/features/Employees/employeesInfiniteList/model/services/createEmployee/createEmployee";
 import { deleteEmployeeAvatar } from "@/features/Employees/employeesInfiniteList/model/services/deleteEmployeeAvatar/deleteEmployeeAvatar";
@@ -29,7 +29,7 @@ export const EditEmployee = memo((props: EditEmployeeProps) => {
     const [form] = useForm();
     const dispatch = useAppDispatch();
     const detailsForm = useSelector(getEmployeeDetailsForm);
-    const workspaceId = useSelector(getUserActiveWorkspaceId);
+    const activeWorkspace = useSelector(getUserActiveWorkspace);
     const formAvatar = useSelector(getEmployeeDetailsFormAvatar);
     const dataChanged = useSelector(getEmployeeDetailsDataChanged);
     const avatarChanged = useSelector(getEmployeeDetailsAvatarChanged);
@@ -42,7 +42,7 @@ export const EditEmployee = memo((props: EditEmployeeProps) => {
                     const newEmployee = await dispatch(
                         createEmployee({
                             data: detailsForm,
-                            workspaceId,
+                            workspaceId: activeWorkspace?.id,
                         }),
                     ).unwrap();
 
@@ -98,11 +98,11 @@ export const EditEmployee = memo((props: EditEmployeeProps) => {
     }, [
         detailsForm,
         dispatch,
-        workspaceId,
+        activeWorkspace?.id,
+        avatarChanged,
         formAvatar,
         onUpdated,
         dataChanged,
-        avatarChanged,
     ]);
 
     return (

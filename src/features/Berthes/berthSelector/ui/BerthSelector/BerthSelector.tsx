@@ -4,8 +4,7 @@ import {
     getBerth,
     getBerthDetailsForm,
 } from "@/entities/Berth";
-import { getEmployeeDetailsForm } from "@/entities/Employee";
-import { getUserActiveWorkspaceId } from "@/entities/User";
+import { getUserActiveWorkspace } from "@/entities/User";
 import {
     getAllBerthes,
     getAllBerthesError,
@@ -68,11 +67,7 @@ export const BerthSelector = memo((props: BerthSelectorProps) => {
     const error = useSelector(getAllBerthesError);
     const berthes = useSelector(getAllBerthes.selectAll);
     const berthDetails = useSelector(getBerthDetailsForm);
-    const activeWorkspaceId = useSelector(getUserActiveWorkspaceId);
-    // const employeeOrganization = useSelector(
-    //     getEmployeeDetailsFormSelectedOrganization,
-    // );
-    const employeeDetailsForm = useSelector(getEmployeeDetailsForm);
+    const activeWorkspace = useSelector(getUserActiveWorkspace);
 
     // Список
     const options = useMemo(() => {
@@ -86,8 +81,7 @@ export const BerthSelector = memo((props: BerthSelectorProps) => {
         if (!isInitialized) {
             dispatch(
                 fetchAllBerthes({
-                    workspaceId: activeWorkspaceId,
-                    organizationId: employeeDetailsForm?.organization?.id,
+                    workspaceId: activeWorkspace?.id,
                     replaceData: true,
                 }),
             );
@@ -125,14 +119,13 @@ export const BerthSelector = memo((props: BerthSelectorProps) => {
     }, [dispatch, value?.id]);
 
     const onSave = useCallback(async () => {
-        if (berthDetails && employeeDetailsForm?.organization) {
+        if (berthDetails) {
             if (!berthDetails.id) {
                 // Создаем
                 const res = await dispatch(
                     createBerth({
                         data: berthDetails,
-                        workspaceId: activeWorkspaceId,
-                        organizationId: employeeDetailsForm?.organization?.id,
+                        workspaceId: activeWorkspace?.id,
                     }),
                 ).unwrap();
 
@@ -153,13 +146,7 @@ export const BerthSelector = memo((props: BerthSelectorProps) => {
         } else {
             alert("Сначала нужно выбрать организацию!");
         }
-    }, [
-        activeWorkspaceId,
-        berthDetails,
-        dispatch,
-        employeeDetailsForm?.organization,
-        onValueChanged,
-    ]);
+    }, [activeWorkspace?.id, berthDetails, dispatch, onValueChanged]);
 
     return (
         <>

@@ -5,7 +5,7 @@ import {
 } from "@/entities/Inspection/model/selectors/inspectionDetailsSelectors";
 import { inspectionDetailsActions } from "@/entities/Inspection/model/slice/inspectionDetailsSlice";
 import { InspectionType } from "@/entities/InspectionType";
-import { getUserActiveWorkspaceId } from "@/entities/User";
+import { getUserActiveWorkspace } from "@/entities/User";
 import { InspectionTypeSelector } from "@/features/InspectionTypes/inspectionTypeSelector";
 import { classNames } from "@/shared/lib/classNames/classNames";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
@@ -13,10 +13,12 @@ import { FieldData } from "@/shared/types/FieldData";
 import { CheckCircleOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import {
     Alert,
+    Col,
     DatePicker,
     Form,
     FormInstance,
     Input,
+    Row,
     Switch,
     Tabs,
     TabsProps,
@@ -38,7 +40,7 @@ export const InspectionDetailsForm = memo(
         const isLoading = useSelector(getInspectionDetailsIsLoading);
         const error = useSelector(getInspectionDetailsError);
         const detailsForm = useSelector(getInspectionDetailsForm);
-        const workspaceId = useSelector(getUserActiveWorkspaceId);
+        const activeWorkspace = useSelector(getUserActiveWorkspace);
 
         const fields = useMemo((): FieldData[] => {
             if (!detailsForm) {
@@ -96,54 +98,65 @@ export const InspectionDetailsForm = memo(
 
         const infoContent = (
             <>
-                <Form.Item
-                    required
-                    name={"date"}
-                    label={"Дата"}
-                    rules={[
-                        {
-                            required: true,
-                            message: "Пожалуйста, укажите дату!",
-                        },
-                    ]}
-                >
-                    <DatePicker />
-                </Form.Item>
-                <Form.Item>
-                    <InspectionTypeSelector
-                        value={detailsForm?.inspectionType}
-                        onValueChanged={onChangeInspectionType}
-                    />
-                </Form.Item>
-                <Form.Item label={"Штрафная"}>
-                    <Switch
-                        checked={detailsForm?.isPenalty}
-                        onChange={(checked) => {
-                            if (detailsForm) {
-                                inspectionDetailsActions.setFormData({
-                                    ...detailsForm,
-                                    isPenalty: checked,
-                                });
-                            }
-                        }}
-                    />
-                </Form.Item>
-                <Form.Item label={"Комиссионная"}>
-                    <Switch
-                        checked={detailsForm?.isCommitional}
-                        onChange={(checked) => {
-                            if (detailsForm) {
-                                inspectionDetailsActions.setFormData({
-                                    ...detailsForm,
-                                    isCommitional: checked,
-                                });
-                            }
-                        }}
-                    />
-                </Form.Item>
+                <Row gutter={[16, 16]} justify={"start"}>
+                    <Col span={3}>
+                        <Form.Item
+                            required
+                            name={"date"}
+                            label={"Дата"}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Пожалуйста, укажите дату!",
+                                },
+                            ]}
+                        >
+                            <DatePicker />
+                        </Form.Item>
+                    </Col>
+                    <Col span={6}>
+                        <Form.Item label={"Тип"}>
+                            <InspectionTypeSelector
+                                value={detailsForm?.inspectionType}
+                                onValueChanged={onChangeInspectionType}
+                            />
+                        </Form.Item>
+                    </Col>
+                    <Col span={3}>
+                        <Form.Item label={"Штрафная"}>
+                            <Switch
+                                checked={detailsForm?.isPenalty}
+                                onChange={(checked) => {
+                                    if (detailsForm) {
+                                        inspectionDetailsActions.setFormData({
+                                            ...detailsForm,
+                                            isPenalty: checked,
+                                        });
+                                    }
+                                }}
+                            />
+                        </Form.Item>
+                    </Col>
+                    <Col span={3}>
+                        <Form.Item label={"Комиссионная"}>
+                            <Switch
+                                checked={detailsForm?.isCommitional}
+                                onChange={(checked) => {
+                                    if (detailsForm) {
+                                        inspectionDetailsActions.setFormData({
+                                            ...detailsForm,
+                                            isCommitional: checked,
+                                        });
+                                    }
+                                }}
+                            />
+                        </Form.Item>
+                    </Col>
+                </Row>
                 <Form.Item
                     name={"dateOfElimination"}
                     label={"Срок устранения нарушений"}
+                    validateStatus={"error"}
                 >
                     <DatePicker />
                 </Form.Item>
@@ -158,7 +171,7 @@ export const InspectionDetailsForm = memo(
                     <DatePicker />
                 </Form.Item>
                 <Form.Item required name={"notes"} label={"Примечания"}>
-                    <Input />
+                    <Input.TextArea />
                 </Form.Item>
             </>
         );

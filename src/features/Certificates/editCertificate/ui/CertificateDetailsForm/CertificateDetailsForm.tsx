@@ -5,7 +5,7 @@ import {
 } from "@/entities/Certificate/model/selectors/certificateSelectors";
 import { certificateDetailsActions } from "@/entities/Certificate/model/slice/certificateDetailsSlice";
 import { CertificateType } from "@/entities/CertificateType";
-import { getUserActiveWorkspaceId } from "@/entities/User";
+import { getUserActiveWorkspace } from "@/entities/User";
 import { CertificateTypeSelector } from "@/features/CertificateTypes/certificateTypeSelector";
 import { classNames } from "@/shared/lib/classNames/classNames";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
@@ -28,7 +28,7 @@ export const CertificateDetailsForm = memo(
         const isLoading = useSelector(getCertificateDetailsIsLoading);
         const error = useSelector(getCertificateDetailsError);
         const certificateDetailsForm = useSelector(getCertificateDetailsForm);
-        const workspaceId = useSelector(getUserActiveWorkspaceId);
+        const activeWorkspace = useSelector(getUserActiveWorkspace);
 
         const fields = useMemo((): FieldData[] => {
             if (!certificateDetailsForm) {

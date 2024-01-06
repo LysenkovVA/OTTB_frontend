@@ -9,7 +9,6 @@ import Number = types.Number;
 export interface CreateCertificateTypeProps {
     data: CertificateType;
     workspaceId: string | undefined;
-    // organizationId: string | undefined;
 }
 
 export const createCertificateType = createAsyncThunk<
@@ -23,10 +22,6 @@ export const createCertificateType = createAsyncThunk<
         return rejectWithValue("Рабочее пространство неизвестно!");
     }
 
-    // if (!organizationId) {
-    //     return rejectWithValue("Организация не задана!");
-    // }
-
     try {
         const response = await extra.api.post<CertificateType>(
             "/certificate-types/create",
@@ -34,7 +29,6 @@ export const createCertificateType = createAsyncThunk<
             {
                 params: {
                     workspaceId,
-                    // organizationId,
                 },
             },
         );

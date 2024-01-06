@@ -1,4 +1,5 @@
 import { ConstructionObjectItem } from "@/entities/ConstructionObject";
+import { getUserActiveWorkspace } from "@/entities/User";
 import { fetchConstructionObjectsInfiniteList } from "@/features/ConstructionObjects/constructionObjectsInfiniteList/model/services/fetchConstructionObjectsInfiniteList/fetchConstructionObjectsInfiniteList";
 import {
     DynamicModuleLoader,
@@ -55,11 +56,15 @@ export const ConstructionObjectsInfiniteList = memo(
         const isInitialized = useSelector(
             getConstructionObjectsInfiniteListIsInitialized,
         );
+        const activeWorkspace = useSelector(getUserActiveWorkspace);
 
         useInitialEffect(() => {
             if (!isInitialized) {
                 dispatch(
-                    fetchConstructionObjectsInfiniteList({ replaceData: true }),
+                    fetchConstructionObjectsInfiniteList({
+                        workspaceId: activeWorkspace?.id,
+                        replaceData: true,
+                    }),
                 );
             }
         });
@@ -73,11 +78,20 @@ export const ConstructionObjectsInfiniteList = memo(
                 );
                 dispatch(
                     fetchConstructionObjectsInfiniteList({
+                        workspaceId: activeWorkspace?.id,
                         replaceData: false,
                     }),
                 );
             }
-        }, [dispatch, hasMore, isInitialized, isLoading, limit, offset]);
+        }, [
+            activeWorkspace?.id,
+            dispatch,
+            hasMore,
+            isInitialized,
+            isLoading,
+            limit,
+            offset,
+        ]);
 
         const skeletons = useMemo(() => {
             const skeletons = [];

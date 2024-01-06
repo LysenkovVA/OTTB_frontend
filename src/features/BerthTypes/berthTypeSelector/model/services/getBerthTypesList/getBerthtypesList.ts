@@ -7,7 +7,6 @@ import { AxiosError } from "axios";
 
 export interface GetBerthTypesListProps {
     workspaceId: string | undefined;
-    organizationId: string | undefined;
     replaceData?: boolean; // Для использования в action.meta.arg
 }
 
@@ -17,14 +16,10 @@ export const getBerthTypesList = createAsyncThunk<
     ThunkConfig<string>
 >("getBerthTypesList", async (props, thunkApi) => {
     const { extra, rejectWithValue, getState } = thunkApi;
-    const { workspaceId, organizationId } = props;
+    const { workspaceId } = props;
 
     if (!workspaceId) {
         return rejectWithValue("Рабочее пространство неизвестно!");
-    }
-
-    if (!organizationId) {
-        return rejectWithValue("Организация не задана!");
     }
 
     try {
@@ -34,7 +29,6 @@ export const getBerthTypesList = createAsyncThunk<
             {
                 params: {
                     workspaceId,
-                    organizationId,
                 },
             },
         );

@@ -1,4 +1,4 @@
-import { Organization } from "@/entities/Organization";
+import { Workspace } from "@/entities/Workspace";
 
 export interface ConstructionObject {
     id: string;
@@ -6,5 +6,5 @@ export interface ConstructionObject {
     address?: string;
     startDate?: Date;
     endDate?: Date;
-    organization?: Organization;
+    workspace?: Workspace;
 }

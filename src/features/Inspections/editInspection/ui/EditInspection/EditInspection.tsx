@@ -1,5 +1,5 @@
 import { getInspectionDetailsForm } from "@/entities/Inspection/model/selectors/inspectionDetailsSelectors";
-import { getUserActiveWorkspaceId } from "@/entities/User";
+import { getUserActiveWorkspace } from "@/entities/User";
 import { InspectionDetailsForm } from "@/features/Inspections/editInspection/ui/InspectionDetailsForm/InspectionDetailsForm";
 import { createInspection } from "@/features/Inspections/inspectionsInfiniteList/model/services/createInspection/createInspection";
 import { updateInspection } from "@/features/Inspections/inspectionsInfiniteList/model/services/updateInspection/updateInspection";
@@ -21,7 +21,7 @@ export const EditInspection = memo((props: EditInspectionProps) => {
     const [form] = useForm();
     const dispatch = useAppDispatch();
     const detailsForm = useSelector(getInspectionDetailsForm);
-    const workspaceId = useSelector(getUserActiveWorkspaceId);
+    const activeWorkspace = useSelector(getUserActiveWorkspace);
 
     const onSave = useCallback(async () => {
         if (detailsForm) {
@@ -31,7 +31,7 @@ export const EditInspection = memo((props: EditInspectionProps) => {
                     const newEmployee = await dispatch(
                         createInspection({
                             data: detailsForm,
-                            workspaceId,
+                            workspaceId: activeWorkspace?.id,
                         }),
                     ).unwrap();
 
@@ -49,7 +49,7 @@ export const EditInspection = memo((props: EditInspectionProps) => {
                 }
             } catch {}
         }
-    }, [detailsForm, dispatch, workspaceId, onUpdated]);
+    }, [detailsForm, dispatch, activeWorkspace?.id, onUpdated]);
 
     return (
         <EditFormWrapper

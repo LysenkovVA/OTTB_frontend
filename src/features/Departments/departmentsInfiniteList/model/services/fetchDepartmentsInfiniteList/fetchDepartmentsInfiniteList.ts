@@ -1,6 +1,6 @@
 import { ThunkConfig } from "@/app/providers/StoreProvider";
 import { Department } from "@/entities/Department";
-import { getUserActiveWorkspaceId } from "@/entities/User";
+import { getUserActiveWorkspace } from "@/entities/User";
 import { ServerError } from "@/shared/error/ServerError";
 import { FetchRowsResult } from "@/shared/types/FetchRowsResult";
 import { createAsyncThunk } from "@reduxjs/toolkit";
@@ -22,11 +22,11 @@ export const fetchDepartmentsInfiniteList = createAsyncThunk<
     const { extra, rejectWithValue, getState } = thunkApi;
 
     // Получаем параметры из стейта
-    const workspaceId = getUserActiveWorkspaceId(getState());
+    const activeWorkspace = getUserActiveWorkspace(getState());
     const limit = getDepartmentsInfiniteListLimit(getState());
     const offset = getDepartmentsInfiniteListOffset(getState());
 
-    if (!workspaceId) {
+    if (!activeWorkspace?.id) {
         return rejectWithValue("Рабочее пространство неизвестно!");
     }
 
@@ -35,7 +35,7 @@ export const fetchDepartmentsInfiniteList = createAsyncThunk<
             "/departments",
             {
                 params: {
-                    workspaceId,
+                    workspaceId: activeWorkspace.id,
                     limit,
                     offset,
                 },

@@ -4,7 +4,7 @@ import {
     getCertificateType,
     getCertificateTypeDetailsForm,
 } from "@/entities/CertificateType";
-import { getUserActiveWorkspaceId } from "@/entities/User";
+import { getUserActiveWorkspace } from "@/entities/User";
 
 import {
     getCertificateTypesListError,
@@ -75,7 +75,7 @@ export const CertificateTypeSelector = memo(
         const certificateTypeDetails = useSelector(
             getCertificateTypeDetailsForm,
         );
-        const activeWorkspaceId = useSelector(getUserActiveWorkspaceId);
+        const activeWorkspace = useSelector(getUserActiveWorkspace);
         // const employeeDetailsForm = useSelector(getEmployeeDetailsForm);
 
         // Список
@@ -90,8 +90,7 @@ export const CertificateTypeSelector = memo(
             if (!isInitialized) {
                 dispatch(
                     getCertificateTypesList({
-                        workspaceId: activeWorkspaceId,
-                        // organizationId: employeeDetailsForm?.organization?.id,
+                        workspaceId: activeWorkspace?.id,
                         replaceData: true,
                     }),
                 );
@@ -135,7 +134,7 @@ export const CertificateTypeSelector = memo(
                     const res = await dispatch(
                         createCertificateType({
                             data: certificateTypeDetails,
-                            workspaceId: activeWorkspaceId,
+                            workspaceId: activeWorkspace?.id,
                         }),
                     ).unwrap();
 
@@ -155,7 +154,7 @@ export const CertificateTypeSelector = memo(
                 setModalOpen(false);
             }
         }, [
-            activeWorkspaceId,
+            activeWorkspace?.id,
             certificateTypeDetails,
             dispatch,
             onValueChanged,

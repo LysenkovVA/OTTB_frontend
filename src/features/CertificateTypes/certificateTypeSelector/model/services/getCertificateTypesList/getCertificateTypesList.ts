@@ -7,7 +7,6 @@ import { AxiosError } from "axios";
 
 export interface GetCertificateTypesListProps {
     workspaceId: string | undefined;
-    // organizationId: string | undefined;
     replaceData?: boolean; // Для использования в action.meta.arg
 }
 
@@ -23,10 +22,6 @@ export const getCertificateTypesList = createAsyncThunk<
         return rejectWithValue("Рабочее пространство неизвестно!");
     }
 
-    // if (!organizationId) {
-    //     return rejectWithValue("Организация не задана!");
-    // }
-
     try {
         // Отправляем запрос
         const response = await extra.api.get<FetchRowsResult<CertificateType>>(
@@ -34,7 +29,6 @@ export const getCertificateTypesList = createAsyncThunk<
             {
                 params: {
                     workspaceId,
-                    // organizationId,
                 },
             },
         );

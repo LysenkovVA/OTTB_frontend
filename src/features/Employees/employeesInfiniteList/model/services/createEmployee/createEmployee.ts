@@ -6,7 +6,7 @@ import { AxiosError } from "axios";
 
 export interface CreateEmployeeProps {
     data: Employee;
-    workspaceId: string;
+    workspaceId: string | undefined;
 }
 
 export const createEmployee = createAsyncThunk<

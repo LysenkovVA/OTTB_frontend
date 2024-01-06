@@ -7,24 +7,19 @@ import { AxiosError } from "axios";
 export interface FetchAllBerthesProps {
     replaceData?: boolean; // Для использования в action.meta.arg
     workspaceId: string | undefined;
-    organizationId: string | undefined;
 }
 
 export const fetchAllBerthes = createAsyncThunk<
     FetchRowsResult<Berth>,
     FetchAllBerthesProps,
     ThunkConfig<string>
->("berthes/fetchAllBerthes", async (props, thunkApi) => {
+>("berthes/fetchAllConstructionObjects", async (props, thunkApi) => {
     const { extra, rejectWithValue, getState } = thunkApi;
-    const { organizationId, workspaceId } = props;
+    const { workspaceId } = props;
 
     try {
         if (!workspaceId) {
             return rejectWithValue("Рабочее пространство неизвестно!");
-        }
-
-        if (!organizationId) {
-            return rejectWithValue("Организация не задана!");
         }
 
         // Отправляем запрос
@@ -33,7 +28,6 @@ export const fetchAllBerthes = createAsyncThunk<
             {
                 params: {
                     workspaceId,
-                    organizationId,
                 },
             },
         );

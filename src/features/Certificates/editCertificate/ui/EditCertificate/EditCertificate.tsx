@@ -1,5 +1,5 @@
 import { getCertificateDetailsForm } from "@/entities/Certificate/model/selectors/certificateSelectors";
-import { getUserActiveWorkspaceId } from "@/entities/User";
+import { getUserActiveWorkspace } from "@/entities/User";
 import { createCertificate } from "@/features/Certificates/certificatesInfiniteList/model/services/createCertificate/createCertificate";
 import { updateCertificate } from "@/features/Certificates/certificatesInfiniteList/model/services/updateCertificate/updateCertificate";
 import { CertificateDetailsForm } from "@/features/Certificates/editCertificate/ui/CertificateDetailsForm/CertificateDetailsForm";
@@ -21,7 +21,7 @@ export const EditCertificate = memo((props: EditCertificateProps) => {
     const [form] = useForm();
     const dispatch = useAppDispatch();
     const detailsForm = useSelector(getCertificateDetailsForm);
-    const workspaceId = useSelector(getUserActiveWorkspaceId);
+    const workspace = useSelector(getUserActiveWorkspace);
 
     const onSave = useCallback(async () => {
         if (detailsForm) {
@@ -31,7 +31,7 @@ export const EditCertificate = memo((props: EditCertificateProps) => {
                     const newEmployee = await dispatch(
                         createCertificate({
                             data: detailsForm,
-                            workspaceId,
+                            workspaceId: workspace?.id,
                         }),
                     ).unwrap();
 
@@ -49,7 +49,7 @@ export const EditCertificate = memo((props: EditCertificateProps) => {
                 }
             } catch {}
         }
-    }, [detailsForm, dispatch, workspaceId, onUpdated]);
+    }, [detailsForm, dispatch, workspace?.id, onUpdated]);
 
     return (
         <EditFormWrapper

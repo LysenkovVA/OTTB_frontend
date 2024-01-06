@@ -6,7 +6,7 @@ import { AxiosError } from "axios";
 
 export interface CreateInspectionProps {
     data: Inspection;
-    workspaceId: string;
+    workspaceId: string | undefined;
 }
 
 export const createInspection = createAsyncThunk<

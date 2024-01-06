@@ -11,7 +11,7 @@ export const deleteBerth = createAsyncThunk<
     void,
     DeleteBerthProps,
     ThunkConfig<string>
->("berthes/deleteBerth", async (props, thunkApi) => {
+>("berthes/deleteConstructionObject", async (props, thunkApi) => {
     const { extra, rejectWithValue } = thunkApi;
 
     try {

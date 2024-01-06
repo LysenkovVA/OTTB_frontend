@@ -76,7 +76,7 @@ export const DepartmentsInfiniteList = memo(
                         department={{
                             id: "0",
                             name: "",
-                            organization: { id: "1", name: "" },
+                            workspace: { id: "1", name: "ССТ-М" },
                         }}
                         isLoading={true}
                     />,

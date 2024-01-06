@@ -7,51 +7,40 @@ import { AxiosError } from "axios";
 export interface CreateBerthTypeProps {
     data: BerthType;
     workspaceId: string | undefined;
-    organizationId: string | undefined;
 }
 
 export const createBerthType = createAsyncThunk<
     BerthType,
     CreateBerthTypeProps,
     ThunkConfig<string>
->(
-    "createBerthType",
-    async ({ data, workspaceId, organizationId }, thunkApi) => {
-        const { extra, rejectWithValue } = thunkApi;
+>("createBerthType", async ({ data, workspaceId }, thunkApi) => {
+    const { extra, rejectWithValue } = thunkApi;
 
-        if (!workspaceId) {
-            return rejectWithValue("Рабочее пространство неизвестно!");
-        }
+    if (!workspaceId) {
+        return rejectWithValue("Рабочее пространство неизвестно!");
+    }
 
-        if (!organizationId) {
-            return rejectWithValue("Организация не задана!");
-        }
-
-        try {
-            const response = await extra.api.post<BerthType>(
-                "/berth-types/create",
-                { ...data, id: undefined },
-                {
-                    params: {
-                        workspaceId,
-                        organizationId,
-                    },
+    try {
+        const response = await extra.api.post<BerthType>(
+            "/berth-types/create",
+            { ...data, id: undefined },
+            {
+                params: {
+                    workspaceId,
                 },
-            );
+            },
+        );
 
-            return response.data;
-        } catch (e) {
-            if (e instanceof AxiosError) {
-                const serverError = e?.response?.data as ServerError;
+        return response.data;
+    } catch (e) {
+        if (e instanceof AxiosError) {
+            const serverError = e?.response?.data as ServerError;
 
-                if (serverError) {
-                    return rejectWithValue(serverError.error);
-                }
+            if (serverError) {
+                return rejectWithValue(serverError.error);
             }
-
-            return rejectWithValue(
-                "Произошла ошибка при создании типа должности!",
-            );
         }
-    },
-);
+
+        return rejectWithValue("Произошла ошибка при создании типа должности!");
+    }
+});

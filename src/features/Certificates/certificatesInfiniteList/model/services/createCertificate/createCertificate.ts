@@ -6,7 +6,7 @@ import { AxiosError } from "axios";
 
 export interface CreateCertificateProps {
     data: Certificate;
-    workspaceId: string;
+    workspaceId: string | undefined;
 }
 
 export const createCertificate = createAsyncThunk<
@@ -15,6 +15,10 @@ export const createCertificate = createAsyncThunk<
     ThunkConfig<string>
 >("createCertificate", async ({ data, workspaceId }, thunkApi) => {
     const { extra, rejectWithValue } = thunkApi;
+
+    if (!workspaceId) {
+        return rejectWithValue("Рабочее пространство не задано!");
+    }
 
     try {
         const response = await extra.api.post<Certificate>(

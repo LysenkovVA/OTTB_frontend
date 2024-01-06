@@ -1,11 +1,8 @@
-import { CertificatesPage } from "@/pages/CertificatesPage";
 import { ConstructionObjectsPage } from "@/pages/ConstructionObjectsPage";
-import { CreateCertificatePage } from "@/pages/CreateCertificatePage";
 import { CreateConstructionObjectPage } from "@/pages/CreateConstructionObjectPage";
 import { CreateDepartmentPage } from "@/pages/CreateDepartmentPage";
 import { CreateEmployeePage } from "@/pages/CreateEmployeePage";
 import { CreateInspectionPage } from "@/pages/CreateInspectionPage";
-import { CreateOrganizationPage } from "@/pages/CreateOrganizationPage";
 import { DepartmentsPage } from "@/pages/DepartmentsPage";
 import { EmployeeDetailsPage } from "@/pages/EmployeeDetailsPage";
 import { EmployeesPage } from "@/pages/EmployeesPage";
@@ -13,8 +10,6 @@ import { InspectionDetailsPage } from "@/pages/InspectionDetailsPage";
 import { InspectionsPage } from "@/pages/InspectionsPage";
 import { LoginPage } from "@/pages/LoginPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
-import { OrganizationDetailsPage } from "@/pages/OrganizationDetailsPage";
-import { OrganizationsPage } from "@/pages/OrganizationsPage";
 import { ProfilePage } from "@/pages/ProfilePage";
 import { SignUpPage } from "@/pages/SignUpPage";
 import { RouteProps } from "react-router-dom";
@@ -26,11 +21,8 @@ export enum AppRoutes {
     INSPECTIONS = "inspections",
     CREATE_INSPECTION = "create_inspection",
     INSPECTION_DETAILS = "inspection_details",
-    CERTIFICATES = "certificates",
-    CREATE_CERTIFICATE = "create_certificate",
-    ORGANIZATIONS = "organizations",
-    CREATE_ORGANIZATION = "create_organization",
-    ORGANIZATION_DETAILS = "organization_details",
+    // CERTIFICATES = "certificates",
+    // CREATE_CERTIFICATE = "create_certificate",
     CONSTRUCTION_OBJECTS = "objects",
     CREATE_CONSTRUCTION_OBJECT = "create_object",
     DEPARTMENTS = "departments",
@@ -52,12 +44,8 @@ export const RoutePath: Record<AppRoutes, string> = {
     [AppRoutes.CREATE_INSPECTION]: "/inspections/create",
     [AppRoutes.INSPECTION_DETAILS]: "/inspections/",
 
-    [AppRoutes.CERTIFICATES]: "/certificates",
-    [AppRoutes.CREATE_CERTIFICATE]: "/certificates/create",
-
-    [AppRoutes.ORGANIZATIONS]: "/organizations",
-    [AppRoutes.CREATE_ORGANIZATION]: "/organizations/create",
-    [AppRoutes.ORGANIZATION_DETAILS]: "/organizations/", // +id
+    // [AppRoutes.CERTIFICATES]: "/certificates",
+    // [AppRoutes.CREATE_CERTIFICATE]: "/certificates/create",
 
     [AppRoutes.CONSTRUCTION_OBJECTS]: "/objects",
     [AppRoutes.CREATE_CONSTRUCTION_OBJECT]: "/objects/create",
@@ -106,31 +94,16 @@ export const routeConfig: Record<AppRoutes, AppRouteProps> = {
         element: <InspectionDetailsPage />,
         authOnly: true,
     },
-    [AppRoutes.CERTIFICATES]: {
-        path: RoutePath.certificates,
-        element: <CertificatesPage />,
-        authOnly: true,
-    },
-    [AppRoutes.CREATE_CERTIFICATE]: {
-        path: RoutePath.create_certificate,
-        element: <CreateCertificatePage />,
-        authOnly: true,
-    },
-    [AppRoutes.ORGANIZATIONS]: {
-        path: RoutePath.organizations,
-        element: <OrganizationsPage />,
-        authOnly: true,
-    },
-    [AppRoutes.CREATE_ORGANIZATION]: {
-        path: RoutePath.create_organization,
-        element: <CreateOrganizationPage />,
-        authOnly: true,
-    },
-    [AppRoutes.ORGANIZATION_DETAILS]: {
-        path: `${RoutePath.organization_details}:id`,
-        element: <OrganizationDetailsPage />,
-        authOnly: true,
-    },
+    // [AppRoutes.CERTIFICATES]: {
+    //     path: RoutePath.certificates,
+    //     element: <CertificatesPage />,
+    //     authOnly: true,
+    // },
+    // [AppRoutes.CREATE_CERTIFICATE]: {
+    //     path: RoutePath.create_certificate,
+    //     element: <CreateCertificatePage />,
+    //     authOnly: true,
+    // },
     [AppRoutes.CONSTRUCTION_OBJECTS]: {
         path: RoutePath.objects,
         element: <ConstructionObjectsPage />,

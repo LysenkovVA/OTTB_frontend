@@ -2,6 +2,7 @@ import { Profile, updateProfileData } from "@/entities/Profile";
 import { deleteProfileAvatar } from "@/entities/Profile/model/services/deleteProfileAvatar/deleteProfileAvatar";
 import { updateProfileAvatar } from "@/entities/Profile/model/services/updateProfileAvatar/updateProfileAvatar";
 import { initAuthData } from "@/entities/User/model/services/initAuthData/initAuthData";
+import { Workspace, updateWorkspace } from "@/entities/Workspace";
 import { USER_LOCALSTORAGE_KEY } from "@/shared/const/localstorage";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { User } from "../types/User";
@@ -9,7 +10,7 @@ import { UserSchema } from "../types/UserSchema";
 
 const initialState: UserSchema = {
     authenticatedUser: {},
-    activeWorkspaceId: "",
+    activeWorkspace: { id: "", name: "" },
     registeredUserId: undefined,
     isLoading: false,
     error: "",
@@ -22,7 +23,13 @@ export const userSlice = createSlice({
     reducers: {
         setAuthData: (state, action: PayloadAction<User>) => {
             state.authenticatedUser = action.payload;
-            state.activeWorkspaceId = action.payload.workspaces?.[0].id;
+            state.activeWorkspace = action.payload.workspaces?.[0];
+        },
+        setActiveWorkspace: (
+            state,
+            action: PayloadAction<Workspace | undefined>,
+        ) => {
+            state.activeWorkspace = action.payload;
         },
         logout: (state) => {
             state.authenticatedUser = undefined;
@@ -44,7 +51,7 @@ export const userSlice = createSlice({
                     state.isLoading = false;
                     state.error = undefined;
                     state.authenticatedUser = action.payload;
-                    state.activeWorkspaceId = action.payload.workspaces?.[0].id;
+                    state.activeWorkspace = action.payload.workspaces?.[0];
                     state._isInitialized = true;
                 },
             )
@@ -73,7 +80,13 @@ export const userSlice = createSlice({
                 if (state?.authenticatedUser?.profile) {
                     state.authenticatedUser.profile.avatar = undefined;
                 }
-            });
+            })
+            .addCase(
+                updateWorkspace.fulfilled,
+                (state, action: PayloadAction<Workspace>) => {
+                    state.activeWorkspace = action.payload;
+                },
+            );
     },
 });
 

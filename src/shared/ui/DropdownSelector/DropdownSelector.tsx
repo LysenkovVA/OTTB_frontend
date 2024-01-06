@@ -64,6 +64,7 @@ export const DropdownSelector = memo((props: DropdownSelectorProps) => {
         <DynamicModuleLoader reducers={reducers} removeAfterUnmount={false}>
             <Flex>
                 <Select
+                    style={{ width: "100%", textAlign: "start" }}
                     showSearch
                     allowClear={true}
                     labelInValue

@@ -1,7 +1,7 @@
-import { Organization } from "@/entities/Organization";
+import { Workspace } from "@/entities/Workspace";
 
 export interface Department {
     id: string;
     name: string;
-    organization?: Organization;
+    workspace?: Workspace;
 }

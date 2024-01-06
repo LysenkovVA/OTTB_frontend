@@ -1,5 +1,5 @@
 import { CertificateItem } from "@/entities/Certificate";
-import { getUserActiveWorkspaceId } from "@/entities/User";
+import { getUserActiveWorkspace } from "@/entities/User";
 import { fetchInfiniteListCertificates } from "@/features/Certificates/certificatesInfiniteList/model/services/fetchInfiniteListCertificates/fetchInfiniteListCertificates";
 import {
     DynamicModuleLoader,
@@ -48,13 +48,13 @@ export const CertificatesInfiniteList = memo(
         const isInitialized = useSelector(
             getCertificatesInfiniteListIsInitialized,
         );
-        const activeWorkspaceId = useSelector(getUserActiveWorkspaceId);
+        const activeWorkspace = useSelector(getUserActiveWorkspace);
 
         useInitialEffect(() => {
             if (!isInitialized) {
                 dispatch(
                     fetchInfiniteListCertificates({
-                        workspaceId: activeWorkspaceId,
+                        workspaceId: activeWorkspace?.id,
                         replaceData: true,
                     }),
                 );
@@ -68,12 +68,20 @@ export const CertificatesInfiniteList = memo(
                 );
                 dispatch(
                     fetchInfiniteListCertificates({
-                        workspaceId: activeWorkspaceId,
+                        workspaceId: activeWorkspace?.id,
                         replaceData: false,
                     }),
                 );
             }
-        }, [dispatch, hasMore, isInitialized, isLoading, limit, offset]);
+        }, [
+            activeWorkspace?.id,
+            dispatch,
+            hasMore,
+            isInitialized,
+            isLoading,
+            limit,
+            offset,
+        ]);
 
         const skeletons = useMemo(() => {
             const skeletons = [];

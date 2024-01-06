@@ -6,11 +6,10 @@ import { DepartmentDetailsSchema } from "../types/DepartmentDetailsSchema";
 const initialState: DepartmentDetailsSchema = {
     isDataLoading: false,
     dataError: undefined,
-    departmentDetails: { id: "", name: "", organization: { id: "", name: "" } },
+    departmentDetails: { id: "", name: "" },
     departmentDetailsForm: {
         id: "",
         name: "",
-        organization: { id: "", name: "" },
     },
     _isInitialized: false,
 };

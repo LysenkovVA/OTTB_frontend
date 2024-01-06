@@ -10,7 +10,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 
 export interface FetchInfiniteListCertificatesProps {
-    workspaceId: string;
+    workspaceId: string | undefined;
     replaceData?: boolean; // Для использования в action.meta.arg
 }
 

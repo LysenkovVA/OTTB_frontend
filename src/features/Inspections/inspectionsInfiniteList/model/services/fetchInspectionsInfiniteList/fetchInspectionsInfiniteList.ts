@@ -10,7 +10,7 @@ import {
 } from "../../selectors/inspectionsInfiniteListSelectors";
 
 export interface FetchInspectionsInfiniteListProps {
-    workspaceId: string;
+    workspaceId: string | undefined;
     replaceData?: boolean; // Для использования в action.meta.arg
 }
 

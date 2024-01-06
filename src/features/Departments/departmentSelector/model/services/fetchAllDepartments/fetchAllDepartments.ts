@@ -7,7 +7,6 @@ import { AxiosError } from "axios";
 export interface FetchAllDepartmentsProps {
     replaceData?: boolean; // Для использования в action.meta.arg
     workspaceId: string | undefined;
-    organizationId: string | undefined;
 }
 
 export const fetchAllDepartments = createAsyncThunk<
@@ -17,14 +16,10 @@ export const fetchAllDepartments = createAsyncThunk<
 >("departments/fetchAllDepartments", async (props, thunkApi) => {
     const { extra, rejectWithValue, getState } = thunkApi;
 
-    const { organizationId, workspaceId } = props;
+    const { workspaceId } = props;
 
     if (!workspaceId) {
         return rejectWithValue("Рабочее пространство неизвестно!");
-    }
-
-    if (!organizationId) {
-        return rejectWithValue("Организация не задана!");
     }
 
     try {
@@ -34,7 +29,6 @@ export const fetchAllDepartments = createAsyncThunk<
             {
                 params: {
                     workspaceId,
-                    organizationId,
                 },
             },
         );

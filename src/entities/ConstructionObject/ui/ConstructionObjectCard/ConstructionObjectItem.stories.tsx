@@ -20,7 +20,7 @@ const constructionObject: ConstructionObject = {
     address: "Москва, ул. Яблочкина, д.25",
     startDate: new Date(),
     endDate: new Date(),
-    organization: { id: "1", name: "ООО 'ССТ-М'" },
+    workspace: { id: "1", name: "ООО 'ССТ-М'" },
 };
 
 export const Primary: Story = {

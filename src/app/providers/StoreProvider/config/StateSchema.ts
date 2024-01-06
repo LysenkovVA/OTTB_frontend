@@ -3,21 +3,22 @@ import { BerthDetailsSchema } from "@/entities/Berth";
 import { BerthTypeDetailsSchema } from "@/entities/BerthType/model/types/BerthTypeDetailsSchema";
 import { CertificateDetailsSchema } from "@/entities/Certificate";
 import { CertificateTypeDetailsSchema } from "@/entities/CertificateType";
+import { ConstructionObjectDetailsSchema } from "@/entities/ConstructionObject";
 import { EmployeeDetailsSchema } from "@/entities/Employee";
 import { InspectionDetailsSchema } from "@/entities/Inspection/model/types/InspectionDetailsSchema";
 import { InspectionTypeDetailsSchema } from "@/entities/InspectionType";
-import { OrganizationDetailsSchema } from "@/entities/Organization";
 import { ProfileSchema } from "@/entities/Profile";
 import { UserSchema } from "@/entities/User/model/types/UserSchema";
+import { WorkspaceDetailsSchema } from "@/entities/Workspace";
 import { BerthTypeListSchema } from "@/features/BerthTypes/berthTypeSelector";
 import { BerthesListSchema } from "@/features/Berthes/berthSelector";
 import { CertificateTypeListSchema } from "@/features/CertificateTypes/certificateTypeSelector";
+import { ConstructionObjectsListSchema } from "@/features/ConstructionObjects/constructionObjectSelector";
 import { DepartmentDetailsSchema } from "@/features/Departments/departmentDetailsCard";
 import { AllDepartmentsSchema } from "@/features/Departments/departmentSelector";
 import { InspectionTypeSelectorSchema } from "@/features/InspectionTypes/inspectionTypeSelector";
-import { OrganizationSelectorSchema } from "@/features/Organizations/organizationSelector";
-import { OrganizationsInfiniteListSchema } from "@/features/Organizations/organizationsInfiniteList/model/types/OrganizationsInfiniteListSchema";
 import { UISchema } from "@/features/UI";
+import { AllWorkspacesSchema } from "@/features/Workspaces/workspaceSelector";
 import { AuthSchema } from "@/features/auth";
 import { LogoutSchema } from "@/features/logout/model/types/LogoutSchema";
 import { SignUpSchema } from "@/features/signUp/model/types/SignUpSchema";
@@ -49,31 +50,47 @@ export interface StateSchema {
     authSchema?: AuthSchema;
     logoutSchema?: LogoutSchema;
     signUpSchema?: SignUpSchema;
+
     // ПРОФИЛЬ
     profileSchema?: ProfileSchema;
-    // ГЛАВНЫЕ СТРАНИЦЫ
+
+    // РАБОЧЕЕ ПРОСТРАНСТВО
+    workspaceDetailsSchema?: WorkspaceDetailsSchema;
+    allWorkspacesSchema?: AllWorkspacesSchema;
+
+    // ПРОВЕРКИ
     inspectionsInfiniteListSchema?: InspectionsInfiniteListSchema;
     inspectionDetailsSchema?: InspectionDetailsSchema;
-    certificatesInfiniteListSchema?: CertificatesInfiniteListSchema;
-    organizationsInfiniteListSchema?: OrganizationsInfiniteListSchema;
-    constructionObjectsInfiniteListSchema?: ConstructionObjectsInfiniteListSchema;
-    departmentsInfiniteListSchema?: DepartmentsInfiniteListSchema;
-    employeesInfiniteListSchema?: EmployeesInfiniteListSchema;
-    // ДЕТАЛИ РАБОТНИКА
-    employeeDetailsSchema?: EmployeeDetailsSchema;
-    departmentDetailsSchema?: DepartmentDetailsSchema;
-    berthDetailsSchema?: BerthDetailsSchema;
-    allBerthesSchema?: BerthesListSchema;
-    organizationSelectorSchema?: OrganizationSelectorSchema;
-    allDepartmentsSchema?: AllDepartmentsSchema;
-    organizationDetailsSchema?: OrganizationDetailsSchema;
-    berthTypeDetailsSchema?: BerthTypeDetailsSchema;
-    berthTypesListSchema?: BerthTypeListSchema;
-    certificateTypeDetailsSchema?: CertificateTypeDetailsSchema;
-    certificateTypesListSchema?: CertificateTypeListSchema;
-    certificateDetailsSchema?: CertificateDetailsSchema;
+    // ТИПЫ ПРОВЕРОК
     inspectionTypeDetailsSchema?: InspectionTypeDetailsSchema;
     inspectionTypeSelectorSchema?: InspectionTypeSelectorSchema;
+
+    // УДОСТОВЕРЕНИЯ
+    certificateDetailsSchema?: CertificateDetailsSchema;
+    certificatesInfiniteListSchema?: CertificatesInfiniteListSchema;
+    // ТИПЫ УДОСТОВЕРЕНИЙ
+    certificateTypeDetailsSchema?: CertificateTypeDetailsSchema;
+    certificateTypesListSchema?: CertificateTypeListSchema;
+
+    // ОБЪЕКТЫ
+    constructionObjectDetailsSchema?: ConstructionObjectDetailsSchema;
+    constructionObjectSelectorSchema?: ConstructionObjectsListSchema;
+    constructionObjectsInfiniteListSchema?: ConstructionObjectsInfiniteListSchema;
+
+    // ПОДРАЗДЕЛЕНИЯ
+    departmentDetailsSchema?: DepartmentDetailsSchema;
+    allDepartmentsSchema?: AllDepartmentsSchema;
+    departmentsInfiniteListSchema?: DepartmentsInfiniteListSchema;
+
+    // СОТРУДНИКИ
+    employeeDetailsSchema?: EmployeeDetailsSchema;
+    employeesInfiniteListSchema?: EmployeesInfiniteListSchema;
+    // ДОЛЖНОСТИ
+    berthDetailsSchema?: BerthDetailsSchema;
+    allBerthesSchema?: BerthesListSchema;
+    // ТИПЫ ДОЛЖНОСТЕЙ
+    berthTypeDetailsSchema?: BerthTypeDetailsSchema;
+    berthTypesListSchema?: BerthTypeListSchema;
 }
 
 // Для автокоплита

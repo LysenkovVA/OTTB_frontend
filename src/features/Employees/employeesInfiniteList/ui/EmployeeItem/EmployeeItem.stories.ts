@@ -25,7 +25,7 @@ export const Primary: Story = {
             department: {
                 id: "1",
                 name: "Участок 1",
-                organization: {
+                workspace: {
                     id: "1",
                     name: "ООО ССТ-М",
                 },
