@@ -1,4 +1,3 @@
-import { departmentsInfiniteListActions } from "@/features/Departments/departmentsInfiniteList/model/slice/departmentsInfiniteListSlice";
 import {
     DynamicModuleLoader,
     ReducersList,
@@ -86,9 +85,6 @@ export const DepartmentCard = memo((props: DepartmentCardProps) => {
         if (departmentId) {
             try {
                 await dispatch(deleteDepartment({ departmentId }));
-                dispatch(
-                    departmentsInfiniteListActions.removeOne(departmentId),
-                );
                 navigate(-1);
             } catch {}
         }

@@ -1,0 +1,26 @@
+.AppImage {
+  width: 100%;
+  border: 2px solid lightgray;
+  border-radius: 10px;
+
+  &:hover {
+    .deleteButton {
+      visibility: visible;
+
+      //position: absolute;
+      //margin: 5px;
+      //right: 0;
+      //top: 0
+    }
+  }
+}
+
+.deleteButton {
+  color: red;
+  visibility: hidden;
+  position: absolute;
+  margin: 5px;
+  right: 0;
+  top: 0;
+  font-size: 20px;
+}

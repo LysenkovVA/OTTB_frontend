@@ -121,51 +121,13 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
         [dispatch, employeeDetailsForm],
     );
 
-    // const onChangeOrganization = useCallback(
-    //     async (value: Organization | undefined) => {
-    //         // Установка организации и Сброс значений селекторов
-    //         dispatch(
-    //             employeeDetailsActions.setFormData({
-    //                 ...employeeDetailsForm,
-    //                 organization: value,
-    //                 department: undefined,
-    //                 berth: undefined,
-    //             }),
-    //         );
-    //
-    //         if (value) {
-    //             // Если значение поменялось, меняем значения селекторов
-    //             // Подразделения
-    //             dispatch(
-    //                 fetchAllDepartments({
-    //                     workspaceId,
-    //                     organizationId: value.id,
-    //                     replaceData: true,
-    //                 }),
-    //             );
-    //
-    //             // Должности
-    //             dispatch(
-    //                 fetchAllBerthes({
-    //                     workspaceId,
-    //                     organizationId: value.id,
-    //                     replaceData: true,
-    //                 }),
-    //             );
-    //         }
-    //     },
-    //     [dispatch, employeeDetailsForm, workspaceId],
-    // );
-
     const workContent = (
         <>
             <Row gutter={[8, 8]}>
                 <Col span={12}>
                     <Form.Item label={"Подразделение"}>
                         <DepartmentSelector
-                            disabled={
-                                employeeDetailsForm?.workspace === undefined
-                            }
+                            disabled={activeWorkspace === undefined}
                             value={employeeDetailsForm?.department}
                             onValueChanged={onChangeDepartment}
                         />
@@ -176,9 +138,7 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
                 <Col span={12}>
                     <Form.Item label={"Должность"}>
                         <BerthSelector
-                            disabled={
-                                employeeDetailsForm?.workspace === undefined
-                            }
+                            disabled={activeWorkspace === undefined}
                             value={employeeDetailsForm?.berth}
                             onValueChanged={onChangeBerth}
                         />
@@ -187,11 +147,7 @@ export const EmployeeDetailsForm = memo((props: EmployeeDetailsFormProps) => {
                 {employeeDetailsForm?.berth?.hasRank && (
                     <Col span={12}>
                         <Form.Item label={"Разряд"} name={"rank"}>
-                            <Input
-                                disabled={
-                                    employeeDetailsForm?.workspace === undefined
-                                }
-                            />
+                            <Input disabled={activeWorkspace === undefined} />
                         </Form.Item>
                     </Col>
                 )}

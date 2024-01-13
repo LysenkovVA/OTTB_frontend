@@ -1,7 +1,9 @@
-import { Button, Form, FormInstance } from "antd";
+import { Button, ButtonProps, Form, FormInstance } from "antd";
 import { ReactNode, useEffect, useState } from "react";
 
-export interface SubmitButtonProps {
+type SBProps = Omit<ButtonProps, "title" | "form" | "icon" | "onClick">;
+
+export interface SubmitButtonProps extends SBProps {
     title?: string;
     icon?: ReactNode;
     form?: FormInstance;
@@ -13,6 +15,7 @@ export const SubmitButton = ({
     icon,
     form,
     onClick,
+    ...otherProps
 }: SubmitButtonProps) => {
     const [submittable, setSubmittable] = useState(false);
 
@@ -35,8 +38,12 @@ export const SubmitButton = ({
             icon={icon}
             type="primary"
             htmlType="submit"
+            onClick={(e) => {
+                form?.submit();
+                onClick?.();
+            }}
             disabled={!submittable}
-            onClick={onClick}
+            {...otherProps}
         >
             {title}
         </Button>

@@ -3,6 +3,7 @@ import { BerthDetailsSchema } from "@/entities/Berth";
 import { BerthTypeDetailsSchema } from "@/entities/BerthType/model/types/BerthTypeDetailsSchema";
 import { CertificateDetailsSchema } from "@/entities/Certificate";
 import { CertificateTypeDetailsSchema } from "@/entities/CertificateType";
+import { CheckListDetailsSchema } from "@/entities/CheckList";
 import { ConstructionObjectDetailsSchema } from "@/entities/ConstructionObject";
 import { EmployeeDetailsSchema } from "@/entities/Employee";
 import { InspectionDetailsSchema } from "@/entities/Inspection/model/types/InspectionDetailsSchema";
@@ -85,12 +86,17 @@ export interface StateSchema {
     // СОТРУДНИКИ
     employeeDetailsSchema?: EmployeeDetailsSchema;
     employeesInfiniteListSchema?: EmployeesInfiniteListSchema;
+
     // ДОЛЖНОСТИ
     berthDetailsSchema?: BerthDetailsSchema;
     allBerthesSchema?: BerthesListSchema;
+
     // ТИПЫ ДОЛЖНОСТЕЙ
     berthTypeDetailsSchema?: BerthTypeDetailsSchema;
     berthTypesListSchema?: BerthTypeListSchema;
+
+    // ЧЕК-ЛИСТЫ
+    checkListDetailsSchema?: CheckListDetailsSchema;
 }
 
 // Для автокоплита

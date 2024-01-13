@@ -1,7 +1,8 @@
 import { getUserActiveWorkspace } from "@/entities/User";
 import { userActions } from "@/entities/User/model/slice/userSlice";
 import { Workspace } from "@/entities/Workspace";
-import { WorkspaceSelector } from "@/features/Workspaces/workspaceSelector";
+import { CreateCheckList } from "@/features/CheckLists/createCheckList";
+import { WorkspaceView } from "@/features/Workspaces/WorkspaceView";
 import { classNames } from "@/shared/lib/classNames/classNames";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
 import { AppHeaderLogo } from "@/widgets/AppHeader/ui/AppHeaderLogo/AppHeaderLogo";
@@ -41,12 +42,11 @@ export const AppHeader = memo((props: AppHeaderProps) => {
                 gap={8}
                 style={{ marginLeft: "26px", width: "100%" }}
             >
-                <WorkspaceSelector
-                    className={cls.workspace}
-                    value={activeWorkspace}
-                    onValueChanged={onWorkspaceChanged}
-                />
-                <HeaderAvatar />
+                <WorkspaceView className={cls.workspace} />
+                <Flex align={"center"} gap={8}>
+                    <CreateCheckList />
+                    <HeaderAvatar />
+                </Flex>
             </Flex>
         </Flex>
     );

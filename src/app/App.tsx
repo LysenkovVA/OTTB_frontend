@@ -44,6 +44,8 @@ export const App = () => {
                 <Layout>
                     <Sider className={cls.sider} theme={"light"}>
                         <AppSideMenu />
+                        {/*Странный рендеринг*/}
+                        {/*<AppMenu />*/}
                     </Sider>
                     <Content className={cls.content}>
                         {userIsInitialized && !isLoading && <AppRouter />}

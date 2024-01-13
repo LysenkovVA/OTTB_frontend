@@ -9,3 +9,4 @@ export {
 } from "./model/slice/workspaceDetailsSlice/workspaceDetailsSlice";
 export type { Workspace } from "./model/types/Workspace";
 export type { WorkspaceDetailsSchema } from "./model/types/WorkspaceDetailsSchema";
+export { WorkspaceForm } from "./ui/WorkspaceForm/WorkspaceForm";

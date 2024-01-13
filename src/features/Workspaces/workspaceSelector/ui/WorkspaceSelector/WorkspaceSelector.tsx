@@ -1,5 +1,6 @@
 import {
     Workspace,
+    WorkspaceForm,
     createWorkspace,
     fetchWorkspace,
     getWorkspaceDetailsForm,
@@ -27,7 +28,6 @@ import {
 } from "../../model/selectors/allWorkspacesSelectors";
 import { fetchAllWorkspaces } from "../../model/services/fetchAllWorkspaces/fetchAllWorkspaces";
 import { allWorkspacesReducer } from "../../model/slice/allWorkspacesSlice";
-import { WorkspaceForm } from "../WorkspaceForm/WorkspaceForm";
 import cls from "./WorkspaceSelector.module.scss";
 
 type DDSelectorProps = Omit<

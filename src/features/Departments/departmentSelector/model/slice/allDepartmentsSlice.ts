@@ -1,4 +1,6 @@
 import { Department } from "@/entities/Department";
+import { createDepartment } from "@/features/Departments/departmentDetailsCard/model/services/createDepartment/createDepartment";
+import { deleteDepartment } from "@/features/Departments/departmentDetailsCard/model/services/deleteDepartment/deleteEmployee";
 import { updateDepartment } from "@/features/Departments/departmentDetailsCard/model/services/updateDepartment/updateDepartment";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { allDepartmentsAdapter } from "../adapter/allDepartmentsAdapter";
@@ -55,11 +57,23 @@ export const allDepartmentsSlice = createSlice({
                 }
             })
             .addCase(
+                createDepartment.fulfilled,
+                (state, action: PayloadAction<Department>) => {
+                    allDepartmentsAdapter.addOne(state, action.payload);
+                },
+            )
+            .addCase(
                 updateDepartment.fulfilled,
                 (state, action: PayloadAction<Department>) => {
                     allDepartmentsAdapter.setOne(state, action.payload);
                 },
-            );
+            )
+            .addCase(deleteDepartment.fulfilled, (state, action) => {
+                allDepartmentsAdapter.removeOne(
+                    state,
+                    action.meta.arg.departmentId,
+                );
+            });
     },
 });
 

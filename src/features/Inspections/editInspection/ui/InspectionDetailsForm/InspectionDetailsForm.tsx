@@ -6,24 +6,25 @@ import {
 import { inspectionDetailsActions } from "@/entities/Inspection/model/slice/inspectionDetailsSlice";
 import { InspectionType } from "@/entities/InspectionType";
 import { getUserActiveWorkspace } from "@/entities/User";
+import { CreateCheckList } from "@/features/CheckLists/createCheckList";
 import { InspectionTypeSelector } from "@/features/InspectionTypes/inspectionTypeSelector";
 import { classNames } from "@/shared/lib/classNames/classNames";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
 import { FieldData } from "@/shared/types/FieldData";
-import { CheckCircleOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import {
     Alert,
+    Button,
     Col,
     DatePicker,
     Form,
     FormInstance,
     Input,
     Row,
+    Steps,
     Switch,
-    Tabs,
-    TabsProps,
+    message,
 } from "antd";
-import { memo, useCallback, useMemo } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import cls from "./InspectionDetailsForm.module.scss";
 
@@ -98,12 +99,17 @@ export const InspectionDetailsForm = memo(
 
         const infoContent = (
             <>
+                {/*<Alert*/}
+                {/*    message="Общая информация"*/}
+                {/*    description="Укажите общую информацию о проверке"*/}
+                {/*    type="info"*/}
+                {/*/>*/}
                 <Row gutter={[16, 16]} justify={"start"}>
                     <Col span={3}>
                         <Form.Item
                             required
                             name={"date"}
-                            label={"Дата"}
+                            label={"Дата проверки"}
                             rules={[
                                 {
                                     required: true,
@@ -115,7 +121,7 @@ export const InspectionDetailsForm = memo(
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label={"Тип"}>
+                        <Form.Item label={"Тип проверки"}>
                             <InspectionTypeSelector
                                 value={detailsForm?.inspectionType}
                                 onValueChanged={onChangeInspectionType}
@@ -153,13 +159,20 @@ export const InspectionDetailsForm = memo(
                         </Form.Item>
                     </Col>
                 </Row>
-                <Form.Item
-                    name={"dateOfElimination"}
-                    label={"Срок устранения нарушений"}
-                    validateStatus={"error"}
-                >
-                    <DatePicker />
+                <Form.Item required name={"notes"} label={"Примечания"}>
+                    <Input.TextArea />
                 </Form.Item>
+            </>
+        );
+
+        const checkListContent = (
+            <>
+                <CreateCheckList />
+            </>
+        );
+
+        const documentContent = (
+            <>
                 <Form.Item
                     required
                     name={"documentNumber"}
@@ -170,33 +183,38 @@ export const InspectionDetailsForm = memo(
                 <Form.Item name={"documentDate"} label={"Дата документа"}>
                     <DatePicker />
                 </Form.Item>
-                <Form.Item required name={"notes"} label={"Примечания"}>
-                    <Input.TextArea />
-                </Form.Item>
             </>
         );
 
-        const checkListContent = (
-            <>
-                <div>Check list content</div>
-            </>
-        );
-
-        const items: TabsProps["items"] = [
+        const steps = [
             {
-                key: "1",
-                label: "Информация",
-                children: infoContent,
-                icon: <InfoCircleOutlined />,
+                title: "Общая информация",
+                content: infoContent,
             },
-            // eslint-disable-next-line react/jsx-no-undef
             {
-                key: "2",
-                label: "Чек-лист",
-                children: checkListContent,
-                icon: <CheckCircleOutlined />,
+                title: "Чек-лист",
+                content: checkListContent,
+            },
+            {
+                title: "Итоговый документ",
+                content: documentContent,
             },
         ];
+
+        const [current, setCurrent] = useState(0);
+
+        const next = () => {
+            setCurrent(current + 1);
+        };
+
+        const prev = () => {
+            setCurrent(current - 1);
+        };
+
+        const items = steps.map((item) => ({
+            key: item.title,
+            title: item.title,
+        }));
 
         return (
             <>
@@ -213,13 +231,39 @@ export const InspectionDetailsForm = memo(
                     fields={fields}
                     onValuesChange={onValueChanged}
                 >
-                    <Tabs
-                        defaultActiveKey={"1"}
-                        type={"line"}
-                        centered
-                        tabPosition={"right"}
+                    <Steps
+                        current={current}
                         items={items}
+                        direction={"horizontal"}
                     />
+                    <div style={{ marginTop: 24 }}>
+                        {steps[current].content}
+                    </div>
+                    <div style={{ marginTop: 24 }}>
+                        {current < steps.length - 1 && (
+                            <Button type="primary" onClick={() => next()}>
+                                Дальше
+                            </Button>
+                        )}
+                        {current === steps.length - 1 && (
+                            <Button
+                                type="primary"
+                                onClick={() =>
+                                    message.success("Processing complete!")
+                                }
+                            >
+                                Завершить
+                            </Button>
+                        )}
+                        {current > 0 && (
+                            <Button
+                                style={{ margin: "0 8px" }}
+                                onClick={() => prev()}
+                            >
+                                Назад
+                            </Button>
+                        )}
+                    </div>
                 </Form>
             </>
         );
